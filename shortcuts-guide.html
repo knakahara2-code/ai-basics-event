@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIを使うときに便利なショートカット集</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body {
+  padding: 40px 20px 80px;
+}
+
+.container { max-width: 900px; margin: 0 auto; }
+
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--cyan), var(--blue), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.intro-box {
+  background: rgba(6,182,212,0.06);
+  border: 1px solid rgba(6,182,212,0.2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 40px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #c0c0e0;
+}
+
+.intro-box strong { color: var(--text); }
+
+/* Platform section */
+.platform-section {
+  margin-bottom: 50px;
+}
+
+.platform-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid;
+}
+
+.platform-header.windows { border-color: var(--blue); }
+.platform-header.mac { border-color: var(--text-dim); }
+.platform-header.iphone { border-color: var(--purple); }
+.platform-header.android { border-color: var(--green); }
+
+.platform-icon { font-size: 2rem; }
+
+.platform-name { font-size: 1.5rem; font-weight: 800; }
+.platform-name.windows { color: var(--blue); }
+.platform-name.mac { color: #c0c0e0; }
+.platform-name.iphone { color: var(--purple); }
+.platform-name.android { color: var(--green); }
+
+.platform-sub { font-size: 0.85rem; color: var(--text-dim); }
+
+/* Shortcut cards */
+.shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.shortcut {
+  display: flex;
+  gap: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  transition: border-color 0.2s;
+  align-items: flex-start;
+}
+
+.shortcut:hover { border-color: rgba(255,255,255,0.15); }
+
+.shortcut-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.shortcut-content { flex: 1; }
+
+.shortcut-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.shortcut-desc {
+  font-size: 0.85rem;
+  color: #b8b8d0;
+  line-height: 1.5;
+}
+
+.shortcut-tip {
+  font-size: 0.78rem;
+  color: var(--cyan);
+  margin-top: 6px;
+}
+
+/* Key badge */
+.key {
+  display: inline-block;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Inter', monospace;
+  color: var(--text);
+  margin: 0 1px;
+  box-shadow: 0 2px 0 rgba(255,255,255,0.06);
+}
+
+.key-combo {
+  margin-bottom: 8px;
+  line-height: 2;
+}
+
+/* Use case box */
+.use-case {
+  background: rgba(139,92,246,0.06);
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-top: 16px;
+}
+
+.use-case-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--purple);
+  margin-bottom: 10px;
+}
+
+.use-case-item {
+  font-size: 0.85rem;
+  color: #c0c0e0;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.use-case-item:last-child { border-bottom: none; }
+.use-case-item strong { color: var(--text); }
+
+/* Flow diagram */
+.flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.flow-step {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.flow-step-icon { font-size: 1.3rem; margin-bottom: 4px; }
+.flow-step-label { font-size: 0.75rem; color: var(--text-dim); }
+.flow-arrow { color: var(--purple); font-size: 1.1rem; }
+
+/* Comparison table */
+.compare-section {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid var(--border);
+}
+
+.compare-section h2 {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 0.82rem;
+}
+
+.compare-table th {
+  padding: 12px 14px;
+  text-align: left;
+  background: rgba(255,255,255,0.04);
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #c0c0e0;
+  vertical-align: top;
+}
+
+.compare-table tr:last-child td { border-bottom: none; }
+
+.compare-table th:first-child,
+.compare-table td:first-child {
+  color: var(--text-dim);
+  font-weight: 600;
+  width: 130px;
+  white-space: nowrap;
+}
+
+/* Print */
+@media print {
+  .key { border: 1px solid #ccc; box-shadow: none; }
+  .shortcut { border: 1px solid #ddd; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  h1 { font-size: 1.6rem; }
+  .shortcut { flex-direction: column; gap: 8px; }
+  .compare-table { font-size: 0.75rem; }
+  .compare-table th, .compare-table td { padding: 8px 10px; }
+  .flow { gap: 6px; }
+  .flow-step { padding: 8px 10px; font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>AIを使うときに便利な<br>ショートカット集</h1>
+<p class="subtitle">スクリーンショット・コピペ・音声入力 — これだけ覚えればAI活用が10倍はかどる</p>
+
+<div class="intro-box">
+  <strong>🎯 なぜショートカットが大事？</strong><br>
+  AIに画像を見せたい → <strong>スクショ</strong> → <strong>貼り付け</strong>。<br>
+  AIの回答を使いたい → <strong>コピー</strong> → <strong>貼り付け</strong>。<br>
+  長い文章を打つのが面倒 → <strong>音声入力</strong>。<br>
+  この3つの流れを覚えるだけで、AIとのやりとりが劇的にスムーズになります。
+</div>
+
+<!-- AI活用の基本フロー -->
+<div class="flow">
+  <div class="flow-step">
+    <div class="flow-step-icon">📸</div>
+    <div class="flow-step-label">スクショ撮影</div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">
+    <div class="flow-step-icon">📋</div>
+    <div class="flow-step-label">コピー or 貼り付け</div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">
+    <div class="flow-step-icon">🤖</div>
+    <div class="flow-step-label">AIに送信</div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-step">
+    <div class="flow-step-icon">✨</div>
+    <div class="flow-step-label">回答を活用</div>
+  </div>
+</div>
+
+<!-- ==================== Windows ==================== -->
+<div class="platform-section windows">
+  <div class="platform-header windows">
+    <span class="platform-icon">🪟</span>
+    <div>
+      <div class="platform-name windows">Windows</div>
+      <div class="platform-sub">Windows 10 / 11 共通</div>
+    </div>
+  </div>
+
+  <div class="shortcuts">
+    <div class="shortcut">
+      <div class="shortcut-icon">📸</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">スクリーンショット（範囲選択）</div>
+        <div class="key-combo">
+          <span class="key">Win</span> + <span class="key">Shift</span> + <span class="key">S</span>
+        </div>
+        <div class="shortcut-desc">画面の好きな部分だけを切り取ってコピー。撮ったらすぐAIのチャットに貼り付けられる。</div>
+        <div class="shortcut-tip">💡 エラー画面やWebページの一部をAIに見せたいときに最強！</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">📋</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">コピー</div>
+        <div class="key-combo">
+          <span class="key">Ctrl</span> + <span class="key">C</span>
+        </div>
+        <div class="shortcut-desc">選択した文字・画像をクリップボードにコピー。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">📌</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">貼り付け（ペースト）</div>
+        <div class="key-combo">
+          <span class="key">Ctrl</span> + <span class="key">V</span>
+        </div>
+        <div class="shortcut-desc">コピーした文字・画像をAIのチャット欄などに貼り付ける。</div>
+        <div class="shortcut-tip">💡 スクショを撮った後、AIのチャット欄でCtrl+Vすれば画像がそのまま送れる！</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">🔄</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">ウィンドウ切り替え</div>
+        <div class="key-combo">
+          <span class="key">Alt</span> + <span class="key">Tab</span>
+        </div>
+        <div class="shortcut-desc">開いているアプリを瞬時に切り替え。AIとExcelを行ったり来たりするときに便利。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">🎤</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">音声入力</div>
+        <div class="key-combo">
+          <span class="key">Win</span> + <span class="key">H</span>
+        </div>
+        <div class="shortcut-desc">キーボードを打たずに、声で文字入力。AIへの長い指示も話すだけ。</div>
+        <div class="shortcut-tip">💡 「句読点」「改行」も声で入力できる。慣れると超快適！</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">✂️</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">全選択</div>
+        <div class="key-combo">
+          <span class="key">Ctrl</span> + <span class="key">A</span>
+        </div>
+        <div class="shortcut-desc">ページ全体のテキストを一括選択。長い文章をまるごとAIに貼り付けたいときに。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">↩️</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">元に戻す</div>
+        <div class="key-combo">
+          <span class="key">Ctrl</span> + <span class="key">Z</span>
+        </div>
+        <div class="shortcut-desc">間違えて消してしまったときに。直前の操作を取り消す。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="use-case">
+    <div class="use-case-title">🚀 よくある活用パターン</div>
+    <div class="use-case-item"><strong>エラー画面をAIに聞く：</strong> Win+Shift+S → エラー部分をスクショ → AIのチャットで Ctrl+V → 「これ何？」</div>
+    <div class="use-case-item"><strong>AIの回答をExcelに貼る：</strong> AIの回答を選択 → Ctrl+C → Alt+TabでExcelに切替 → Ctrl+V</div>
+    <div class="use-case-item"><strong>長い指示を声で入力：</strong> AIのチャット欄をクリック → Win+H → 話す → 送信</div>
+  </div>
+</div>
+
+<!-- ==================== Mac ==================== -->
+<div class="platform-section mac">
+  <div class="platform-header mac">
+    <span class="platform-icon">🍎</span>
+    <div>
+      <div class="platform-name mac">Mac</div>
+      <div class="platform-sub">macOS 共通</div>
+    </div>
+  </div>
+
+  <div class="shortcuts">
+    <div class="shortcut">
+      <div class="shortcut-icon">📸</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">スクリーンショット（範囲選択）</div>
+        <div class="key-combo">
+          <span class="key">⌘ Cmd</span> + <span class="key">Shift</span> + <span class="key">4</span>
+        </div>
+        <div class="shortcut-desc">十字カーソルが出るので、撮りたい範囲をドラッグ。デスクトップに画像が保存される。</div>
+        <div class="shortcut-tip">💡 Ctrl も一緒に押すとクリップボードにコピー（ファイル保存なし）→ そのまま ⌘+V で貼り付けOK</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">🖥️</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">スクリーンショット（画面全体）</div>
+        <div class="key-combo">
+          <span class="key">⌘ Cmd</span> + <span class="key">Shift</span> + <span class="key">3</span>
+        </div>
+        <div class="shortcut-desc">画面全体を撮影。デスクトップに保存される。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">📋</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">コピー</div>
+        <div class="key-combo">
+          <span class="key">⌘ Cmd</span> + <span class="key">C</span>
+        </div>
+        <div class="shortcut-desc">選択した文字・画像をクリップボードにコピー。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">📌</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">貼り付け（ペースト）</div>
+        <div class="key-combo">
+          <span class="key">⌘ Cmd</span> + <span class="key">V</span>
+        </div>
+        <div class="shortcut-desc">コピーした文字・画像をAIのチャット欄などに貼り付ける。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">🔄</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">ウィンドウ切り替え</div>
+        <div class="key-combo">
+          <span class="key">⌘ Cmd</span> + <span class="key">Tab</span>
+        </div>
+        <div class="shortcut-desc">開いているアプリを瞬時に切り替え。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">🎤</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">音声入力</div>
+        <div class="key-combo">
+          <span class="key">🌐 fn</span> キーを2回押す（または <span class="key">🎤 マイクキー</span>）
+        </div>
+        <div class="shortcut-desc">どのテキスト入力欄でも音声入力が使える。</div>
+        <div class="shortcut-tip">💡 初回は設定 → キーボード → 音声入力 をオンにする必要あり</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">✂️</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">全選択</div>
+        <div class="key-combo">
+          <span class="key">⌘ Cmd</span> + <span class="key">A</span>
+        </div>
+        <div class="shortcut-desc">ページ全体のテキストを一括選択。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">↩️</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">元に戻す</div>
+        <div class="key-combo">
+          <span class="key">⌘ Cmd</span> + <span class="key">Z</span>
+        </div>
+        <div class="shortcut-desc">直前の操作を取り消す。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== iPhone ==================== -->
+<div class="platform-section iphone">
+  <div class="platform-header iphone">
+    <span class="platform-icon">📱</span>
+    <div>
+      <div class="platform-name iphone">iPhone / iPad</div>
+      <div class="platform-sub">iOS / iPadOS</div>
+    </div>
+  </div>
+
+  <div class="shortcuts">
+    <div class="shortcut">
+      <div class="shortcut-icon">📸</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">スクリーンショット</div>
+        <div class="key-combo">
+          <strong>Face ID搭載機：</strong> <span class="key">サイドボタン</span> + <span class="key">音量↑</span> 同時押し<br>
+          <strong>ホームボタン搭載機：</strong> <span class="key">サイドボタン</span> + <span class="key">ホームボタン</span> 同時押し
+        </div>
+        <div class="shortcut-desc">左下にプレビューが表示される。タップすると編集・切り取りも可能。</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">📋</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">コピー＆貼り付け</div>
+        <div class="shortcut-desc">
+          <strong>コピー：</strong>テキストを長押し → 範囲選択 → 「コピー」をタップ<br>
+          <strong>貼り付け：</strong>入力欄を長押し → 「ペースト」をタップ
+        </div>
+        <div class="shortcut-tip">💡 写真アプリでスクショを開いて「共有」→ AIアプリに直接送ることもできる</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">🎤</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">音声入力</div>
+        <div class="shortcut-desc">キーボードの <span class="key">🎤 マイクボタン</span>（スペースキーの横）をタップ → 話す → もう一度タップで終了</div>
+        <div class="shortcut-tip">💡 ChatGPTアプリ・Claudeアプリなら、アプリ内のマイクボタンで直接音声会話もできる！</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">🔍</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">画像内のテキストをコピー（Live Text）</div>
+        <div class="shortcut-desc">写真の中の文字を長押し → テキストとして選択・コピーできる。書類や看板の文字をAIに送るときに便利。</div>
+        <div class="shortcut-tip">💡 iPhone 15以降 / iOS 15以降で利用可能</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Android ==================== -->
+<div class="platform-section android">
+  <div class="platform-header android">
+    <span class="platform-icon">🤖</span>
+    <div>
+      <div class="platform-name android">Android</div>
+      <div class="platform-sub">機種により若干異なる場合あり</div>
+    </div>
+  </div>
+
+  <div class="shortcuts">
+    <div class="shortcut">
+      <div class="shortcut-icon">📸</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">スクリーンショット</div>
+        <div class="key-combo">
+          <span class="key">電源ボタン</span> + <span class="key">音量↓</span> 同時押し
+        </div>
+        <div class="shortcut-desc">ほぼ全機種共通。撮影後に通知バーから編集・共有ができる。</div>
+        <div class="shortcut-tip">💡 一部機種は電源ボタン長押しメニューから「スクリーンショット」も選べる</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">📋</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">コピー＆貼り付け</div>
+        <div class="shortcut-desc">
+          <strong>コピー：</strong>テキストを長押し → 範囲選択 → 「コピー」をタップ<br>
+          <strong>貼り付け：</strong>入力欄を長押し → 「貼り付け」をタップ
+        </div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">🎤</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">音声入力</div>
+        <div class="shortcut-desc">キーボードの <span class="key">🎤 マイクボタン</span> をタップ → 話す → 自動で文字に変換される</div>
+        <div class="shortcut-tip">💡 GeminiアプリをGoogleアシスタントの代わりに設定すれば「OK Google」でAIに話しかけられる！</div>
+      </div>
+    </div>
+
+    <div class="shortcut">
+      <div class="shortcut-icon">📷</div>
+      <div class="shortcut-content">
+        <div class="shortcut-title">Googleレンズで画像内テキストをコピー</div>
+        <div class="shortcut-desc">カメラアプリ → Googleレンズモード → テキストを映す → 選択してコピー。書類の文字をAIに送るのに便利。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 比較表 ==================== -->
+<div class="compare-section">
+  <h2>📊 早見表 — 同じ操作、OS別まとめ</h2>
+
+  <table class="compare-table">
+    <tr>
+      <th>やりたいこと</th>
+      <th style="color:var(--blue)">🪟 Windows</th>
+      <th style="color:#c0c0e0">🍎 Mac</th>
+      <th style="color:var(--purple)">📱 iPhone</th>
+      <th style="color:var(--green)">🤖 Android</th>
+    </tr>
+    <tr>
+      <td>スクショ（範囲）</td>
+      <td>Win+Shift+S</td>
+      <td>⌘+Shift+4</td>
+      <td>サイド+音量↑<br>→ 編集で切り取り</td>
+      <td>電源+音量↓<br>→ 編集で切り取り</td>
+    </tr>
+    <tr>
+      <td>コピー</td>
+      <td>Ctrl+C</td>
+      <td>⌘+C</td>
+      <td>長押し →「コピー」</td>
+      <td>長押し →「コピー」</td>
+    </tr>
+    <tr>
+      <td>貼り付け</td>
+      <td>Ctrl+V</td>
+      <td>⌘+V</td>
+      <td>長押し →「ペースト」</td>
+      <td>長押し →「貼り付け」</td>
+    </tr>
+    <tr>
+      <td>音声入力</td>
+      <td>Win+H</td>
+      <td>fn 2回</td>
+      <td>キーボードの🎤</td>
+      <td>キーボードの🎤</td>
+    </tr>
+    <tr>
+      <td>アプリ切替</td>
+      <td>Alt+Tab</td>
+      <td>⌘+Tab</td>
+      <td>下から上スワイプ</td>
+      <td>■ or スワイプ</td>
+    </tr>
+    <tr>
+      <td>全選択</td>
+      <td>Ctrl+A</td>
+      <td>⌘+A</td>
+      <td>テキスト長押し<br>→「すべてを選択」</td>
+      <td>テキスト長押し<br>→「すべて選択」</td>
+    </tr>
+    <tr>
+      <td>元に戻す</td>
+      <td>Ctrl+Z</td>
+      <td>⌘+Z</td>
+      <td>3本指で左スワイプ<br>またはシェイク</td>
+      <td>—（アプリ依存）</td>
+    </tr>
+  </table>
+</div>
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」配布資料</p>
+  <p style="margin-top:6px;">情報は2026年4月時点。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年4月9日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</body>
+</html>
