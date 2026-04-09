@@ -32,14 +32,16 @@
     color: var(--text-primary);
     overflow: hidden;
     height: 100vh;
-    width: 100vw;
+    width: 100%;
+    margin: 0;
   }
 
   /* Slide container */
   .slides-container {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     position: relative;
+    overflow: hidden;
   }
 
   .slide {
@@ -627,9 +629,14 @@
   /* ===== Mobile Responsive ===== */
   @media (max-width: 768px) {
     .slide {
-      padding: 20px 20px 80px;
+      padding: 24px 20px 80px;
       justify-content: flex-start;
       padding-top: 30px;
+    }
+
+    .slide-content {
+      width: 100%;
+      margin: 0 auto;
     }
 
     .title-main {
