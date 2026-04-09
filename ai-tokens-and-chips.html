@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>トークンって何？ — AIと半導体のつながり</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body {
+  padding: 40px 20px 80px;
+}
+
+.container { max-width: 900px; margin: 0 auto; }
+
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--orange), var(--pink), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 40px;
+}
+
+/* ===== Section ===== */
+.section {
+  margin-bottom: 50px;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.section-label.token { color: var(--orange); }
+.section-label.gpu { color: var(--green); }
+.section-label.tsmc { color: var(--blue); }
+.section-label.kumamoto { color: var(--pink); }
+
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+/* ===== Visual example ===== */
+.visual-box {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.visual-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.token-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.token-piece {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+.token-piece.t1 { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.3); color: var(--orange); }
+.token-piece.t2 { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.3); color: var(--purple); }
+.token-piece.t3 { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: var(--green); }
+.token-piece.t4 { background: rgba(79,143,255,0.15); border-color: rgba(79,143,255,0.3); color: var(--blue); }
+.token-piece.t5 { background: rgba(236,72,153,0.15); border-color: rgba(236,72,153,0.3); color: var(--pink); }
+.token-piece.t6 { background: rgba(6,182,212,0.15); border-color: rgba(6,182,212,0.3); color: var(--cyan); }
+
+.token-count {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+.token-count strong { color: var(--text); }
+
+/* ===== Info card ===== */
+.info-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s;
+}
+
+.info-card:hover { border-color: rgba(255,255,255,0.15); }
+
+.info-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-card-body {
+  font-size: 0.88rem;
+  color: #b8b8d0;
+  line-height: 1.6;
+}
+
+.info-card-body strong { color: var(--text); }
+
+/* ===== Analogy box ===== */
+.analogy {
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.analogy-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+
+.analogy-body {
+  font-size: 0.9rem;
+  color: #c8c8e0;
+  line-height: 1.7;
+}
+
+.analogy-body strong { color: var(--text); }
+
+/* ===== Flow diagram ===== */
+.chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.chain-step {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.chain-icon { font-size: 1.6rem; margin-bottom: 6px; }
+.chain-label { font-size: 0.78rem; font-weight: 600; }
+.chain-sub { font-size: 0.68rem; color: var(--text-dim); margin-top: 2px; }
+.chain-arrow { font-size: 1.2rem; color: var(--purple); }
+
+/* ===== Highlight ===== */
+.highlight-box {
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 20px 0;
+  text-align: center;
+  line-height: 1.7;
+}
+
+.highlight-box.orange {
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+}
+
+.highlight-box.green {
+  background: rgba(16,185,129,0.06);
+  border: 1px solid rgba(16,185,129,0.2);
+}
+
+.highlight-box.blue {
+  background: rgba(79,143,255,0.06);
+  border: 1px solid rgba(79,143,255,0.2);
+}
+
+.highlight-box.pink {
+  background: rgba(236,72,153,0.06);
+  border: 1px solid rgba(236,72,153,0.2);
+}
+
+.highlight-box strong { color: var(--text); }
+
+/* ===== Number callout ===== */
+.number-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.number-card {
+  text-align: center;
+  padding: 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.number-value {
+  font-size: 2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.number-label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ===== Kumamoto section ===== */
+.kumamoto-highlight {
+  background: linear-gradient(135deg, rgba(236,72,153,0.08), rgba(139,92,246,0.05));
+  border: 1px solid rgba(236,72,153,0.25);
+  border-radius: 16px;
+  padding: 28px;
+  margin: 20px 0;
+}
+
+/* ===== Print ===== */
+@media print {
+  .token-piece { border: 1px solid #ccc; }
+  .info-card { border: 1px solid #ddd; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  h1 { font-size: 1.6rem; }
+  .section-title { font-size: 1.3rem; }
+  .chain { flex-direction: column; }
+  .chain-arrow { transform: rotate(90deg); }
+  .number-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>トークンって何？<br>AIと半導体のつながり</h1>
+<p class="subtitle">AIの「燃料」から熊本のTSMCまで — 全部つながっている話</p>
+
+<!-- ==================== PART 1: トークン ==================== -->
+<div class="section">
+  <div class="section-label token">PART 1</div>
+  <div class="section-title">そもそも「トークン」って何？</div>
+
+  <div class="analogy">
+    <div class="analogy-title">💡 ひとことで言うと</div>
+    <div class="analogy-body">
+      トークンとは、<strong>AIが文章を理解するときの「区切り単位」</strong>です。<br>
+      人間は文章を「単語」で理解しますが、AIは<strong>「トークン」</strong>という独自の区切りで読んでいます。
+    </div>
+  </div>
+
+  <div class="visual-box">
+    <div class="visual-title">🔍 実際に見てみよう — 「今日はいい天気ですね」をAIはこう分解する</div>
+    <div class="token-demo">
+      <span class="token-piece t1">今日</span>
+      <span class="token-piece t2">は</span>
+      <span class="token-piece t3">いい</span>
+      <span class="token-piece t4">天気</span>
+      <span class="token-piece t5">です</span>
+      <span class="token-piece t6">ね</span>
+    </div>
+    <div class="token-count">この文章 = <strong>6トークン</strong>（日本語は1文字〜2文字で1トークンが多い）</div>
+  </div>
+
+  <div class="visual-box">
+    <div class="visual-title">🔍 英語の場合 — "I love sushi" はこう</div>
+    <div class="token-demo">
+      <span class="token-piece t1">I</span>
+      <span class="token-piece t2">love</span>
+      <span class="token-piece t3">sushi</span>
+    </div>
+    <div class="token-count">この文章 = <strong>3トークン</strong>（英語は1単語 ≒ 1トークンが多い）</div>
+  </div>
+
+  <div class="highlight-box orange">
+    <strong>⚡ ここがポイント</strong><br>
+    日本語は英語の<strong>約1.5〜2倍</strong>のトークンを消費する。<br>
+    同じ内容でも、日本語のほうが「AIの処理コスト」が高くなる！
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-title">🍣 回転寿司でたとえると</div>
+    <div class="analogy-body">
+      トークン = <strong>お皿の枚数</strong><br>
+      AIに質問する = お皿を流す（入力トークン）<br>
+      AIが答える = お皿が返ってくる（出力トークン）<br>
+      <strong>お皿の枚数が多いほど、お金がかかる</strong> = トークンが多いほどコストがかかる<br><br>
+      無料プランの「回数制限」は、実は<strong>「使えるお皿の総数」に制限がある</strong>ということ！
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PART 2: コンテキストウィンドウ ==================== -->
+<div class="section">
+  <div class="section-label token">PART 2</div>
+  <div class="section-title">「100万トークン対応」ってどういうこと？</div>
+
+  <div class="info-card">
+    <div class="info-card-title">📚 コンテキストウィンドウ = AIの「記憶力」</div>
+    <div class="info-card-body">
+      AIが一度に読める情報量の上限のこと。<br>
+      <strong>100万トークン</strong> ≒ <strong>小説7〜8冊分</strong>を一度に読んで理解できる。
+    </div>
+  </div>
+
+  <div class="number-row">
+    <div class="number-card">
+      <div class="number-value">4K</div>
+      <div class="number-label">初代ChatGPT（2022年）<br>レポート数ページ分</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">128K</div>
+      <div class="number-label">GPT-4（2023年）<br>本1冊分</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">200K</div>
+      <div class="number-label">Claude 2（2023年）<br>本2冊分</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">1M</div>
+      <div class="number-label">最新モデル（2026年）<br>小説7〜8冊分</div>
+    </div>
+  </div>
+
+  <div class="highlight-box blue">
+    わずか<strong>3年で記憶力が250倍</strong>に。<br>
+    <span style="font-size:0.85rem; color:var(--text-dim);">この急激な進化を支えているのが…次のパート</span>
+  </div>
+</div>
+
+<!-- ==================== PART 3: GPU ==================== -->
+<div class="section">
+  <div class="section-label gpu">PART 3</div>
+  <div class="section-title">トークンを処理しているのは誰？→ GPU</div>
+
+  <div class="analogy">
+    <div class="analogy-title">🏭 工場でたとえると</div>
+    <div class="analogy-body">
+      <strong>トークン</strong> = 工場に届く原材料<br>
+      <strong>GPU</strong> = 原材料を加工する工場の機械<br>
+      <strong>AI企業（OpenAI等）</strong> = 工場のオーナー<br><br>
+      機械（GPU）がたくさんあるほど、一度に大量の原材料（トークン）を処理できる。<br>
+      だから<strong>AI企業はGPUを奪い合っている</strong>。
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-card-title">🎮 GPUって何？</div>
+    <div class="info-card-body">
+      もともとは<strong>ゲームの映像処理</strong>のためのチップ。3Dゲームのキャラクターを滑らかに動かすために、<strong>大量の計算を同時にこなす</strong>のが得意。<br><br>
+      この「大量の計算を同時にこなす」能力が、AIの学習にもぴったりだった。<br>
+      → AI時代の主役に躍り出た。
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-card-title">💚 NVIDIA（エヌビディア）が世界を支配</div>
+    <div class="info-card-body">
+      AI用GPUの市場シェア<strong>約80%以上</strong>を握るのが<strong>NVIDIA</strong>。<br>
+      2024年に時価総額世界一になった。もともとゲーム用GPU会社だったのが、AI需要で爆発的に成長。<br><br>
+      最新GPU「Blackwell」1基で<strong>数千万円</strong>。OpenAIやGoogleは<strong>数万基</strong>単位で購入している。
+    </div>
+  </div>
+
+  <div class="number-row">
+    <div class="number-card">
+      <div class="number-value">80%+</div>
+      <div class="number-label">NVIDIAのAI用GPU<br>市場シェア</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">$3.5兆</div>
+      <div class="number-label">NVIDIAの時価総額<br>（2025年ピーク時）</div>
+    </div>
+    <div class="number-card">
+      <div class="number-value">数万基</div>
+      <div class="number-label">OpenAIが使っている<br>GPUの数</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PART 4: 半導体とTSMC ==================== -->
+<div class="section">
+  <div class="section-label tsmc">PART 4</div>
+  <div class="section-title">そのGPUを作っているのは？ → TSMC</div>
+
+  <div class="analogy">
+    <div class="analogy-title">🔗 つながりを整理すると</div>
+    <div class="analogy-body">
+      <strong>NVIDIA</strong>はGPUを「設計」する会社。でも自分では作らない（ファブレス企業）。<br>
+      実際に半導体チップを「製造」するのが<strong>TSMC（台湾積体電路製造）</strong>。<br><br>
+      つまり：AIが賢くなる → GPUが必要 → NVIDIAが設計 → <strong>TSMCが製造</strong>
+    </div>
+  </div>
+
+  <div class="chain">
+    <div class="chain-step">
+      <div class="chain-icon">💬</div>
+      <div class="chain-label">あなたの質問</div>
+      <div class="chain-sub">トークンに変換</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step">
+      <div class="chain-icon">🤖</div>
+      <div class="chain-label">AI（GPT等）</div>
+      <div class="chain-sub">トークンを処理</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step">
+      <div class="chain-icon">🎮</div>
+      <div class="chain-label">GPU（NVIDIA）</div>
+      <div class="chain-sub">計算を実行</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step">
+      <div class="chain-icon">🏭</div>
+      <div class="chain-label">半導体工場</div>
+      <div class="chain-sub">TSMC が製造</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:rgba(236,72,153,0.3); background:rgba(236,72,153,0.08);">
+      <div class="chain-icon">🌋</div>
+      <div class="chain-label" style="color:var(--pink);">熊本 JASM</div>
+      <div class="chain-sub">ここで作ってる！</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-card-title">🌏 TSMCとは</div>
+    <div class="info-card-body">
+      <strong>世界の先端半導体の約90%を製造</strong>する台湾の企業。<br>
+      Apple、NVIDIA、AMD、Qualcomm…世界中のテック企業のチップがTSMC製。<br>
+      iPhoneの中のチップもTSMC製。あなたのスマホの中にもTSMCがいる。
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PART 5: 熊本 ==================== -->
+<div class="section">
+  <div class="section-label kumamoto">PART 5</div>
+  <div class="section-title">🌋 そして熊本へ — JASM（TSMC熊本工場）</div>
+
+  <div class="kumamoto-highlight">
+    <div class="info-card" style="background:transparent; border:none; padding:0; margin-bottom:16px;">
+      <div class="info-card-title" style="font-size:1.1rem;">🏭 JASM（Japan Advanced Semiconductor Manufacturing）</div>
+      <div class="info-card-body">
+        TSMCとソニー・デンソー・トヨタが共同出資した半導体工場。<br>
+        <strong>菊陽町</strong>に第1工場（2024年稼働開始）、<strong>第2工場も建設決定</strong>。
+      </div>
+    </div>
+
+    <div class="number-row">
+      <div class="number-card" style="background:rgba(236,72,153,0.05);">
+        <div class="number-value">約1.2兆円</div>
+        <div class="number-label">第1工場の総投資額</div>
+      </div>
+      <div class="number-card" style="background:rgba(236,72,153,0.05);">
+        <div class="number-value">1,700人+</div>
+        <div class="number-label">直接雇用</div>
+      </div>
+      <div class="number-card" style="background:rgba(236,72,153,0.05);">
+        <div class="number-value">4.3兆円</div>
+        <div class="number-label">経済波及効果（10年）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <div class="info-card-title">🤔 でも、AIのGPUを作っているわけではない？</div>
+    <div class="info-card-body">
+      JASM（熊本）で作るのは主に<strong>自動車向け・IoT向けの半導体</strong>（成熟プロセス：12nm〜28nm）。<br>
+      NVIDIAのAI用GPU（最先端：3nm〜5nm）は台湾本社の工場で製造。<br><br>
+      ただし、<strong>半導体サプライチェーン全体</strong>で見ると：<br>
+      • 熊本工場が車載チップを引き受ける → 台湾の工場に余裕ができる → AI用GPUの生産が加速<br>
+      • 半導体人材が熊本で育つ → 将来の先端工場誘致につながる<br>
+      • <strong>日本の半導体産業復活の第一歩</strong>として、熊本は最前線にいる
+    </div>
+  </div>
+
+  <div class="highlight-box pink">
+    <strong>🌋 あなたがChatGPTに話しかけるたびに</strong><br>
+    トークン → GPU → 半導体 → この巨大なサプライチェーンが動いている。<br>
+    <strong>熊本はその一端を担っている。</strong><br>
+    <span style="font-size:0.85rem; color:var(--text-dim);">AIは遠い世界の話じゃない。すぐそこにある。</span>
+  </div>
+</div>
+
+<!-- ==================== まとめ ==================== -->
+<div class="section">
+  <div class="section-title" style="text-align:center;">まとめ — 全部つながっている</div>
+
+  <div class="chain">
+    <div class="chain-step">
+      <div class="chain-icon">🗣️</div>
+      <div class="chain-label">あなたの言葉</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step">
+      <div class="chain-icon">🧩</div>
+      <div class="chain-label">トークンに分解</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step">
+      <div class="chain-icon">🎮</div>
+      <div class="chain-label">GPU が計算</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step">
+      <div class="chain-icon">🏭</div>
+      <div class="chain-label">TSMC が製造</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:rgba(236,72,153,0.3); background:rgba(236,72,153,0.08);">
+      <div class="chain-icon">🌋</div>
+      <div class="chain-label" style="color:var(--pink);">熊本が支える</div>
+    </div>
+  </div>
+
+  <div class="highlight-box green" style="font-size:1.1rem;">
+    AIは「ソフトウェアだけ」の世界じゃない。<br>
+    <strong>半導体・エネルギー・土地・人材</strong> — リアルな産業と密接につながっている。<br>
+    <strong>熊本にいる私たちは、AIの「製造現場」のすぐそばにいる。</strong>
+  </div>
+</div>
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」配布資料</p>
+  <p style="margin-top:6px;">情報は2026年4月時点。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年4月9日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</body>
+</html>
