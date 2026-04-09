@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会 — 資料一覧</title>
+<meta name="description" content="ChatGPT・Claude・Gemini の基礎から最新動向まで。AI初心者向け勉強会の配布資料です。">
+<link rel="stylesheet" href="common.css">
+<style>
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px 60px;
+}
+
+/* Background orbs */
+.bg-orbs {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.12;
+  animation: float 25s infinite ease-in-out;
+}
+
+.orb:nth-child(1) { width: 500px; height: 500px; background: var(--blue); top: -10%; left: -10%; animation-delay: 0s; }
+.orb:nth-child(2) { width: 400px; height: 400px; background: var(--purple); top: 50%; right: -10%; animation-delay: -8s; }
+.orb:nth-child(3) { width: 350px; height: 350px; background: var(--pink); bottom: -10%; left: 30%; animation-delay: -16s; }
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  width: 100%;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.subtitle {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+.date-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-border);
+  color: var(--blue);
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+/* Cards */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.card-link:hover { text-decoration: none; }
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 30px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  transition: transform 0.2s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.card-icon {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+  width: 50px;
+  text-align: center;
+}
+
+.card-body { flex: 1; }
+
+.card-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.card-label.main { color: var(--purple); }
+.card-label.guide { color: var(--green); }
+.card-label.detail { color: var(--orange); }
+.card-label.timeline { color: var(--cyan); }
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.card-desc {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.card-arrow {
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  align-self: center;
+  flex-shrink: 0;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.card:hover .card-arrow {
+  transform: translateX(4px);
+  color: var(--text);
+}
+
+.card.highlight {
+  background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(236,72,153,0.05));
+  border-color: rgba(139,92,246,0.25);
+}
+
+@media print {
+  .bg-orbs { display: none; }
+  .card { border: 1px solid #ddd; }
+}
+
+@media (max-width: 600px) {
+  body { padding: 30px 16px 40px; }
+  .header h1 { font-size: 1.6rem; }
+  .card { padding: 20px; gap: 14px; }
+  .card-icon { font-size: 1.8rem; width: 40px; }
+  .card-title { font-size: 1.05rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-branding">
+      <img src="bY_color2.png" alt="bY community">
+      <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
+    </div>
+    <h1>いまさら聞けない！<br>AIの初歩の初歩を<br>ゆるりと語ろうの会</h1>
+    <p class="subtitle">配布資料・参考リンク集</p>
+    <span class="date-badge">2026年4月</span>
+    <br><span class="last-updated">最終更新: 2026年4月9日</span>
+  </div>
+
+  <div class="card-list">
+
+    <a href="presentation.html" class="card-link">
+      <div class="card highlight">
+        <div class="card-icon">🎤</div>
+        <div class="card-body">
+          <div class="card-label main">PRESENTATION</div>
+          <div class="card-title">プレゼンテーション本編</div>
+          <div class="card-desc">AI入門から3大チャットAI比較、マルチモーダル、AIエージェント（Cowork）まで。全19スライド。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="ai-setup-guide.html" class="card-link">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-body">
+          <div class="card-label guide">SETUP GUIDE</div>
+          <div class="card-title">3大AI はじめてセットアップガイド</div>
+          <div class="card-desc">ChatGPT・Claude・Gemini を今日から使い始めるための手順。料金プラン比較も。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="ai-version-timeline.html" class="card-link">
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-body">
+          <div class="card-label timeline">TIMELINE</div>
+          <div class="card-title">3大AI バージョン進化 横並び年表</div>
+          <div class="card-desc">2022〜2026年、同時期に3社で何が起きていたかを横並びで比較。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="ai-version-history.html" class="card-link">
+      <div class="card">
+        <div class="card-icon">🔬</div>
+        <div class="card-body">
+          <div class="card-label detail">DEEP DIVE</div>
+          <div class="card-title">バージョン別 詳細進化年表</div>
+          <div class="card-desc">各バージョンで何ができるようになったか。マニア向けの完全網羅版。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="site-footer">
+    <p>「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」配布資料</p>
+    <p class="footer-credit">このプレゼン資料は、AIエージェント「Claude Cowork」と人間が一緒に作成しました。</p>
+    <div class="footer-logo">
+      <img src="bY_color2.png" alt="bY community">
+      <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
+    </div>
+    <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+    <p class="last-updated" style="margin-top:8px;">最終更新: 2026年4月9日</p>
+  </div>
+
+</div>
+
+</body>
+</html>

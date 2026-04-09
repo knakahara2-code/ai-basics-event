@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3大AI はじめてセットアップガイド</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body {
+  padding: 40px 20px 80px;
+}
+
+.container { max-width: 900px; margin: 0 auto; }
+
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--green), var(--orange), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.intro-box {
+  background: rgba(79,143,255,0.06);
+  border: 1px solid rgba(79,143,255,0.2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 40px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #c0c0e0;
+}
+
+.intro-box strong { color: var(--text); }
+
+/* AI Section */
+.ai-section {
+  margin-bottom: 50px;
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid;
+}
+
+.ai-header.chatgpt { border-color: var(--green); }
+.ai-header.claude { border-color: var(--orange); }
+.ai-header.gemini { border-color: var(--blue); }
+
+.ai-icon { font-size: 2rem; }
+
+.ai-name { font-size: 1.5rem; font-weight: 800; }
+.ai-name.chatgpt { color: var(--green); }
+.ai-name.claude { color: var(--orange); }
+.ai-name.gemini { color: var(--blue); }
+
+.ai-company { font-size: 0.85rem; color: var(--text-dim); }
+
+/* Info row */
+.info-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.info-chip {
+  font-size: 0.8rem;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.chip-url {
+  background: rgba(79,143,255,0.1);
+  border: 1px solid rgba(79,143,255,0.25);
+  color: var(--blue);
+}
+
+.chip-url a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.chip-url a:hover { text-decoration: underline; }
+
+.chip-free {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.25);
+  color: var(--green);
+}
+
+.chip-app {
+  background: rgba(139,92,246,0.1);
+  border: 1px solid rgba(139,92,246,0.25);
+  color: var(--purple);
+}
+
+/* Steps */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  transition: border-color 0.2s;
+}
+
+.step:hover { border-color: rgba(255,255,255,0.15); }
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.chatgpt .step-num { background: rgba(16,185,129,0.15); color: var(--green); }
+.claude .step-num { background: rgba(245,158,11,0.15); color: var(--orange); }
+.gemini .step-num { background: rgba(79,143,255,0.15); color: var(--blue); }
+
+.step-content { flex: 1; }
+
+.step-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.step-desc {
+  font-size: 0.85rem;
+  color: #b8b8d0;
+  line-height: 1.5;
+}
+
+.step-tip {
+  font-size: 0.78rem;
+  color: var(--cyan);
+  margin-top: 6px;
+}
+
+/* Tip box */
+.tip-box {
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: #c8c8e0;
+}
+
+.tip-box strong { color: var(--orange); }
+
+/* Plan comparison */
+.plan-summary {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.plan-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.plan-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.plan-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.chatgpt .plan-price { color: var(--green); }
+.claude .plan-price { color: var(--orange); }
+.gemini .plan-price { color: var(--blue); }
+
+.plan-note {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+/* First try section */
+.first-try {
+  margin-top: 20px;
+  background: rgba(139,92,246,0.06);
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+
+.first-try-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--purple);
+  margin-bottom: 10px;
+}
+
+.try-item {
+  font-size: 0.85rem;
+  color: #c0c0e0;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.try-item:last-child { border-bottom: none; }
+
+.try-item strong { color: var(--text); }
+
+/* Bottom section */
+.comparison-section {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid var(--border);
+}
+
+.comparison-section h2 {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 0.85rem;
+}
+
+.comparison-table th {
+  padding: 12px 16px;
+  text-align: left;
+  background: rgba(255,255,255,0.04);
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+
+.comparison-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #c0c0e0;
+}
+
+.comparison-table tr:last-child td { border-bottom: none; }
+.comparison-table th:first-child, .comparison-table td:first-child {
+  color: var(--text-dim);
+  font-weight: 600;
+  width: 140px;
+}
+
+/* (footer styles in common.css) */
+
+/* Print additions */
+@media print {
+  .step { border: 1px solid #ddd; }
+  .ai-name { -webkit-text-fill-color: initial; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  h1 { font-size: 1.6rem; }
+  .step { flex-direction: column; gap: 8px; }
+  .plan-summary { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>3大AI はじめてセットアップガイド</h1>
+<p class="subtitle">ChatGPT・Claude・Gemini を今日から使い始めるための完全手順</p>
+
+<div class="intro-box">
+  <strong>🎯 このガイドの対象：</strong> AIを使ったことがない、または登録だけして放置している方<br>
+  所要時間は<strong>各サービス 5〜10分</strong>。すべて<strong>無料プラン</strong>で始められます。
+</div>
+
+<!-- ==================== ChatGPT ==================== -->
+<div class="ai-section chatgpt">
+  <div class="ai-header chatgpt">
+    <span class="ai-icon">💚</span>
+    <div>
+      <div class="ai-name chatgpt">ChatGPT</div>
+      <div class="ai-company">OpenAI ／ 世界で最も利用者が多いAI</div>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <span class="info-chip chip-url"><a href="https://chat.openai.com" target="_blank">chat.openai.com</a></span>
+    <span class="info-chip chip-free">無料プランあり</span>
+    <span class="info-chip chip-app">iOS / Android アプリあり</span>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">アカウント作成</div>
+        <div class="step-desc"><a href="https://chat.openai.com" style="color:var(--green)">chat.openai.com</a> にアクセス → 「Sign up」をクリック → メールアドレスを入力（Google / Apple / Microsoft アカウントでもOK）</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">メール認証</div>
+        <div class="step-desc">届いたメールの「Verify email address」をクリック → 名前と生年月日を入力</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">チャット画面で話しかける</div>
+        <div class="step-desc">「Message ChatGPT...」の入力欄に日本語で質問するだけ！</div>
+        <div class="step-tip">💡 ヒント：最初は「自己紹介して」や「今日の天気を教えて」でOK</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">スマホアプリもインストール</div>
+        <div class="step-desc">App Store / Google Play で「ChatGPT」を検索 → インストール → 同じアカウントでログイン → 音声会話もできる</div>
+        <div class="step-tip">💡 スマホでは音声入力（マイクボタン）が超便利！話しかけるだけで使える</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <strong>⚠️ 無料プランの注意点：</strong> 2026年2月から無料・Goプランには広告が表示されます。GPT-4oは回数制限あり。広告なし＆フル機能はPlus（月$20）から。
+  </div>
+
+  <div class="plan-summary">
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">無料</div>
+      <div class="plan-note">GPT-5.2 Instant（制限あり）+ 広告あり</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Go</div>
+      <div class="plan-price">$8/月</div>
+      <div class="plan-note">10倍のメッセージ・広告あり</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Plus</div>
+      <div class="plan-price">$20/月</div>
+      <div class="plan-note">広告なし・GPT-5.2 Thinking・全機能</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$200/月</div>
+      <div class="plan-note">GPT-5.4 Pro・全モデル無制限</div>
+    </div>
+  </div>
+
+  <div class="first-try">
+    <div class="first-try-title">🚀 まずこれを試してみよう</div>
+    <div class="try-item"><strong>「来週の出張の持ち物リストを作って」</strong> → 実用的なリスト生成</div>
+    <div class="try-item"><strong>「この文章をもっと丁寧にして：〇〇」</strong> → 文章のリライト</div>
+    <div class="try-item"><strong>「Excelの VLOOKUP の使い方を初心者向けに教えて」</strong> → わかりやすい解説</div>
+    <div class="try-item"><strong>「英語メールを日本語に翻訳して：Dear...」</strong> → 翻訳</div>
+  </div>
+</div>
+
+<!-- ==================== Claude ==================== -->
+<div class="ai-section claude">
+  <div class="ai-header claude">
+    <span class="ai-icon">🧡</span>
+    <div>
+      <div class="ai-name claude">Claude</div>
+      <div class="ai-company">Anthropic ／ 安全性と長文理解に強い。エージェント機能が最先端</div>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <span class="info-chip chip-url"><a href="https://claude.ai" target="_blank">claude.ai</a></span>
+    <span class="info-chip chip-free">無料プランあり</span>
+    <span class="info-chip chip-app">iOS / Android / デスクトップアプリ</span>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">アカウント作成</div>
+        <div class="step-desc"><a href="https://claude.ai" style="color:var(--orange)">claude.ai</a> にアクセス → 「Sign up」→ メールアドレスまたはGoogleアカウントで登録</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">電話番号認証</div>
+        <div class="step-desc">SMS認証が必要。日本の電話番号（+81）でOK。認証コードを入力して完了。</div>
+        <div class="step-tip">💡 これはセキュリティのための一度だけの手続きです</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">チャット画面で話しかける</div>
+        <div class="step-desc">日本語でそのまま質問OK。長い文章や資料を貼り付けても正確に理解してくれるのが強み。</div>
+        <div class="step-tip">💡 PDFやファイルを添付して「要約して」と言うだけで分析してくれる</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">デスクトップアプリを入れる（おすすめ）</div>
+        <div class="step-desc"><a href="https://claude.ai/download" style="color:var(--orange)">claude.ai/download</a> からダウンロード → インストール → ログイン。無料でもチャット機能は使える。</div>
+        <div class="step-tip">💡 Proプラン（$20/月）に加入すると <strong>Cowork</strong>（AIに仕事を丸ごと任せるエージェント機能）が解放される！</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <strong>⚠️ 無料プランの注意点：</strong> 1日の使用回数に制限あり（目安：短い会話20〜30回程度）。Sonnetモデルのみ利用可能。<strong>Opus・拡張思考・Coworkは全てProプラン（$20/月）以上が必要。</strong>
+  </div>
+
+  <div class="plan-summary">
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">無料</div>
+      <div class="plan-note">Sonnet利用可・回数制限あり</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$20/月</div>
+      <div class="plan-note">Opus含む全モデル・Cowork・優先アクセス</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Max</div>
+      <div class="plan-price">$100〜200/月</div>
+      <div class="plan-note">5x($100) / 20x($200) の2段階</div>
+    </div>
+  </div>
+
+  <div class="first-try">
+    <div class="first-try-title">🚀 まずこれを試してみよう</div>
+    <div class="try-item"><strong>PDFを添付して「3行で要約して」</strong> → 長文の瞬間理解</div>
+    <div class="try-item"><strong>「この議事録から、タスク一覧を抜き出して」</strong> → 構造化が得意</div>
+    <div class="try-item"><strong>「新入社員向けのマニュアルを作って。テーマは○○」</strong> → 丁寧な文書作成</div>
+    <div class="try-item"><strong>「このデータを表にまとめて」+ CSVファイル添付</strong> → データ整理</div>
+  </div>
+</div>
+
+<!-- ==================== Gemini ==================== -->
+<div class="ai-section gemini">
+  <div class="ai-header gemini">
+    <span class="ai-icon">💙</span>
+    <div>
+      <div class="ai-name gemini">Gemini</div>
+      <div class="ai-company">Google ／ Gmail・カレンダー・マップなどGoogle全サービスと連携</div>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <span class="info-chip chip-url"><a href="https://gemini.google.com" target="_blank">gemini.google.com</a></span>
+    <span class="info-chip chip-free">無料プランあり</span>
+    <span class="info-chip chip-app">iOS / Android アプリあり</span>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Googleアカウントでログインするだけ</div>
+        <div class="step-desc"><a href="https://gemini.google.com" style="color:var(--blue)">gemini.google.com</a> にアクセス → Googleアカウントでログイン。新規登録は不要！</div>
+        <div class="step-tip">💡 Googleアカウントがあれば即使える。最も簡単なセットアップ！<br>
+        💡 <strong>会社でGoogle Workspace（Business Standard以上）を使っている人は、Gemini in Docs/Sheets/Meet等が追加料金なしで使える可能性大！</strong>IT部門に「Gemini有効になってますか？」と聞いてみよう。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">チャット画面で話しかける</div>
+        <div class="step-desc">日本語でそのまま質問OK。画像も添付できる。Google検索の結果をリアルタイムで使えるのが強み。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Google連携をオンにする</div>
+        <div class="step-desc">設定 →「拡張機能」→ Google Workspace をオンにすると、GmailやGoogleドライブの中身をAIに聞ける！</div>
+        <div class="step-tip">💡 「先週来たメールで重要なものを教えて」のような使い方が可能に</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">スマホアプリもインストール</div>
+        <div class="step-desc">「Google Gemini」アプリをインストール → Androidでは Google アシスタントの代わりに設定可能 →「OK Google」で起動</div>
+        <div class="step-tip">💡 Androidユーザーなら標準アシスタントとして最も自然に使える</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <strong>⚠️ 無料プランの注意点：</strong> Gemini 2.5 Flash が使える。十分高性能だが、上位モデルやDeep Researchのフル機能はAI Plus（月1,200円〜）以上から。
+  </div>
+
+  <div class="plan-summary">
+    <div class="plan-card">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">無料</div>
+      <div class="plan-note">Gemini 2.5 Flash・Google連携</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">AI Plus</div>
+      <div class="plan-price">1,200円/月</div>
+      <div class="plan-note">Gemini 3 Flash・200GBストレージ</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">AI Pro</div>
+      <div class="plan-price">約$20/月</div>
+      <div class="plan-note">Gemini 3.1 Pro・2TB・全機能</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">AI Ultra</div>
+      <div class="plan-price">約$250/月</div>
+      <div class="plan-note">無制限Deep Research・最高性能</div>
+    </div>
+  </div>
+
+  <div class="first-try">
+    <div class="first-try-title">🚀 まずこれを試してみよう</div>
+    <div class="try-item"><strong>「今日のニュースを5つ教えて」</strong> → リアルタイム情報（検索連携）</div>
+    <div class="try-item"><strong>写真を添付して「これ何？」</strong> → 画像認識</div>
+    <div class="try-item"><strong>「Gmailで未読の重要メールを要約して」</strong> → Google連携の威力</div>
+    <div class="try-item"><strong>「渋谷から新宿までの行き方を教えて」</strong> → マップ連携</div>
+  </div>
+</div>
+
+<!-- ==================== 比較まとめ ==================== -->
+<div class="comparison-section">
+  <h2>📊 3つのAI、どう使い分ける？</h2>
+
+  <table class="comparison-table">
+    <tr>
+      <th></th>
+      <th style="color:var(--green)">ChatGPT</th>
+      <th style="color:var(--orange)">Claude</th>
+      <th style="color:var(--blue)">Gemini</th>
+    </tr>
+    <tr>
+      <td>セットアップ</td>
+      <td>メール登録</td>
+      <td>メール + SMS認証</td>
+      <td>Googleアカウントのみ ✨<br><span style="font-size:0.75rem;color:var(--blue)">Workspace利用者は既にAI機能込み</span></td>
+    </tr>
+    <tr>
+      <td>得意なこと</td>
+      <td>万能・画像生成・音声会話</td>
+      <td>長文理解・文書作成・コーディング</td>
+      <td>Google連携・リアルタイム検索</td>
+    </tr>
+    <tr>
+      <td>こんな人に</td>
+      <td>とりあえずAIを始めたい人</td>
+      <td>仕事の資料作成を効率化したい人</td>
+      <td>Google系サービスをよく使う人</td>
+    </tr>
+    <tr>
+      <td>無料の実力</td>
+      <td>○ GPT-5.2 Instant（制限付）</td>
+      <td>○ Sonnet（制限付）</td>
+      <td>◎ 2.5 Flash（十分高性能）</td>
+    </tr>
+    <tr>
+      <td>有料の目安</td>
+      <td>$8/月〜（Go）</td>
+      <td>$20/月〜（Pro）</td>
+      <td>1,200円/月〜（AI Plus）</td>
+    </tr>
+    <tr>
+      <td>日本語</td>
+      <td>◎</td>
+      <td>◎</td>
+      <td>◎</td>
+    </tr>
+    <tr>
+      <td>最初の1つなら</td>
+      <td colspan="3" style="text-align:center; color:var(--text); font-weight:600;">
+        迷ったら <span style="color:var(--green)">ChatGPT</span> か <span style="color:var(--blue)">Gemini</span> から。<br>
+        仕事で使い倒すなら <span style="color:var(--orange)">Claude</span> がおすすめ。<br>
+        <span style="font-size:0.8rem; color:var(--text-dim);">正解はないので、3つとも無料で試してみるのがベスト！</span>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」配布資料</p>
+  <p style="margin-top:6px;">情報は2026年4月時点。各社の公式発表をもとに作成。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年4月9日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</div>
+</body>
+</html>

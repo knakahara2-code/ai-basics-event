@@ -1,0 +1,196 @@
+/* ============================================================
+   common.css — 共通スタイル
+   「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」
+   bY community / YAMAGA BASE Inc.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@300;400;600;700;900&display=swap');
+
+/* --- CSS Variables --- */
+:root {
+  --bg: #0a0a1a;
+  --card-bg: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.08);
+  --text: #f0f0ff;
+  --text-dim: #8888aa;
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,0.06);
+  --green-border: rgba(16,185,129,0.25);
+  --orange: #f59e0b;
+  --orange-bg: rgba(245,158,11,0.06);
+  --orange-border: rgba(245,158,11,0.25);
+  --blue: #4f8fff;
+  --blue-bg: rgba(79,143,255,0.06);
+  --blue-border: rgba(79,143,255,0.25);
+  --purple: #8b5cf6;
+  --pink: #ec4899;
+  --cyan: #06b6d4;
+}
+
+/* --- Reset & Base --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans JP', 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- Shared heading gradient --- */
+.gradient-heading {
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--green), var(--orange), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Back-to-hub link --- */
+.back-to-hub {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blue);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--blue-border);
+  background: var(--blue-bg);
+  transition: background 0.2s;
+}
+.back-to-hub:hover {
+  background: rgba(79,143,255,0.12);
+  text-decoration: none;
+}
+
+/* --- Back-to-top button --- */
+.back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(18,18,42,0.9);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, background 0.2s, transform 0.2s;
+}
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  background: rgba(79,143,255,0.2);
+  transform: translateY(-2px);
+}
+
+/* --- Footer --- */
+.site-footer {
+  text-align: center;
+  margin-top: 50px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.site-footer .footer-nav {
+  margin-bottom: 16px;
+}
+
+.site-footer .footer-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.site-footer .footer-logo img {
+  height: 96px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 14px;
+  padding: 14px 20px;
+}
+
+.site-footer .footer-logo .presents {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.site-footer .footer-credit {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.3);
+}
+
+.site-footer .footer-copyright {
+  margin-top: 10px;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.2);
+}
+
+/* --- Last updated badge --- */
+.last-updated {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 3px 12px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  margin-top: 10px;
+}
+
+/* --- Header logo (hub page) --- */
+.header-branding {
+  margin-bottom: 18px;
+}
+
+.header-branding img {
+  height: 120px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  padding: 16px 24px;
+}
+
+.header-branding .presents {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+}
+
+/* --- Print --- */
+@media print {
+  body { background: white; color: #222; }
+  .back-to-top { display: none; }
+  .back-to-hub { display: none; }
+  .site-footer { color: #888; border-color: #ddd; }
+  .site-footer .footer-logo img { filter: grayscale(1); }
+  .gradient-heading { -webkit-text-fill-color: #333; }
+}
+
+/* --- Responsive base --- */
+@media (max-width: 600px) {
+  .back-to-top { bottom: 16px; right: 16px; width: 40px; height: 40px; }
+}

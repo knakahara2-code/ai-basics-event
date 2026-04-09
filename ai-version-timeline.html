@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3大AI バージョン進化 横並び年表</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body {
+  line-height: 1.5;
+  padding: 40px 20px 80px;
+}
+
+.container { max-width: 1300px; margin: 0 auto; }
+
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--green), var(--orange), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+/* ========== TABLE LAYOUT ========== */
+.tl-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.tl-table th, .tl-table td {
+  vertical-align: top;
+  padding: 0;
+}
+
+/* Header row */
+.tl-table thead th {
+  padding: 16px 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  border-bottom: 2px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.03);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tl-table thead th:first-child {
+  width: 120px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.th-chatgpt { color: var(--green); border-bottom-color: var(--green) !important; }
+.th-claude { color: var(--orange); border-bottom-color: var(--orange) !important; }
+.th-gemini { color: var(--blue); border-bottom-color: var(--blue) !important; }
+
+/* Year separator */
+.year-row td {
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.year-label {
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.05em;
+}
+
+/* Data rows */
+.tl-table tbody tr:not(.year-row) td {
+  padding: 8px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.tl-table tbody tr:not(.year-row):hover td {
+  background: rgba(255,255,255,0.015);
+}
+
+/* Date cell */
+.date-cell {
+  text-align: center;
+  padding: 14px 10px !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: rgba(255,255,255,0.015);
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* Version cards */
+.v-card {
+  border-radius: 8px;
+  padding: 10px 12px;
+  border-left: 3px solid;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.v-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.v-card.chatgpt {
+  background: var(--green-bg);
+  border-left-color: var(--green);
+  border: 1px solid var(--green-border);
+  border-left: 3px solid var(--green);
+}
+
+.v-card.claude {
+  background: var(--orange-bg);
+  border-left-color: var(--orange);
+  border: 1px solid var(--orange-border);
+  border-left: 3px solid var(--orange);
+}
+
+.v-card.gemini {
+  background: var(--blue-bg);
+  border-left-color: var(--blue);
+  border: 1px solid var(--blue-border);
+  border-left: 3px solid var(--blue);
+}
+
+.v-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.v-card.chatgpt .v-name { color: var(--green); }
+.v-card.claude .v-name { color: var(--orange); }
+.v-card.gemini .v-name { color: var(--blue); }
+
+.v-tier {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 1px;
+  font-weight: 500;
+}
+
+.v-desc {
+  font-size: 0.78rem;
+  color: #b8b8d0;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* Landmark badge */
+.v-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.v-badge.landmark { background: rgba(236,72,153,0.15); color: var(--pink); border: 1px solid rgba(236,72,153,0.3); }
+.v-badge.reasoning { background: rgba(139,92,246,0.15); color: var(--purple); border: 1px solid rgba(139,92,246,0.3); }
+
+/* Empty cell */
+.empty-cell {
+  padding: 8px;
+}
+
+/* Column borders */
+.col-chatgpt { border-right: 1px solid var(--border); }
+.col-claude { border-right: 1px solid var(--border); }
+
+/* (footer styles in common.css) */
+
+/* Print additions */
+@media print {
+  .tl-table { border: 1px solid #ccc; }
+  .v-card { border: 1px solid #ddd; }
+  .v-desc { color: #555; }
+  .date-cell { color: #666; }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  body { padding: 20px 8px 60px; }
+  h1 { font-size: 1.6rem; }
+  .date-cell { font-size: 0.7rem; padding: 8px 4px !important; }
+  .v-card { padding: 7px 8px; }
+  .v-name { font-size: 0.8rem; }
+  .v-desc { font-size: 0.7rem; }
+  .tl-table thead th:first-child { width: 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>3大AI バージョン進化 横並び年表</h1>
+<p class="subtitle">ChatGPT / Claude / Gemini — 2022〜2026 同時期に何が起きていたか</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>ChatGPT</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Claude</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Gemini</div>
+</div>
+
+<table class="tl-table">
+<thead>
+  <tr>
+    <th>時期</th>
+    <th class="th-chatgpt">💚 ChatGPT<br><span style="font-size:0.7rem;font-weight:400;color:var(--text-dim)">OpenAI</span></th>
+    <th class="th-claude">🧡 Claude<br><span style="font-size:0.7rem;font-weight:400;color:var(--text-dim)">Anthropic</span></th>
+    <th class="th-gemini">💙 Gemini<br><span style="font-size:0.7rem;font-weight:400;color:var(--text-dim)">Google</span></th>
+  </tr>
+</thead>
+<tbody>
+
+<!-- ===== 2022 ===== -->
+<tr class="year-row"><td colspan="4"><span class="year-label">2022</span></td></tr>
+
+<tr>
+  <td class="date-cell">11月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">GPT-3.5</div>
+      <div class="v-tier">初代ChatGPT</div>
+      <div class="v-desc">テキストのみ。2ヶ月で1億ユーザー突破。</div>
+      <div class="v-badge landmark">世界を変えた</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td class="empty-cell"></td>
+</tr>
+
+<!-- ===== 2023 ===== -->
+<tr class="year-row"><td colspan="4"><span class="year-label">2023</span></td></tr>
+
+<tr>
+  <td class="date-cell">3月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">GPT-4</div>
+      <div class="v-tier">画像入力対応・推論大幅向上</div>
+      <div class="v-desc">司法試験上位10%。128Kトークン。プラグイン対応。</div>
+    </div>
+  </td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude 1</div>
+      <div class="v-tier">招待制で公開</div>
+      <div class="v-desc">「安全で有用なAI」コンセプト。テキストのみ。</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">7月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude 2</div>
+      <div class="v-tier">一般公開・100Kトークン</div>
+      <div class="v-desc">初の一般公開。コーディング・数学が向上。</div>
+      <div class="v-badge landmark">一般公開</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">11月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">GPT-4 Turbo</div>
+      <div class="v-tier">高速化＆低コスト</div>
+      <div class="v-desc">3倍安価。カスタムGPTs登場。JSONモード。</div>
+    </div>
+  </td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude 2.1</div>
+      <div class="v-tier">200Kトークン</div>
+      <div class="v-desc">コンテキスト倍増。ハルシネーション大幅減。</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">12月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude empty-cell"></td>
+  <td>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 1.0</div>
+      <div class="v-tier">Ultra / Pro / Nano</div>
+      <div class="v-desc">Google本格参入。MMLU人間超え（90%）。</div>
+      <div class="v-badge landmark">Google本格参入</div>
+    </div>
+  </td>
+</tr>
+
+<!-- ===== 2024 ===== -->
+<tr class="year-row"><td colspan="4"><span class="year-label">2024</span></td></tr>
+
+<tr>
+  <td class="date-cell">2月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude empty-cell"></td>
+  <td>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 1.5 Pro</div>
+      <div class="v-tier">100万トークン（業界初）</div>
+      <div class="v-desc">MoEアーキテクチャ。Ultra超え性能をPro価格で。</div>
+      <div class="v-badge landmark">100万トークン業界初</div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td class="date-cell">3月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude 3 ファミリー</div>
+      <div class="v-tier">Opus / Sonnet / Haiku</div>
+      <div class="v-desc">3サイズ展開。画像理解に初対応。</div>
+      <div class="v-badge landmark">3サイズ体制</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">5月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">GPT-4o</div>
+      <div class="v-tier">マルチモーダル統合</div>
+      <div class="v-desc">テキスト・音声・画像をリアルタイム処理。無料開放。</div>
+      <div class="v-badge landmark">マルチモーダル元年</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 1.5 Flash</div>
+      <div class="v-tier">高速・低コスト版</div>
+      <div class="v-desc">Proの知識を蒸留。開発者向け主力に。</div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td class="date-cell">6月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude 3.5 Sonnet</div>
+      <div class="v-tier">衝撃のコスパ — Opus超え</div>
+      <div class="v-desc">中位モデルが最上位を超える。Artifacts登場。</div>
+      <div class="v-badge landmark">コーディング最強</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">7月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">GPT-4o mini</div>
+      <div class="v-tier">超低コスト</div>
+      <div class="v-desc">GPT-3.5を完全置換。安価でGPT-4レベル。</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">9月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">o1</div>
+      <div class="v-tier">推論特化モデル</div>
+      <div class="v-desc">「考えてから答える」Chain of Thought。数学・科学で飛躍。</div>
+      <div class="v-badge reasoning">推論AI元年</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">12月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude empty-cell"></td>
+  <td>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 2.0 Flash</div>
+      <div class="v-tier">リアルタイム対話</div>
+      <div class="v-desc">1.5 Flashの2倍高速。画像・音声生成。検索統合。</div>
+    </div>
+  </td>
+</tr>
+
+<!-- ===== 2025 ===== -->
+<tr class="year-row"><td colspan="4"><span class="year-label">2025</span></td></tr>
+
+<tr>
+  <td class="date-cell">1月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">o3-mini</div>
+      <div class="v-tier">推論モデル小型版</div>
+      <div class="v-desc">高速・低コストで強力な推論。</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">2月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude 3.7 Sonnet</div>
+      <div class="v-tier">拡張思考（Extended Thinking）</div>
+      <div class="v-desc">ステップバイステップ思考。Claude Code同時リリース。</div>
+      <div class="v-badge landmark">Claude Code登場</div>
+    </div>
+  </td>
+  <td>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 2.0 Pro</div>
+      <div class="v-tier">フルサイズ版</div>
+      <div class="v-desc">コーディング・数学・複雑推論で強力。</div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td class="date-cell">3月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude empty-cell"></td>
+  <td>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 2.5 Pro</div>
+      <div class="v-tier">ネイティブ思考</div>
+      <div class="v-desc">Chain-of-Thoughtがネイティブ組込み。</div>
+      <div class="v-badge reasoning">ネイティブ思考</div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td class="date-cell">4月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">o3 / o4-mini</div>
+      <div class="v-tier">推論モデル本格版</div>
+      <div class="v-desc">数学・コーディング・視覚タスクで圧倒的。</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">5月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude 4 Sonnet & Opus</div>
+      <div class="v-tier">次世代モデル</div>
+      <div class="v-desc">推論大幅向上。エージェント用途に最適化。</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">6月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">GPT-5</div>
+      <div class="v-tier">GPT+o統合フラッグシップ</div>
+      <div class="v-desc">GPTシリーズとoシリーズを統合。モード切替可能。</div>
+      <div class="v-badge landmark">GPT+o統合</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">9月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude Sonnet 4.5</div>
+      <div class="v-tier">SWE-bench歴代最高 77.2%</div>
+      <div class="v-desc">「世界最高のコーディングモデル」。100万トークン（β）。</div>
+      <div class="v-badge landmark">世界最強コーディング</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">10月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude Haiku 4.5</div>
+      <div class="v-tier">高速モデル刷新</div>
+      <div class="v-desc">旧Sonnet 4.0並みの推論力で高速。</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">11月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Claude Opus 4.5</div>
+      <div class="v-tier">最高峰推論</div>
+      <div class="v-desc">最も高度な推論・分析。effort調整機能。</div>
+    </div>
+  </td>
+  <td>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 3 Flash</div>
+      <div class="v-tier">次世代の主力</div>
+      <div class="v-desc">Pro級推論をFlash速度で。Antigravity同時発表。</div>
+      <div class="v-badge landmark">Antigravity登場</div>
+    </div>
+  </td>
+</tr>
+
+<tr>
+  <td class="date-cell">12月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">GPT-5.2</div>
+      <div class="v-tier">Codex統合・コーディング強化</div>
+      <div class="v-desc">Gemini 3との競争で急遽リリース（"Code Red"）。</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td class="empty-cell"></td>
+</tr>
+
+<!-- ===== 2026 ===== -->
+<tr class="year-row"><td colspan="4"><span class="year-label">2026</span></td></tr>
+
+<tr>
+  <td class="date-cell">1月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Cowork 登場</div>
+      <div class="v-tier">非エンジニア向けデスクトップエージェント</div>
+      <div class="v-desc">プログラマーでなくてもAIに仕事を丸ごと任せられる。</div>
+      <div class="v-badge landmark">全ての人にエージェントを</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">2月</td>
+  <td class="col-chatgpt empty-cell"></td>
+  <td class="col-claude">
+    <div class="v-card claude">
+      <div class="v-name">Opus 4.6 / Sonnet 4.6</div>
+      <div class="v-tier">100万トークン正式版</div>
+      <div class="v-desc">出力300K。Microsoft Copilot Cowork連携発表。</div>
+      <div class="v-badge landmark">最新</div>
+    </div>
+  </td>
+  <td class="empty-cell"></td>
+</tr>
+
+<tr>
+  <td class="date-cell">3月</td>
+  <td class="col-chatgpt">
+    <div class="v-card chatgpt">
+      <div class="v-name">GPT-5.4</div>
+      <div class="v-tier">現在の最新モデル</div>
+      <div class="v-desc">100万トークン。エラー33%減。CarPlay対応。</div>
+      <div class="v-badge landmark">最新</div>
+    </div>
+  </td>
+  <td class="col-claude empty-cell"></td>
+  <td>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 3.1 Pro</div>
+      <div class="v-tier">Computer Use・MCP対応</div>
+      <div class="v-desc">ARC-AGI-2で77.1%。自律UI操作。マップ連携。</div>
+      <div class="v-badge landmark">最新</div>
+    </div>
+    <div style="height:6px"></div>
+    <div class="v-card gemini">
+      <div class="v-name">Gemini 3.1 Flash Lite</div>
+      <div class="v-tier">最安・最速</div>
+      <div class="v-desc">2.5倍高速。大量処理・コスト重視向け。</div>
+    </div>
+  </td>
+</tr>
+
+</tbody>
+</table>
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」別冊資料</p>
+  <p style="margin-top:6px;">情報は2026年4月時点。各社の公式発表をもとに作成。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年4月9日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</div>
+</body>
+</html>

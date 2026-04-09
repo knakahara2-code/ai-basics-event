@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3大AI バージョン別進化年表</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body {
+  line-height: 1.6;
+  padding: 40px 20px 80px;
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 40px;
+}
+
+/* Section headers */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 50px 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid;
+}
+
+.section-header.chatgpt { border-color: var(--green); }
+.section-header.claude { border-color: var(--orange); }
+.section-header.gemini { border-color: var(--blue); }
+
+.section-icon { font-size: 1.8rem; }
+
+.section-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.section-name.chatgpt { color: var(--green); }
+.section-name.claude { color: var(--orange); }
+.section-name.gemini { color: var(--blue); }
+
+.section-company {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* Version cards */
+.version-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.version-card {
+  display: grid;
+  grid-template-columns: 160px 200px 1fr;
+  gap: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.version-card:hover {
+  border-color: rgba(255,255,255,0.15);
+}
+
+.version-date {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+}
+
+.version-date-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.version-name-col {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+}
+
+.version-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.version-name.chatgpt { color: var(--green); }
+.version-name.claude { color: var(--orange); }
+.version-name.gemini { color: var(--blue); }
+
+.version-tier {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.version-details {
+  padding: 16px 20px;
+}
+
+.version-desc {
+  font-size: 0.88rem;
+  color: #c8c8e0;
+  margin-bottom: 8px;
+}
+
+.version-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.tag.new {
+  background: rgba(16,185,129,0.15);
+  color: var(--green);
+  border: 1px solid rgba(16,185,129,0.3);
+}
+
+.tag.upgrade {
+  background: rgba(79,143,255,0.15);
+  color: var(--blue);
+  border: 1px solid rgba(79,143,255,0.3);
+}
+
+.tag.landmark {
+  background: rgba(236,72,153,0.15);
+  color: var(--pink);
+  border: 1px solid rgba(236,72,153,0.3);
+}
+
+.tag.reasoning {
+  background: rgba(139,92,246,0.15);
+  color: var(--purple);
+  border: 1px solid rgba(139,92,246,0.3);
+}
+
+/* Milestone marker */
+.milestone {
+  text-align: center;
+  padding: 14px;
+  margin: 20px 0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.milestone.chatgpt {
+  background: rgba(16,185,129,0.06);
+  border: 1px solid rgba(16,185,129,0.2);
+  color: var(--green);
+}
+
+.milestone.claude {
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+  color: var(--orange);
+}
+
+.milestone.gemini {
+  background: rgba(79,143,255,0.06);
+  border: 1px solid rgba(79,143,255,0.2);
+  color: var(--blue);
+}
+
+/* (footer styles in common.css) */
+
+/* Print additions */
+@media print {
+  .version-card { border: 1px solid #ddd; }
+  .version-desc { color: #444; }
+  .tag { border: 1px solid #ccc; }
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .version-card { grid-template-columns: 1fr; }
+  .version-date, .version-name-col { border-right: none; border-bottom: 1px solid var(--border); }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>3大AI バージョン別進化年表</h1>
+<p class="subtitle">ChatGPT / Claude / Gemini — 各バージョンで何ができるようになったか（2022〜2026）</p>
+
+<!-- ===================== ChatGPT ===================== -->
+<div class="section-header chatgpt">
+  <span class="section-icon">💚</span>
+  <div>
+    <div class="section-name chatgpt">ChatGPT（OpenAI）</div>
+    <div class="section-company">2022年11月〜 ／ 週7億人が利用</div>
+  </div>
+</div>
+
+<div class="version-grid">
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2022年11月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-3.5</span><span class="version-tier">初代ChatGPT</span></div>
+    <div class="version-details">
+      <div class="version-desc">テキストのみ。質問に答える、文章を書く、翻訳する。2ヶ月で1億ユーザー突破。パラメータ数1,750億。コンテキスト16Kトークン。</div>
+      <div class="version-tags"><span class="tag landmark">世界を変えた</span><span class="tag new">テキスト生成</span><span class="tag new">翻訳</span><span class="tag new">コード生成</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2023年3月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-4</span><span class="version-tier">大幅性能向上</span></div>
+    <div class="version-details">
+      <div class="version-desc">画像入力に対応（マルチモーダル化の第一歩）。推論能力が大幅向上。司法試験で上位10%のスコア。コンテキスト128Kトークン。パラメータ約1兆。</div>
+      <div class="version-tags"><span class="tag new">画像理解</span><span class="tag upgrade">推論力向上</span><span class="tag new">プラグイン対応</span><span class="tag new">Code Interpreter</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2023年11月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-4 Turbo</span><span class="version-tier">高速化＆低コスト</span></div>
+    <div class="version-details">
+      <div class="version-desc">GPT-4の高速・低コスト版。知識が2023年4月まで更新。カスタムGPTs（自分専用AIを作れる）登場。JSON出力モード追加。</div>
+      <div class="version-tags"><span class="tag upgrade">3倍安価</span><span class="tag new">カスタムGPTs</span><span class="tag new">JSONモード</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2024年5月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-4o</span><span class="version-tier">マルチモーダル統合</span></div>
+    <div class="version-details">
+      <div class="version-desc">テキスト・音声・画像をリアルタイムで処理。音声会話が自然に。無料ユーザーにも開放。GPT-4より2倍高速・半額。「o」= omni（全方位）。</div>
+      <div class="version-tags"><span class="tag landmark">マルチモーダル元年</span><span class="tag new">リアルタイム音声</span><span class="tag new">無料開放</span><span class="tag upgrade">2倍高速</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2024年7月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-4o mini</span><span class="version-tier">軽量・超低コスト</span></div>
+    <div class="version-details">
+      <div class="version-desc">GPT-4oの小型版。GPT-3.5 Turboを全面的に置き換え。非常に安価ながらGPT-4レベルの性能。開発者向けの主力モデルに。</div>
+      <div class="version-tags"><span class="tag upgrade">超低コスト</span><span class="tag upgrade">GPT-3.5置換</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2024年9月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">o1</span><span class="version-tier">推論特化モデル</span></div>
+    <div class="version-details">
+      <div class="version-desc">「考えてから答える」推論モデルの登場。数学・科学・コーディングで飛躍的性能向上。回答前に内部で段階的に思考する（Chain of Thought）。</div>
+      <div class="version-tags"><span class="tag landmark">推論AI元年</span><span class="tag reasoning">段階的思考</span><span class="tag new">数学・科学特化</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年1月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">o3-mini</span><span class="version-tier">推論モデル小型版</span></div>
+    <div class="version-details">
+      <div class="version-desc">o1の後継となる推論モデルの小型版。高速かつ低コストで強力な推論を実現。</div>
+      <div class="version-tags"><span class="tag reasoning">推論</span><span class="tag upgrade">高速・低コスト</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年4月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">o3 / o4-mini</span><span class="version-tier">推論モデル本格版</span></div>
+    <div class="version-details">
+      <div class="version-desc">o3はフルサイズの推論モデル。o4-miniは超高速・低コストの推論特化。数学・コーディング・視覚タスクで圧倒的性能。</div>
+      <div class="version-tags"><span class="tag reasoning">高度推論</span><span class="tag new">視覚推論</span><span class="tag upgrade">コスト効率</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年6月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-5</span><span class="version-tier">統合フラッグシップ</span></div>
+    <div class="version-details">
+      <div class="version-desc">GPTシリーズとoシリーズを統合した「一つのAI」。アプリ開発、コード生成、エージェント的行動が可能に。Auto/Fast/Thinkingモードを切替可能。</div>
+      <div class="version-tags"><span class="tag landmark">GPT+o統合</span><span class="tag new">エージェント機能</span><span class="tag new">モード切替</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年12月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-5.2</span><span class="version-tier">コーディング強化</span></div>
+    <div class="version-details">
+      <div class="version-desc">Codex特化版も登場。Google Gemini 3との競争で急遽リリース（"Code Red"と報道）。</div>
+      <div class="version-tags"><span class="tag upgrade">コーディング強化</span><span class="tag new">Codex統合</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年3月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-5.4</span><span class="version-tier">現在の最新モデル</span></div>
+    <div class="version-details">
+      <div class="version-desc">推論・コーディング・エージェントの集大成。100万トークンのコンテキスト。GPT-5.2比でエラー33%減。Pro版はプロフェッショナル向け最高性能。CarPlay対応。</div>
+      <div class="version-tags"><span class="tag landmark">最新</span><span class="tag upgrade">100万トークン</span><span class="tag upgrade">エラー33%減</span><span class="tag new">CarPlay</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="milestone chatgpt">ChatGPTの歩み：テキストのみ → 画像理解 → マルチモーダル → 推論 → エージェント → 全統合</div>
+
+
+<!-- ===================== Claude ===================== -->
+<div class="section-header claude">
+  <span class="section-icon">🧡</span>
+  <div>
+    <div class="section-name claude">Claude（Anthropic）</div>
+    <div class="section-company">2023年3月〜 ／ 安全性と長文理解に強み</div>
+  </div>
+</div>
+
+<div class="version-grid">
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2023年3月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude 1</span><span class="version-tier">招待制で公開</span></div>
+    <div class="version-details">
+      <div class="version-desc">Anthropic初のAI。招待制のみで利用可能。「安全で有用なAI」をコンセプトに開発。テキストのみ対応。</div>
+      <div class="version-tags"><span class="tag new">安全性重視</span><span class="tag new">テキスト生成</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2023年7月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude 2</span><span class="version-tier">一般公開</span></div>
+    <div class="version-details">
+      <div class="version-desc">初の一般公開モデル。コンテキスト100Kトークン（約75,000語）。コーディング・数学能力が向上。</div>
+      <div class="version-tags"><span class="tag landmark">一般公開</span><span class="tag new">100Kコンテキスト</span><span class="tag upgrade">コーディング向上</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2023年11月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude 2.1</span><span class="version-tier">長文理解の王</span></div>
+    <div class="version-details">
+      <div class="version-desc">コンテキスト200Kトークン（約500ページ分）に倍増。ハルシネーション（知ったかぶり）が大幅減少。</div>
+      <div class="version-tags"><span class="tag landmark">200Kトークン</span><span class="tag upgrade">ハルシネーション減</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2024年3月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude 3 ファミリー</span><span class="version-tier">Opus / Sonnet / Haiku</span></div>
+    <div class="version-details">
+      <div class="version-desc">3サイズ展開を開始。Opus（最高性能）/ Sonnet（バランス）/ Haiku（高速・低コスト）。画像理解（ビジョン）に初対応。</div>
+      <div class="version-tags"><span class="tag landmark">3サイズ体制</span><span class="tag new">画像理解</span><span class="tag new">Opus/Sonnet/Haiku</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2024年6月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude 3.5 Sonnet</span><span class="version-tier">衝撃のコスパ</span></div>
+    <div class="version-details">
+      <div class="version-desc">Sonnet（中位モデル）なのにOpus（最上位）を超える性能。開発者の間で爆発的に普及。SWE-benchで業界トップ。Artifacts（画面内プレビュー）機能追加。</div>
+      <div class="version-tags"><span class="tag landmark">Opus超え</span><span class="tag upgrade">コーディング最強</span><span class="tag new">Artifacts</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年2月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude 3.7 Sonnet</span><span class="version-tier">思考モデル</span></div>
+    <div class="version-details">
+      <div class="version-desc">「拡張思考」（Extended Thinking）に初対応。回答前にステップバイステップで考える能力を獲得。Claude Code同時リリース。</div>
+      <div class="version-tags"><span class="tag reasoning">拡張思考</span><span class="tag landmark">Claude Code登場</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年5月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude 4 (Sonnet & Opus)</span><span class="version-tier">次世代モデル</span></div>
+    <div class="version-details">
+      <div class="version-desc">推論能力が大幅向上。エージェント用途に最適化。Claude 4 Opusは最も高度な推論を提供。</div>
+      <div class="version-tags"><span class="tag upgrade">推論大幅向上</span><span class="tag new">エージェント最適化</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年9月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude Sonnet 4.5</span><span class="version-tier">コーディング世界最強</span></div>
+    <div class="version-details">
+      <div class="version-desc">SWE-bench Verified 77.2%で歴代最高スコア。「世界最高のコーディングモデル」「世界最高のエージェントモデル」と公式が宣言。100万トークンのコンテキスト対応（ベータ）。</div>
+      <div class="version-tags"><span class="tag landmark">SWE-bench最高</span><span class="tag upgrade">100万トークン</span><span class="tag new">エージェント最強</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年10月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude Haiku 4.5</span><span class="version-tier">高速モデル刷新</span></div>
+    <div class="version-details">
+      <div class="version-desc">軽量・高速モデルが大幅進化。旧Sonnet 4.0並みの推論力を持ちつつ高速。日常の質問や要約に最適。</div>
+      <div class="version-tags"><span class="tag upgrade">Sonnet 4並み性能</span><span class="tag upgrade">高速</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年11月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude Opus 4.5</span><span class="version-tier">最高峰モデル</span></div>
+    <div class="version-details">
+      <div class="version-desc">最も高度な推論・分析能力。「effortパラメータ」で思考の深さを調整可能。複雑なタスクや研究用途に。</div>
+      <div class="version-tags"><span class="tag upgrade">最高推論力</span><span class="tag new">effort調整</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年1月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Cowork 登場</span><span class="version-tier">非エンジニア向けエージェント</span></div>
+    <div class="version-details">
+      <div class="version-desc">Claude Codeのパワーをデスクトップアプリから。プログラマーでなくてもAIに仕事を丸ごと任せられるように。フォルダ指定でファイル操作、ドキュメント自動生成。</div>
+      <div class="version-tags"><span class="tag landmark">全ての人にAIエージェントを</span><span class="tag new">デスクトップ統合</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年2月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Opus 4.6 / Sonnet 4.6</span><span class="version-tier">現在の最新モデル</span></div>
+    <div class="version-details">
+      <div class="version-desc">エージェント検索性能向上、トークン効率改善。100万トークンコンテキストが正式版に。出力上限300Kトークン。MicrosoftのCopilot Coworkとも連携（3月発表）。</div>
+      <div class="version-tags"><span class="tag landmark">最新</span><span class="tag upgrade">100万トークン正式版</span><span class="tag new">Microsoft連携</span><span class="tag upgrade">出力300K</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="milestone claude">Claudeの歩み：安全なテキストAI → 長文特化 → 3サイズ展開 → コーディング最強 → エージェント化（Cowork）</div>
+
+
+<!-- ===================== Gemini ===================== -->
+<div class="section-header gemini">
+  <span class="section-icon">💙</span>
+  <div>
+    <div class="section-name gemini">Gemini（Google）</div>
+    <div class="section-company">2023年12月〜 ／ 月7.5億ユーザー ／ Google全サービスと連携</div>
+  </div>
+</div>
+
+<div class="version-grid">
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2023年12月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 1.0</span><span class="version-tier">Ultra / Pro / Nano</span></div>
+    <div class="version-details">
+      <div class="version-desc">Googleの本格的なマルチモーダルAI。Ultra/Pro/Nanoの3サイズ。Ultraは人間の専門家をMMLUテストで初めて超越（90%）。Bard → Geminiにブランド統合。</div>
+      <div class="version-tags"><span class="tag landmark">Google本格参入</span><span class="tag new">マルチモーダル</span><span class="tag new">3サイズ</span><span class="tag landmark">MMLU人間超え</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2024年2月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 1.5 Pro</span><span class="version-tier">100万トークンの衝撃</span></div>
+    <div class="version-details">
+      <div class="version-desc">100万トークンのコンテキストウィンドウ（業界初）。Mixture-of-Experts（MoE）アーキテクチャ採用。1.0 Ultraを超える性能をPro価格で実現。</div>
+      <div class="version-tags"><span class="tag landmark">100万トークン（業界初）</span><span class="tag new">MoEアーキテクチャ</span><span class="tag upgrade">Ultra超え性能</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2024年5月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 1.5 Flash</span><span class="version-tier">高速・低コスト版</span></div>
+    <div class="version-details">
+      <div class="version-desc">Proの知識を蒸留した軽量・高速版。コンテキスト32K。低コストで大量処理に最適。開発者向けの主力モデルに。</div>
+      <div class="version-tags"><span class="tag new">Flash登場</span><span class="tag upgrade">軽量・高速</span><span class="tag upgrade">低コスト</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2024年12月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 2.0 Flash</span><span class="version-tier">リアルタイムAI</span></div>
+    <div class="version-details">
+      <div class="version-desc">1.5 Flashの2倍高速で同等品質。リアルタイム音声・映像対話API。ネイティブ画像生成・音声合成。Google検索統合。</div>
+      <div class="version-tags"><span class="tag upgrade">2倍高速</span><span class="tag new">リアルタイム対話</span><span class="tag new">画像・音声生成</span><span class="tag new">検索統合</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年2月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 2.0 Pro</span><span class="version-tier">フルサイズ版</span></div>
+    <div class="version-details">
+      <div class="version-desc">Gemini 2.0のフルサイズモデル。コーディング・数学・複雑な推論で強力な性能。Google AI ProプランでAdvanced利用可能。</div>
+      <div class="version-tags"><span class="tag upgrade">フルサイズ性能</span><span class="tag upgrade">推論強化</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年3月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 2.5 Pro</span><span class="version-tier">ネイティブ思考</span></div>
+    <div class="version-details">
+      <div class="version-desc">「考える」能力がネイティブに組み込まれた。Chain-of-Thoughtを維持しながらマルチモーダル。コーディング・数学・画像理解で大幅向上。</div>
+      <div class="version-tags"><span class="tag reasoning">ネイティブ思考</span><span class="tag upgrade">コーディング向上</span><span class="tag upgrade">画像理解向上</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2025年11月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 3 Flash</span><span class="version-tier">次世代の主力</span></div>
+    <div class="version-details">
+      <div class="version-desc">Gemini 3のFlash版。Pro級の推論をFlashの速度で実現。博士レベルの推論能力。Antigravity（エージェント開発プラットフォーム）と同時発表。</div>
+      <div class="version-tags"><span class="tag landmark">Gemini 3世代</span><span class="tag new">Antigravity同時発表</span><span class="tag upgrade">博士レベル推論</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年3月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 3.1 Pro</span><span class="version-tier">現在の最新フラッグシップ</span></div>
+    <div class="version-details">
+      <div class="version-desc">ARC-AGI-2で77.1%（新しい論理パターンへの対応力）。テキスト・音声・画像・動画・コードリポジトリの理解。Googleマップ連携。Computer Use（自律UI操作）対応。MCP対応。</div>
+      <div class="version-tags"><span class="tag landmark">最新</span><span class="tag new">Computer Use</span><span class="tag new">MCP対応</span><span class="tag new">マップ連携</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年3月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 3.1 Flash Lite</span><span class="version-tier">最安・最速</span></div>
+    <div class="version-details">
+      <div class="version-desc">最もコスト効率の良いGeminiモデル。2.5 Flashの2.5倍高速、出力速度45%向上。大量処理・コスト重視の用途に最適。</div>
+      <div class="version-tags"><span class="tag upgrade">2.5倍高速</span><span class="tag upgrade">最安</span><span class="tag upgrade">大量処理向け</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="milestone gemini">Geminiの歩み：マルチモーダル → 100万トークン → リアルタイム対話 → ネイティブ思考 → Computer Use（自律操作）</div>
+
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」別冊資料</p>
+  <p style="margin-top:6px;">情報は2026年4月時点。各社の公式発表をもとに作成。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年4月9日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</div>
+</body>
+</html>
