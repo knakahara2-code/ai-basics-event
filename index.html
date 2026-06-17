@@ -138,6 +138,23 @@ body {
 .card-label.detail { color: var(--orange); }
 .card-label.timeline { color: var(--cyan); }
 
+.new-pill {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  padding: 2px 9px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ec4899, #f59e0b);
+  color: #fff;
+  margin-right: 8px;
+  vertical-align: 1px;
+}
+.card.featured {
+  background: linear-gradient(135deg, rgba(236,72,153,0.12), rgba(245,158,11,0.06));
+  border-color: rgba(236,72,153,0.3);
+}
+
 .card-title {
   font-size: 1.2rem;
   font-weight: 700;
@@ -204,6 +221,18 @@ body {
   </div>
 
   <div class="card-list">
+
+    <a href="operations2-presentation.html" class="card-link">
+      <div class="card featured">
+        <div class="card-icon">🤖</div>
+        <div class="card-body">
+          <div class="card-label" style="color:var(--orange);"><span class="new-pill">NEW</span>6/18開催 ・ 第2回</div>
+          <div class="card-title">AIを活用したオペレーション改善Ⅱ</div>
+          <div class="card-desc">Claude Code / Codex を、みんなでワイワイ立ち上げてみる回。原理の初歩の初歩から、ちょっと応用まで。参加型ワークのスライド本編です。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
 
     <a href="presentation.html" class="card-link">
       <div class="card highlight">
@@ -284,18 +313,6 @@ body {
           <div class="card-label" style="color:var(--blue);">GLOSSARY</div>
           <div class="card-title">AI・自律エージェント 用語集</div>
           <div class="card-desc">チャットAIとエージェントの違い、Node.js / npm / API / トークン / モデル、CLI→GUI→NLUI、安全運用まで。むずかしい言葉をぜんぶ「たとえ」で。</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="operations2-presentation.html" class="card-link">
-      <div class="card highlight">
-        <div class="card-icon">🤖</div>
-        <div class="card-body">
-          <div class="card-label main">第2回・スライド</div>
-          <div class="card-title">AIを活用したオペレーション改善Ⅱ</div>
-          <div class="card-desc">自律型AIエージェント（Codex / Claude Code）を立ち上げ、業務を動かす。脳＝クラウド／手＝PC、CLI→GUI→NLUI、安全運用まで。参加型ワークのスライド本編。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
