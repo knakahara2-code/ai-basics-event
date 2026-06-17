@@ -212,6 +212,21 @@ h1 {
   margin: 0 auto 34px;
 }
 
+/* Footnote */
+.footnote {
+  max-width: 1300px;
+  margin: 22px auto 0;
+  padding: 14px 18px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--orange);
+  border-radius: 10px;
+}
+.footnote b { color: var(--orange); }
+
 /* Empty cell */
 .empty-cell {
   padding: 8px;
@@ -722,7 +737,7 @@ h1 {
     <div class="v-card claude">
       <div class="v-name">Claude Fable 5 / Mythos 5</div>
       <div class="v-tier">SWE-Bench Pro 80.3%</div>
-      <div class="v-desc">最も強力な公開モデル。長時間エージェント特化。直後に米政府の輸出規制で一時アクセス停止。（6/9）</div>
+      <div class="v-desc">最も強力な公開モデル。長時間エージェント特化。<b style="color:var(--pink)">公開直後に一時アクセス停止（※）</b>。（6/9）</div>
       <div class="v-badge landmark">最新フラッグシップ</div>
       <div class="v-badge updated">🆕 6/17追加</div>
     </div>
@@ -739,6 +754,10 @@ h1 {
 
 </tbody>
 </table>
+
+<div class="footnote">
+  ※ <b>Claude Fable 5 / Mythos 5 の一時停止について</b> ── 2026年6月9日の公開直後、米政府の輸出管理指令（export control directive）により、Fable 5 と Mythos 5 へのアクセスが一時的に停止されました。Anthropic 自身が「AIが危険な水準に近づきつつある」と警告した数日後の出来事で、最先端モデルが安全保障・規制の対象になり始めたことを象徴する事例です。（出典：TechCrunch / InfoQ 2026年6月）
+</div>
 
 <div class="site-footer">
   <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
