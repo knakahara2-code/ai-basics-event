@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>請求オートメーション ミニデモ ── 源泉データから、ぜんぶ自動で</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap');
+:root{--cream:#FBF7F0;--paper:#fff;--ink:#292220;--mut:#6b6256;--line:#e3dccf;--cyan:#00A4C5;--cyanD:#007F99;--amber:#C8923A;--coral:#EE7A57;--ok:#2f9e6f;--warn:#d98a2b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans JP',"Yu Gothic UI",sans-serif;background:#ece5d8;color:var(--ink);line-height:1.55;padding:26px 18px 70px;}
+.wrap{max-width:1040px;margin:0 auto;}
+.head{text-align:center;margin-bottom:18px;}
+.head .k{font-size:.78rem;font-weight:800;letter-spacing:.08em;color:var(--cyanD);text-transform:uppercase;}
+.head h1{font-size:1.7rem;font-weight:900;margin:4px 0 6px;}
+.head h1 .cy{color:var(--cyan);}
+.head p{font-size:.9rem;color:var(--mut);}
+/* stepper */
+.steps{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0 22px;}
+.step{font-size:.76rem;font-weight:700;color:var(--mut);background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:6px 14px;transition:.25s;}
+.step.on{background:var(--cyan);color:#fff;border-color:var(--cyan);}
+.step.done{background:rgba(0,164,197,.12);color:var(--cyanD);border-color:rgba(0,164,197,.4);}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:18px;}
+.panel h2{font-size:1.05rem;font-weight:800;margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+.panel h2 .n{background:var(--ink);color:#fff;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;}
+.panel .desc{font-size:.82rem;color:var(--mut);margin-bottom:14px;}
+.panel .desc b{color:var(--ink);}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:.84rem;}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;}
+th{font-size:.74rem;color:var(--mut);font-weight:700;background:#faf8f4;}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;}
+.pill{display:inline-block;font-size:.68rem;font-weight:800;border-radius:6px;padding:1px 8px;}
+.p-fixed{background:rgba(0,164,197,.13);color:var(--cyanD);} .p-var{background:rgba(200,146,58,.16);color:var(--amber);} .p-spot{background:rgba(238,122,87,.16);color:var(--coral);}
+.btn{font-family:inherit;font-size:.92rem;font-weight:800;border:none;border-radius:11px;padding:13px 26px;cursor:pointer;transition:.2s;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn-pri{background:var(--cyan);color:#fff;} .btn-pri:hover:not(:disabled){background:var(--cyanD);}
+.btn-appr{background:var(--coral);color:#fff;} .btn-appr:hover:not(:disabled){background:#d4623f;}
+.btn-row{margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.muted{font-size:.78rem;color:var(--mut);}
+/* invoice cards */
+.inv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:4px;}
+.inv{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;}
+.inv .top{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 13px;background:#faf8f4;border-bottom:1px solid var(--line);}
+.inv .ttl{font-weight:800;font-size:.9rem;}
+.inv .no{font-size:.7rem;color:var(--mut);font-variant-numeric:tabular-nums;}
+.inv .st{font-size:.68rem;font-weight:800;border-radius:6px;padding:2px 9px;white-space:nowrap;}
+.st-draft{background:#eee7da;color:#8a7d63;} .st-queued{background:rgba(0,164,197,.14);color:var(--cyanD);} .st-sent{background:rgba(47,158,111,.16);color:var(--ok);}
+.inv .body{padding:11px 13px;font-size:.8rem;}
+.inv .line{display:flex;justify-content:space-between;padding:2px 0;}
+.inv .tot{display:flex;justify-content:space-between;border-top:1px dashed var(--line);margin-top:6px;padding-top:6px;font-weight:800;}
+.inv .meta{font-size:.7rem;color:var(--mut);margin-top:9px;border-top:1px solid var(--line);padding-top:8px;}
+.inv .meta code{background:#f3efe8;border-radius:4px;padding:1px 5px;font-size:.92em;}
+.maillink{font-size:.72rem;color:var(--cyan);font-weight:700;cursor:pointer;text-decoration:underline;}
+.mail{display:none;margin-top:8px;background:#f6fbfc;border:1px solid rgba(0,164,197,.25);border-radius:8px;padding:8px 10px;font-size:.72rem;color:#3a4a4d;white-space:pre-wrap;}
+.mail.open{display:block;}
+/* counter */
+.counter{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px;}
+.cbox{flex:1;min-width:150px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center;}
+.cbox .l{font-size:.72rem;color:var(--mut);font-weight:700;}
+.cbox .v{font-size:1.5rem;font-weight:900;margin-top:2px;}
+.cbox.old .v{color:var(--coral);} .cbox.new .v{color:var(--cyan);}
+.recon td .ok{color:var(--ok);font-weight:800;} .recon td .ng{color:var(--warn);font-weight:800;}
+.foot{font-size:.76rem;color:var(--mut);text-align:center;margin-top:8px;line-height:1.7;}
+.empty{font-size:.85rem;color:#b7ad9c;text-align:center;padding:24px;}
+@media(max-width:680px){.inv-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="k">b<span style="color:var(--cyan)">Y</span> オペレーション改善 ・ ミニデモ</div>
+    <h1>請求オートメーション <span class="cy">デモ</span></h1>
+    <p>源泉データ（一元管理）→ 自動生成 → メール下書き →〔人が承認〕→ 送付 → 消込。<br>あなたが押すボタンは、たった<b>「承認」1回</b>。</p>
+  </div>
+
+  <div class="steps" id="steps">
+    <div class="step on">① 源泉データ</div>
+    <div class="step">② 自動生成</div>
+    <div class="step">③ 承認・送信</div>
+    <div class="step">④ 入金消込</div>
+  </div>
+
+  <!-- 1 source -->
+  <div class="panel">
+    <h2><span class="n">1</span>一元管理データ（源泉）</h2>
+    <p class="desc">契約＝<b>同額</b>、実績＝<b>変動</b>、見積＝<b>単発</b>。<b>金額の出どころ</b>が一箇所にあるのがミソ。<br>ここが正なら、請求書もメールもファイル名も"出力"として自動で吐ける。</p>
+    <table>
+      <thead><tr><th>取引先</th><th>種別</th><th>品目</th><th class="r">数量</th><th class="r">単価</th><th>送付先</th></tr></thead>
+      <tbody id="srcBody"></tbody>
+    </table>
+    <div class="btn-row">
+      <button class="btn btn-pri" id="genBtn">① 請求書を一括生成 ▶</button>
+      <span class="muted">クリックすると、全件ぶんを自動で作ります（税10%・連番・ファイル名・メール文まで）</span>
+    </div>
+  </div>
+
+  <!-- 2 generate -->
+  <div class="panel">
+    <h2><span class="n">2</span>自動生成された請求書 ＋ メール下書き</h2>
+    <p class="desc">税計算・請求番号・ファイル名・送付メールまで全部自動。<b>人はまだ何も手入力していません。</b></p>
+    <div class="inv-grid" id="invGrid"><div class="empty">↑「① 一括生成」を押すと、ここに表示されます</div></div>
+    <div class="btn-row">
+      <button class="btn btn-appr" id="apprBtn" disabled>② すべて承認して送信 ✓</button>
+      <span class="muted" id="apprHint">送信前ゲート ── 中身を確認して、問題なければ承認（＝唯一の人の操作）</span>
+    </div>
+    <div class="counter" id="counter" style="display:none">
+      <div class="cbox old"><div class="l">昔ながらなら 人の操作</div><div class="v" id="oldTouch">–</div></div>
+      <div class="cbox new"><div class="l">このデモでの 人の操作</div><div class="v" id="newTouch">–</div></div>
+      <div class="cbox"><div class="l">自動処理した金額計算</div><div class="v" id="calcN">–</div></div>
+    </div>
+  </div>
+
+  <!-- 3 reconcile -->
+  <div class="panel">
+    <h2><span class="n">3</span>入金消込（おまけ）</h2>
+    <p class="desc">後日の入金明細を、請求残と<b>自動でマッチング</b>。<b>一致は自動消込、不一致だけ人へ</b>。</p>
+    <table class="recon">
+      <thead><tr><th>入金（明細）</th><th class="r">入金額</th><th>対応する請求</th><th class="r">請求額</th><th>判定</th></tr></thead>
+      <tbody id="reconBody"><tr><td colspan="5" class="empty">承認・送信のあとに「自動照合」できます</td></tr></tbody>
+    </table>
+    <div class="btn-row">
+      <button class="btn btn-pri" id="reconBtn" disabled>③ 入金データと自動照合 ▶</button>
+    </div>
+  </div>
+
+  <p class="foot">※ データ・社名・金額はすべて<b>架空</b>です。これはブラウザだけで動く<b>仕組みのイメージ</b> ──<br>
+  実運用では freee / マネーフォワード等のSaaS＋スプレッドシート＋（必要なら）自律エージェントで同じことをします。<br>
+  ＝ <b>源泉を一元化 → 生成は自動 → お金が動く"送信"だけ人が承認</b>。これがあらゆるルーティンに効く"型"。</p>
+</div>
+
+<script>
+const clients=[
+ {name:'株式会社あおぞら商事', type:'同額', item:'月次顧問料', qty:1, unit:55000, email:'keiri@aozora.example.jp'},
+ {name:'やまが工務店', type:'変動', item:'施工管理サポート（8.0h×¥8,000）', qty:8, unit:8000, email:'info@yamaga-komuten.example.jp'},
+ {name:'合同会社ひなた', type:'同額', item:'クラウド利用料（スタンダード）', qty:1, unit:33000, email:'admin@hinata.example.jp'},
+ {name:'菊池デザイン事務所', type:'変動', item:'制作ディレクション（12.5h×¥6,000）', qty:12.5, unit:6000, email:'kikuchi@design.example.jp'},
+ {name:'温泉旅館 山鹿の湯', type:'単発', item:'Web改善コンサル（スポット）', qty:1, unit:180000, email:'yado@yamaganoyu.example.jp'},
+ {name:'株式会社こうさく', type:'同額', item:'保守運用（ベーシック）', qty:1, unit:44000, email:'support@kousaku.example.jp'},
+];
+const yen=n=>'¥'+Math.round(n).toLocaleString('ja-JP');
+const pcls={'同額':'p-fixed','変動':'p-var','単発':'p-spot'};
+const PERIOD='2026-06', PJP='2026年6月';
+let invoices=[];
+
+// render source table
+document.getElementById('srcBody').innerHTML=clients.map(c=>`<tr>
+  <td>${c.name}</td><td><span class="pill ${pcls[c.type]}">${c.type}</span></td>
+  <td>${c.item}</td><td class="r">${c.qty}</td><td class="r">${yen(c.unit)}</td><td class="muted">${c.email}</td></tr>`).join('');
+
+function stepOn(idx){[...document.querySelectorAll('.step')].forEach((s,i)=>{s.classList.toggle('on',i===idx);s.classList.toggle('done',i<idx);});}
+
+document.getElementById('genBtn').onclick=()=>{
+  invoices=clients.map((c,i)=>{
+    const sub=c.qty*c.unit, tax=Math.round(sub*0.1), tot=sub+tax;
+    const no='INV-'+PERIOD.replace('-','')+'-'+String(i+1).padStart(3,'0');
+    const fname=PERIOD+'_'+c.name.replace(/株式会社|合同会社|事務所/g,'').trim()+'_'+no+'.pdf';
+    return {...c, sub, tax, tot, no, fname, status:'draft'};
+  });
+  renderInvoices();
+  document.getElementById('apprBtn').disabled=false;
+  stepOn(1);
+};
+
+function renderInvoices(){
+  document.getElementById('invGrid').innerHTML=invoices.map((v,i)=>{
+    const stc={draft:['st-draft','下書き'],queued:['st-queued','送信予約'],sent:['st-sent','✓ 送信済み']}[v.status];
+    const mail=`件名：【ご請求】${PJP}分 請求書送付のご案内（${v.no}）\n\n${v.name} ご担当者さま\n\nいつもお世話になっております。\n${PJP}分のご請求書（合計 ${yen(v.tot)}）をお送りします。\nお支払期限：翌月末／お振込先：○○銀行 △△支店\n\n添付：${v.fname}\n\n— やまがBASE株式会社`;
+    return `<div class="inv">
+      <div class="top"><div><div class="ttl">${v.name}</div><div class="no">${v.no} ・ ${PJP}分</div></div><div class="st ${stc[0]}" id="st${i}">${stc[1]}</div></div>
+      <div class="body">
+        <div class="line"><span>${v.item}</span><span>${yen(v.sub)}</span></div>
+        <div class="line"><span class="muted">消費税（10%・自動計算）</span><span class="muted">${yen(v.tax)}</span></div>
+        <div class="tot"><span>合計</span><span>${yen(v.tot)}</span></div>
+        <div class="meta">📄 ファイル名（自動）：<code>${v.fname}</code><br>
+        ✉ <span class="maillink" onclick="document.getElementById('m${i}').classList.toggle('open')">送付メール下書きを見る ▾</span>
+        <div class="mail" id="m${i}">${mail}</div></div>
+      </div></div>`;
+  }).join('');
+}
+
+document.getElementById('apprBtn').onclick=function(){
+  invoices.forEach((v,i)=>{v.status='sent';});
+  renderInvoices();
+  this.disabled=true;
+  document.getElementById('apprHint').innerHTML='<b style="color:var(--ok)">✓ 6件すべて承認・送信しました。</b> あなたが触ったのは、この承認ボタン1回だけ。';
+  // counter
+  document.getElementById('counter').style.display='flex';
+  document.getElementById('oldTouch').textContent='約'+(clients.length*5)+'回';
+  document.getElementById('newTouch').textContent='1回';
+  document.getElementById('calcN').textContent=clients.length+'件';
+  document.getElementById('reconBtn').disabled=false;
+  stepOn(2);
+};
+
+document.getElementById('reconBtn').onclick=function(){
+  // sample 入金: 1件だけ金額違い（要確認）
+  const rows=invoices.map((v,i)=>{
+    const paid = i===3 ? v.tot-1000 : v.tot; // 菊池さんだけ¥1,000不足
+    const match = paid===v.tot;
+    return `<tr><td>${v.name}</td><td class="r">${yen(paid)}</td><td>${v.no}</td><td class="r">${yen(v.tot)}</td>
+      <td>${match?'<span class="ok">✓ 自動消込</span>':'<span class="ng">⚠ 要確認（差額 '+yen(v.tot-paid)+'）→ 人へ</span>'}</td></tr>`;
+  }).join('');
+  document.getElementById('reconBody').innerHTML=rows;
+  this.disabled=true;
+  stepOn(3);
+};
+</script>
+</body>
+</html>

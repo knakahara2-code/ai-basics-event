@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>請求書で学ぶ「AX」── ルーティンを"システム"に変える</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap');
+:root{
+  --cream:#FBF7F0; --paper:#ffffff; --ink:#292220; --mut:#6b6256; --line:#e3dccf;
+  --cyan:#00A4C5; --cyanD:#007F99; --amber:#C8923A; --coral:#EE7A57; --friction:#B26B3A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{font-family:'Noto Sans JP',"Yu Gothic UI",sans-serif;background:#ece5d8;color:var(--ink);overflow:hidden;}
+.deck{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;
+  padding:46px 64px 70px;background:
+   radial-gradient(circle at 88% 10%, rgba(0,164,197,.06), transparent 40%),
+   radial-gradient(circle at 8% 92%, rgba(238,122,87,.05), transparent 38%), var(--cream);}
+.slide.active{display:flex;animation:fade .35s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.kick{font-size:.82rem;font-weight:800;letter-spacing:.06em;color:var(--cyanD);margin-bottom:14px;text-transform:uppercase;}
+.kick .b{color:var(--coral);}
+h1{font-size:2.7rem;font-weight:900;line-height:1.22;text-align:center;letter-spacing:-.01em;}
+h1 .cy{color:var(--cyan);}
+.lead{font-size:1.05rem;color:var(--mut);margin-top:16px;text-align:center;font-weight:500;}
+.tag{display:inline-block;margin-top:26px;font-size:.78rem;color:var(--mut);background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:7px 18px;}
+.demobtn{display:inline-block;margin-top:22px;font-size:1.02rem;font-weight:800;color:#fff;background:var(--cyan);border-radius:12px;padding:14px 34px;text-decoration:none;transition:.2s;box-shadow:0 6px 18px rgba(0,164,197,.28);}
+.demobtn:hover{background:var(--cyanD);transform:translateY(-2px);}
+.demobtn .ar{margin-left:6px;}
+h2{font-size:1.55rem;font-weight:900;align-self:flex-start;margin-bottom:4px;}
+h2 .num{color:var(--cyan);margin-right:10px;}
+.sub{align-self:flex-start;font-size:.92rem;color:var(--mut);margin-bottom:22px;font-weight:500;}
+.sub b{color:var(--ink);}
+.stage{width:100%;max-width:1000px;display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;}
+.big{font-size:1.9rem;font-weight:900;text-align:center;line-height:1.4;}
+.big .cy{color:var(--cyan);} .big .co{color:var(--coral);} .big .un{border-bottom:7px solid rgba(0,164,197,.22);}
+.note{margin-top:22px;font-size:1rem;color:var(--mut);text-align:center;max-width:760px;line-height:1.7;}
+.cards{display:flex;gap:16px;width:100%;max-width:980px;margin-top:6px;}
+.card{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 18px;}
+.card.cy{border-top:5px solid var(--cyan);} .card.am{border-top:5px solid var(--amber);} .card.co{border-top:5px solid var(--coral);}
+.card h3{font-size:1.05rem;margin-bottom:7px;}
+.card p{font-size:.86rem;color:var(--mut);line-height:1.6;}
+/* definition list */
+.def{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 28px;max-width:880px;width:100%;}
+.def li{list-style:none;font-size:.98rem;margin:9px 0;padding-left:18px;position:relative;}
+.def li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:8px;border-radius:2px;background:var(--cyan);}
+.def b{color:var(--ink);} .def .g{color:var(--mut);font-size:.9rem;}
+.struct{margin-top:16px;text-align:center;font-size:1.05rem;font-weight:800;color:var(--cyanD);}
+/* generic table */
+.gt{width:100%;max-width:980px;border-collapse:separate;border-spacing:0;font-size:.86rem;}
+.gt th,.gt td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;}
+.gt thead th{background:#f3efe8;font-weight:800;color:#5b5349;font-size:.82rem;}
+.gt .old{background:rgba(178,107,58,.05);} .gt .ax{background:rgba(0,164,197,.06);}
+.gt .ph{font-weight:800;background:#faf8f4;white-space:nowrap;}
+.tch{display:inline-block;font-size:.68rem;font-weight:800;color:var(--friction);background:rgba(178,107,58,.13);border-radius:6px;padding:1px 6px;}
+.okb{display:inline-block;font-size:.68rem;font-weight:800;color:var(--cyanD);background:rgba(0,164,197,.14);border-radius:6px;padding:1px 6px;}
+.kpis{display:flex;gap:12px;width:100%;max-width:980px;margin-top:16px;}
+.kpi{flex:1;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;background:var(--paper);}
+.kpi .kl{font-size:.72rem;font-weight:700;color:var(--mut);margin-bottom:5px;}
+.kpi .ko{font-size:.84rem;color:var(--friction);font-weight:700;}
+.kpi .ka{font-size:1rem;color:var(--cyanD);font-weight:900;margin-top:2px;}
+.kpi .ka::before{content:"→ ";color:#aaa;}
+/* ladder rows reuse gt with accent */
+.lad td:first-child{border-left:6px solid var(--ac);font-weight:800;}
+/* nav */
+.nav{position:fixed;bottom:18px;right:24px;display:flex;align-items:center;gap:14px;z-index:20;}
+.nav button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:1.1rem;cursor:pointer;transition:.2s;}
+.nav button:hover{border-color:var(--cyan);color:var(--cyan);}
+.counter{font-size:.82rem;color:var(--mut);font-variant-numeric:tabular-nums;}
+.dots{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:20;}
+.dot{width:8px;height:8px;border-radius:50%;background:#cfc6b6;cursor:pointer;transition:.2s;}
+.dot.on{background:var(--cyan);transform:scale(1.3);}
+.brand{position:fixed;top:18px;left:24px;font-size:.74rem;font-weight:800;color:var(--mut);letter-spacing:.04em;z-index:20;}
+.brand .y{color:var(--cyan);}
+.foothint{position:fixed;bottom:20px;left:24px;font-size:.7rem;color:#b7ad9c;z-index:20;}
+svg{max-width:100%;height:auto;}
+.s-t{fill:var(--ink);} .s-m{fill:var(--mut);}
+@media(max-width:760px){.slide{padding:30px 20px 64px;}h1{font-size:1.7rem;}h2{font-size:1.2rem;}.cards{flex-direction:column;}.kpis{flex-wrap:wrap;}}
+</style>
+</head>
+<body>
+<div class="brand">YAMAGA BASE × b<span class="y">Y</span> ／ オペレーション改善</div>
+<div class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide active">
+  <div class="kick">b<span style="color:var(--cyan)">Y</span> オペレーション改善 ・ 事例</div>
+  <h1>請求書で学ぶ「<span class="cy">AX</span>」<br><span style="font-size:.62em;font-weight:800">ルーティンを"システム"に変える</span></h1>
+  <p class="lead">毎月の請求業務を題材に、「AIで何が・どう変わるのか」を一本の流れで。</p>
+  <span class="tag">※ 出てくる数字はすべて<strong>架空の例</strong>です（月30件／1件20分／freee利用 を想定）</span>
+</section>
+
+<!-- 2 定義 -->
+<section class="slide">
+  <h2><span class="num">01</span>すべては「仕事の定義」から</h2>
+  <p class="sub">請求の話の前に。中原の整理する、仕事の最小の地図。</p>
+  <div class="stage">
+    <ul class="def">
+      <li><b>悩み</b>：AS-IS・TO-BE・ギャップの<b>どれかが見えていない</b>もの</li>
+      <li><b>課題</b>：その3つが<b>すべて見える化</b>されたもの</li>
+      <li><b>TODO</b>：課題を解決する<b>能動的な最小単位</b></li>
+      <li><b>プロジェクト</b>：複数のTODOを束ねる、独立目的の単位 <span class="g">（一部に サブプロジェクト）</span></li>
+      <li><b>ルーティン</b>：反復・再現性のある定常業務</li>
+      <li><b>態度</b>：維持／改善／創造／放置 を、各要素に選ぶ</li>
+    </ul>
+    <div class="struct">構造：個人・法人 →〔 プロジェクト ／ ルーティン 〕→ TODO</div>
+  </div>
+</section>
+
+<!-- 3 maturity map -->
+<section class="slide">
+  <h2><span class="num">02</span>仕事は"育つ" ── AIの当て方マップ</h2>
+  <p class="sub">同じ仕事が <b>一回性 → 型 → 定常</b> へ移る。AIの当て所もそれで変わる。</p>
+  <div class="stage">
+  <svg viewBox="0 0 940 300" xmlns="http://www.w3.org/2000/svg">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9a9388"/></marker>
+    <marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#EE7A57"/></marker></defs>
+    <!-- 悩み -> 課題 -->
+    <rect x="40" y="34" width="120" height="46" rx="11" fill="#fff" stroke="#d2ccc0"/><text class="s-t" x="100" y="55" text-anchor="middle" font-size="14" font-weight="700">悩み</text><text class="s-m" x="100" y="71" text-anchor="middle" font-size="9">未可視化</text>
+    <line x1="160" y1="57" x2="214" y2="57" stroke="#9a9388" stroke-width="1.5" marker-end="url(#ar)"/><text x="187" y="48" text-anchor="middle" font-size="10" font-weight="700" fill="#007F99">可視化</text>
+    <rect x="216" y="34" width="120" height="46" rx="11" fill="#fff" stroke="#d2ccc0"/><text class="s-t" x="276" y="55" text-anchor="middle" font-size="14" font-weight="700">課題</text><text class="s-m" x="276" y="71" text-anchor="middle" font-size="9">3つ可視化済</text>
+    <path d="M276 80 V104 M150 104 H470 M150 104 V134 M470 104 V134" fill="none" stroke="#9a9388" stroke-width="1.5" marker-end="url(#ar)"/>
+    <!-- columns -->
+    <rect x="60" y="136" width="180" height="50" rx="12" fill="rgba(41,34,32,.045)" stroke="#cfc8bc"/><text class="s-t" x="150" y="159" text-anchor="middle" font-size="14" font-weight="700">プロジェクト</text><text class="s-m" x="150" y="176" text-anchor="middle" font-size="10">一回性・目的単位</text>
+    <rect x="380" y="136" width="180" height="50" rx="12" fill="rgba(41,34,32,.045)" stroke="#cfc8bc"/><text class="s-t" x="470" y="159" text-anchor="middle" font-size="14" font-weight="700">ルーティン</text><text class="s-m" x="470" y="176" text-anchor="middle" font-size="10">反復・再現性</text>
+    <!-- 型化 bridge -->
+    <path d="M240 162 L286 186" fill="none" stroke="#8a8175" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+    <rect x="262" y="190" width="120" height="44" rx="11" fill="rgba(200,146,58,.10)" stroke="#C8923A" stroke-width="1.7" stroke-dasharray="6 4"/><text class="s-t" x="322" y="210" text-anchor="middle" font-size="13" font-weight="700">型化</text><text class="s-m" x="322" y="226" text-anchor="middle" font-size="8.5">AIで"型"を抽出</text>
+    <path d="M382 208 L452 186" fill="none" stroke="#8a8175" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+    <text x="250" y="256" text-anchor="middle" font-size="9" fill="#6b6256">何度もこなすと</text>
+    <!-- project -> 都度AI -->
+    <line x1="150" y1="186" x2="150" y2="214" stroke="#9a9388" stroke-width="1.5" marker-end="url(#ar)"/>
+    <rect x="60" y="216" width="180" height="56" rx="12" fill="rgba(0,164,197,.12)" stroke="#00A4C5" stroke-width="1.8"/><text class="s-t" x="150" y="240" text-anchor="middle" font-size="13" font-weight="700">都度AI（ぱっと）</text><text x="150" y="257" text-anchor="middle" font-size="9" fill="#007F99" font-weight="600">構築ゼロ・毎回手間</text>
+    <!-- routine -> system -->
+    <line x1="470" y1="186" x2="470" y2="214" stroke="#9a9388" stroke-width="1.5" marker-end="url(#ar)"/>
+    <rect x="380" y="216" width="180" height="56" rx="12" fill="rgba(238,122,87,.14)" stroke="#EE7A57" stroke-width="1.8"/><text class="s-t" x="470" y="240" text-anchor="middle" font-size="13" font-weight="700">システム化</text><text x="470" y="257" text-anchor="middle" font-size="9" fill="#C85A38" font-weight="600">以後タダで自動運転</text>
+    <path d="M560 244 H612 V161 H564" fill="none" stroke="#EE7A57" stroke-width="1.8" marker-end="url(#arc)"/>
+    <text transform="rotate(-90 632 210)" x="632" y="210" text-anchor="middle" font-size="9.5" fill="#C85A38" font-weight="600">⟳ 自動で回る</text>
+    <!-- legend right -->
+    <rect x="680" y="40" width="232" height="232" rx="14" fill="#fff" stroke="#e3dccf"/>
+    <text class="s-t" x="700" y="66" font-size="12" font-weight="800">AI活用の2モード</text>
+    <rect x="700" y="80" width="16" height="16" rx="4" fill="rgba(0,164,197,.14)" stroke="#00A4C5"/><text class="s-t" x="724" y="92" font-size="10.5" font-weight="700">都度（ぱっと）</text><text class="s-m" x="724" y="107" font-size="9">構築0・毎回手間。入口</text>
+    <rect x="700" y="120" width="16" height="16" rx="4" fill="rgba(238,122,87,.16)" stroke="#EE7A57"/><text class="s-t" x="724" y="132" font-size="10.5" font-weight="700">システム化（組む）</text><text class="s-m" x="724" y="147" font-size="9">構築重・以後タダ</text>
+    <line x1="700" y1="162" x2="892" y2="162" stroke="#e3dccf"/>
+    <text class="s-m" x="700" y="182" font-size="9.5">① プロジェクトは反復で</text>
+    <text x="700" y="197" font-size="9.5" font-weight="700" fill="#C8923A">　 型化 → ルーティンへ"育つ"</text>
+    <text class="s-m" x="700" y="217" font-size="9.5">② 型化＝システム化の前提</text>
+    <text class="s-m" x="700" y="237" font-size="9.5">③ 型も陳腐化 → 次のもやもや</text>
+    <text class="s-m" x="700" y="257" font-size="9.5">　 ＝円環で回り続ける</text>
+  </svg>
+  </div>
+</section>
+
+<!-- 4 前の発想 -->
+<section class="slide">
+  <h2><span class="num">03</span>"もっと前"の発想</h2>
+  <p class="sub">「請求書をどう速く作るか」の前に、もっと手前がある。</p>
+  <div class="stage">
+    <p class="big">請求書は「作るもの」じゃない。<br><span class="cy un">データの"出力"</span>でしかない。</p>
+    <p class="note">いつ・なぜ発生する？　金額は何で決まる？　── その<b>源泉</b>さえ整えば、<br>書類・ファイル名・メール・記帳は、ぜんぶ"勝手に吐き出される"。<br><b>効かせどころは、書類作成の<u>前</u>。</b></p>
+  </div>
+</section>
+
+<!-- 5 3種類 -->
+<section class="slide">
+  <h2><span class="num">04</span>請求は3種類、源泉が違う</h2>
+  <p class="sub">分類が先。<b>金額がいつ・どこで確定するか</b>で、自動化のしやすさが決まる。</p>
+  <div class="stage">
+    <div class="cards">
+      <div class="card cy"><h3>ルーティン・同額</h3><p>顧問料・サブスク。<br><b>源泉＝契約</b>（事前確定）<br>→ マスタに入れたら毎月コピー。<b>一番楽</b></p></div>
+      <div class="card am"><h3>ルーティン・変動</h3><p>従量・工数×単価。<br><b>源泉＝実績データ</b><br>→ 源泉のデジタル化が鍵</p></div>
+      <div class="card co"><h3>単発</h3><p>スポット。<br><b>源泉＝見積</b><br>→ 見積を請求に流す（一部手入力）</p></div>
+    </div>
+    <p class="note" style="margin-top:24px"><b>いずれも → 一元管理（Single Source of Truth）へ集約。</b><br>二重入力をなくすことが、効率化の本体。</p>
+  </div>
+</section>
+
+<!-- 6 比較表 -->
+<section class="slide">
+  <h2><span class="num">05</span>昔ながら vs AX（自動化）</h2>
+  <p class="sub">同じ業務を工程ごとに対比。軸は速さより<b>「人がデータに触る回数」</b>。</p>
+  <div class="stage">
+    <table class="gt">
+      <thead><tr><th>工程</th><th class="old">🖐 昔ながら（手作業）</th><th class="ax">AX（自動化）</th></tr></thead>
+      <tbody>
+        <tr><td class="ph">② 源泉</td><td class="old">メール・Excel・口頭に散在 <span class="tch">🖐 探索</span></td><td class="ax">SaaS/スプレッドで一元管理</td></tr>
+        <tr><td class="ph">③ 作成</td><td class="old">手入力＋税・端数を手計算 <span class="tch">🖐 入力</span></td><td class="ax">一元データを自動生成・連番採番</td></tr>
+        <tr><td class="ph">④ メール</td><td class="old">毎回 作文・添付・送信 <span class="tch">🖐 作文</span></td><td class="ax">自動ドラフト＋送信時刻を予約</td></tr>
+        <tr><td class="ph">⑤ 送信前</td><td class="old">やる人はやる（属人的）</td><td class="ax"><b>人は"承認"だけ</b> <span class="okb">✓ ここは人を残す</span></td></tr>
+        <tr><td class="ph">⑥ 記帳・消込</td><td class="old">手入力・手で照合 <span class="tch">🖐🖐</span></td><td class="ax">自動記帳。不一致だけ人へ</td></tr>
+      </tbody>
+    </table>
+    <div class="kpis">
+      <div class="kpi"><div class="kl">所要時間（月30件）</div><div class="ko">約10時間</div><div class="ka">数分（承認）</div></div>
+      <div class="kpi"><div class="kl">タッチ数 / 件</div><div class="ko">5〜6回</div><div class="ka">0〜1回</div></div>
+      <div class="kpi"><div class="kl">ミスの起点</div><div class="ko">転記・税・漏れ</div><div class="ka">仕組みが予防</div></div>
+      <div class="kpi"><div class="kl">スケール</div><div class="ko">件数で破綻</div><div class="ka">100件も一定</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 はしご -->
+<section class="slide">
+  <h2><span class="num">06</span>AXは4段の"はしご"</h2>
+  <p class="sub">「全自動 or 手作業」の二択じゃない。<b>今いる段から1つ上がればいい。</b></p>
+  <div class="stage">
+    <table class="gt lad">
+      <thead><tr><th>段階</th><th>やり方（請求業務）</th><th>AIの役割</th><th>タッチ/件</th><th>向いてる請求</th></tr></thead>
+      <tbody>
+        <tr style="--ac:#8a8175"><td>L0 昔ながら</td><td>Excel手入力→PDF→メール→手で記帳・消込</td><td>なし</td><td>✋5〜6</td><td class="s-m">（卒業したい）</td></tr>
+        <tr style="--ac:#00A4C5"><td>L1 都度AI</td><td>データ渡して項目整理・送付文を下書き</td><td>下書き・要約</td><td>✋4〜5</td><td>単発・低頻度</td></tr>
+        <tr style="--ac:#C8923A"><td>L2 型化</td><td>定型フォーマット＋差し込み・一括生成</td><td>"型"を抽出</td><td>✋2〜3</td><td>反復が見えた請求</td></tr>
+        <tr style="--ac:#EE7A57"><td>L3 システム化</td><td>一元データ→自動生成→承認→自動記帳・消込</td><td>自律実行＋例外判断</td><td>🧑0〜1</td><td>ルーティン（同額→変動）</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin-top:18px">色は<b>マップと対応</b> ── <span style="color:var(--cyan);font-weight:700">都度=青</span>／<span style="color:var(--amber);font-weight:700">型化=琥珀</span>／<span style="color:var(--coral);font-weight:700">システム化=珊瑚</span></p>
+  </div>
+</section>
+
+<!-- 8 flow -->
+<section class="slide">
+  <h2><span class="num">07</span>Before / After ── 触る回数が変わる</h2>
+  <p class="sub">同じ業務、2つのレーン。AXは<b>送信前の承認だけ</b>人を残す。</p>
+  <div class="stage">
+  <svg viewBox="0 0 920 268" xmlns="http://www.w3.org/2000/svg">
+    <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9a9388"/></marker></defs>
+    <rect x="20" y="14" width="847" height="22" rx="7" fill="rgba(178,107,58,.10)"/><text x="32" y="29" font-size="12" font-weight="800" fill="#B26B3A">昔ながら（手作業）　人のタッチ ✋ × 6</text>
+    <g font-size="10.5" font-weight="700">
+    <rect x="25" y="42" width="122" height="46" rx="9" fill="#fff" stroke="#d8d2c8"/><text class="s-t" x="86" y="62" text-anchor="middle">データ集め</text><text x="86" y="78" text-anchor="middle" font-size="8" fill="#B26B3A">🖐 散在</text>
+    <rect x="169" y="42" width="122" height="46" rx="9" fill="#fff" stroke="#d8d2c8"/><text class="s-t" x="230" y="62" text-anchor="middle">作成</text><text x="230" y="78" text-anchor="middle" font-size="8" fill="#B26B3A">🖐 入力＋税</text>
+    <rect x="313" y="42" width="122" height="46" rx="9" fill="#fff" stroke="#d8d2c8"/><text class="s-t" x="374" y="62" text-anchor="middle">命名</text><text x="374" y="78" text-anchor="middle" font-size="8" fill="#B26B3A">🖐 バラバラ</text>
+    <rect x="457" y="42" width="122" height="46" rx="9" fill="#fff" stroke="#d8d2c8"/><text class="s-t" x="518" y="62" text-anchor="middle">メール作成</text><text x="518" y="78" text-anchor="middle" font-size="8" fill="#B26B3A">🖐 作文・添付</text>
+    <rect x="601" y="42" width="122" height="46" rx="9" fill="#fff" stroke="#d8d2c8"/><text class="s-t" x="662" y="62" text-anchor="middle">送信</text><text class="s-m" x="662" y="78" text-anchor="middle" font-size="8">手動</text>
+    <rect x="745" y="42" width="122" height="46" rx="9" fill="#fff" stroke="#d8d2c8"/><text class="s-t" x="806" y="62" text-anchor="middle">記帳・消込</text><text x="806" y="78" text-anchor="middle" font-size="8" fill="#B26B3A">🖐🖐 照合</text>
+    </g>
+    <path d="M147 65 H167" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/><path d="M291 65 H311" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/><path d="M435 65 H455" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/><path d="M579 65 H599" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/><path d="M723 65 H743" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/>
+    <rect x="20" y="118" width="847" height="22" rx="7" fill="rgba(0,164,197,.10)"/><text x="32" y="133" font-size="12" font-weight="800" fill="#007F99">AX（自動化）　人のタッチ 🧑 × 1（承認のみ）</text>
+    <g font-size="10.5" font-weight="700">
+    <rect x="25" y="146" width="122" height="46" rx="9" fill="rgba(0,164,197,.07)" stroke="#007F99" stroke-width="1.6"/><text class="s-t" x="86" y="166" text-anchor="middle" font-weight="800">一元管理データ</text><text x="86" y="182" text-anchor="middle" font-size="8" fill="#007F99">契約・実績・見積</text>
+    <rect x="169" y="146" width="122" height="46" rx="9" fill="rgba(0,164,197,.07)" stroke="#00A4C5"/><text class="s-t" x="230" y="166" text-anchor="middle">自動生成・採番</text><text x="230" y="182" text-anchor="middle" font-size="8" fill="#007F99">⚙ 流し込み</text>
+    <rect x="313" y="146" width="122" height="46" rx="9" fill="rgba(0,164,197,.07)" stroke="#00A4C5"/><text class="s-t" x="374" y="166" text-anchor="middle">メール自動下書き</text><text x="374" y="182" text-anchor="middle" font-size="8" fill="#007F99">⚙ 送信予約</text>
+    <rect x="457" y="146" width="122" height="46" rx="9" fill="rgba(0,164,197,.20)" stroke="#00A4C5" stroke-width="2.4"/><text class="s-t" x="518" y="166" text-anchor="middle" font-weight="800">🧑 人が承認</text><text x="518" y="182" text-anchor="middle" font-size="8" fill="#007F99" font-weight="800">送信前ゲート</text>
+    <rect x="601" y="146" width="122" height="46" rx="9" fill="rgba(0,164,197,.07)" stroke="#00A4C5"/><text class="s-t" x="662" y="166" text-anchor="middle">自動送付</text><text x="662" y="182" text-anchor="middle" font-size="8" fill="#007F99">⚙ 一括</text>
+    <rect x="745" y="146" width="122" height="46" rx="9" fill="rgba(0,164,197,.07)" stroke="#00A4C5"/><text class="s-t" x="806" y="166" text-anchor="middle">記帳・消込</text><text x="806" y="182" text-anchor="middle" font-size="8" fill="#007F99">⚙ 不一致だけ人</text>
+    </g>
+    <path d="M147 169 H167" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/><path d="M291 169 H311" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/><path d="M435 169 H455" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/><path d="M579 169 H599" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/><path d="M723 169 H743" stroke="#9a9388" stroke-width="1.4" marker-end="url(#a3)"/>
+    <text x="460" y="228" text-anchor="middle" font-size="14" font-weight="800"><tspan class="s-t">人が触る回数：</tspan><tspan fill="#B26B3A">✋ 5〜6回</tspan><tspan fill="#9a9388">　→　</tspan><tspan fill="#007F99">🧑 1回（承認だけ）</tspan></text>
+    <text class="s-m" x="460" y="250" text-anchor="middle" font-size="10">源泉を一元化できれば、書類・メール・記帳は"出力"として自動で吐ける</text>
+  </svg>
+  </div>
+</section>
+
+<!-- 9 原則 -->
+<section class="slide">
+  <h2><span class="num">08</span>外してはいけない3原則</h2>
+  <p class="sub">ここを言えると、薄っぺらくならない。</p>
+  <div class="stage">
+    <div class="cards">
+      <div class="card cy"><h3>① データ一元化が本体</h3><p>"書類を速く作る"じゃなく、<b>人が同じ数字を二度入力しない</b>こと。タッチ数をゼロへ。</p></div>
+      <div class="card am"><h3>② 全部AIじゃない</h3><p>AIの出番は <b>非構造データの読取・例外の判断・文面生成・仕組み作り</b>。土台はテンプレ／連携で回る。</p></div>
+      <div class="card co"><h3>③ 全部自動にしない</h3><p>新規・値引・相殺は<b>例外レーン</b>で人。<b>お金が動く送信は必ず承認</b>。法要件はSaaSが対応済み。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 デモ＋まとめ -->
+<section class="slide">
+  <div class="kick"><span class="b">DEMO</span> ＆ まとめ</div>
+  <h1>そして、<span class="cy">実際に組んでみる</span>。</h1>
+  <p class="note">請求オートメーションのミニ・デモ：<br><b>源泉データ → 自動生成 → 承認 → 送付</b> を、その場で動かす。</p>
+  <a class="demobtn" href="invoice-automation-demo.html" target="_blank" rel="noopener">▶ デモを開く<span class="ar">↗</span></a>
+  <p class="big" style="margin-top:26px;font-size:1.3rem">これは"請求書"の話じゃない。<br><span class="co">あらゆるルーティンに効く"型"</span>。</p>
+  <span class="tag">次の一歩 ── あなたのルーティンを1つ、はしごのどこに置きますか？</span>
+</section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="nav"><button id="prev">‹</button><span class="counter" id="counter">1 / 10</span><button id="next">›</button></div>
+<div class="foothint">← → / クリックでめくる　※数字は架空例</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let i=0; const dotsBox=document.getElementById('dots');
+slides.forEach((_,n)=>{const d=document.createElement('div');d.className='dot'+(n===0?' on':'');d.onclick=()=>go(n);dotsBox.appendChild(d);});
+const dots=[...document.querySelectorAll('.dot')];
+function go(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));dots.forEach((d,k)=>d.classList.toggle('on',k===i));document.getElementById('counter').textContent=(i+1)+' / '+slides.length;location.hash=i+1;}
+document.getElementById('next').onclick=()=>go(i+1);
+document.getElementById('prev').onclick=()=>go(i-1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')go(i+1);if(e.key==='ArrowLeft')go(i-1);});
+document.getElementById('deck').addEventListener('click',e=>{if(e.target.closest('button,.dot,a'))return;const x=e.clientX/window.innerWidth;go(x>0.5?i+1:i-1);});
+const h=parseInt(location.hash.replace('#',''));if(h)go(h-1);
+</script>
+</body>
+</html>
