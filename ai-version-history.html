@@ -167,6 +167,40 @@ h1 {
   border: 1px solid rgba(139,92,246,0.3);
 }
 
+.tag.updated {
+  background: rgba(6,182,212,0.18);
+  color: var(--cyan);
+  border: 1px solid rgba(6,182,212,0.45);
+}
+
+/* Update banner */
+.update-note {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--cyan);
+  background: rgba(6,182,212,0.08);
+  border: 1px solid rgba(6,182,212,0.3);
+  border-radius: 12px;
+  padding: 10px 18px;
+  max-width: 660px;
+  margin: 0 auto 30px;
+}
+
+/* Footnote */
+.footnote {
+  max-width: 1200px;
+  margin: 8px auto 0;
+  padding: 14px 18px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--orange);
+  border-radius: 10px;
+}
+.footnote b { color: var(--orange); }
+
 /* Milestone marker */
 .milestone {
   text-align: center;
@@ -217,6 +251,8 @@ h1 {
 
 <h1>3大AI バージョン別進化年表</h1>
 <p class="subtitle">ChatGPT / Claude / Gemini — 各バージョンで何ができるようになったか（2022〜2026）</p>
+
+<div class="update-note">🆕 <b>2026年4〜6月の最新リリースを 2026/6/17 に追加</b> ── 新しく足したカードには「🆕 6/17追加」タグが付いています。</div>
 
 <!-- ===================== ChatGPT ===================== -->
 <div class="section-header chatgpt">
@@ -320,10 +356,28 @@ h1 {
 
   <div class="version-card">
     <div class="version-date"><span class="version-date-text">2026年3月</span></div>
-    <div class="version-name-col"><span class="version-name chatgpt">GPT-5.4</span><span class="version-tier">現在の最新モデル</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-5.4</span><span class="version-tier">100万トークン対応</span></div>
     <div class="version-details">
       <div class="version-desc">推論・コーディング・エージェントの集大成。100万トークンのコンテキスト。GPT-5.2比でエラー33%減。Pro版はプロフェッショナル向け最高性能。CarPlay対応。</div>
-      <div class="version-tags"><span class="tag landmark">最新</span><span class="tag upgrade">100万トークン</span><span class="tag upgrade">エラー33%減</span><span class="tag new">CarPlay</span></div>
+      <div class="version-tags"><span class="tag upgrade">100万トークン</span><span class="tag upgrade">エラー33%減</span><span class="tag new">CarPlay</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年4月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-5.5</span><span class="version-tier">幻覚60%減</span></div>
+    <div class="version-details">
+      <div class="version-desc">SWE-bench Verified 88.7%。GPT-5.4比でハルシネーション60%減。Thinking / Pro 版も同時リリース（4/23）。</div>
+      <div class="version-tags"><span class="tag updated">🆕 6/17追加</span><span class="tag upgrade">SWE-bench 88.7%</span><span class="tag upgrade">幻覚60%減</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年6月</span></div>
+    <div class="version-name-col"><span class="version-name chatgpt">GPT-5.6</span><span class="version-tier">現在の最新（報道ベース）</span></div>
+    <div class="version-details">
+      <div class="version-desc">エージェント・コーディングを強化した最新版とされる。Claude Fable 5 への対抗と報じられる。公式アナウンスはやや限定的（6月）。</div>
+      <div class="version-tags"><span class="tag updated">🆕 6/17追加</span><span class="tag landmark">最新</span><span class="tag upgrade">エージェント強化</span></div>
     </div>
   </div>
 </div>
@@ -442,15 +496,42 @@ h1 {
 
   <div class="version-card">
     <div class="version-date"><span class="version-date-text">2026年2月</span></div>
-    <div class="version-name-col"><span class="version-name claude">Opus 4.6 / Sonnet 4.6</span><span class="version-tier">現在の最新モデル</span></div>
+    <div class="version-name-col"><span class="version-name claude">Opus 4.6 / Sonnet 4.6</span><span class="version-tier">100万トークン正式版</span></div>
     <div class="version-details">
       <div class="version-desc">エージェント検索性能向上、トークン効率改善。100万トークンコンテキストが正式版に。出力上限300Kトークン。MicrosoftのCopilot Coworkとも連携（3月発表）。</div>
-      <div class="version-tags"><span class="tag landmark">最新</span><span class="tag upgrade">100万トークン正式版</span><span class="tag new">Microsoft連携</span><span class="tag upgrade">出力300K</span></div>
+      <div class="version-tags"><span class="tag upgrade">100万トークン正式版</span><span class="tag new">Microsoft連携</span><span class="tag upgrade">出力300K</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年4月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude Opus 4.7</span><span class="version-tier">最高峰推論を刷新</span></div>
+    <div class="version-details">
+      <div class="version-desc">Opus系の推論・分析・エージェント性能を更新（4/16）。長時間タスクの安定性が向上。</div>
+      <div class="version-tags"><span class="tag updated">🆕 6/17追加</span><span class="tag upgrade">推論向上</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年5月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude Opus 4.8</span><span class="version-tier">エージェント最適化</span></div>
+    <div class="version-details">
+      <div class="version-desc">長時間の自律作業（long-horizon agentic）に強い最上位。SWE-Bench Pro 69.2%（5/28）。</div>
+      <div class="version-tags"><span class="tag updated">🆕 6/17追加</span><span class="tag new">エージェント最適化</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年6月</span></div>
+    <div class="version-name-col"><span class="version-name claude">Claude Fable 5 / Mythos 5</span><span class="version-tier">最高峰・神話級モデル</span></div>
+    <div class="version-details">
+      <div class="version-desc">Anthropic最強の公開モデル。長時間エージェント・高度推論に特化。SWE-Bench Pro 80.3%。入力$10 / 出力$50（100万トークンあたり）。<b style="color:var(--pink)">公開直後（6/9）に米政府の輸出規制で一時アクセス停止（※）</b>。</div>
+      <div class="version-tags"><span class="tag updated">🆕 6/17追加</span><span class="tag landmark">最新フラッグシップ</span><span class="tag reasoning">SWE-Bench Pro 80.3%</span></div>
     </div>
   </div>
 </div>
 
-<div class="milestone claude">Claudeの歩み：安全なテキストAI → 長文特化 → 3サイズ展開 → コーディング最強 → エージェント化（Cowork）</div>
+<div class="milestone claude">Claudeの歩み：安全なテキストAI → 長文特化 → 3サイズ展開 → コーディング最強 → エージェント化（Cowork）→ 神話級（Fable 5）</div>
 
 
 <!-- ===================== Gemini ===================== -->
@@ -528,10 +609,10 @@ h1 {
 
   <div class="version-card">
     <div class="version-date"><span class="version-date-text">2026年3月</span></div>
-    <div class="version-name-col"><span class="version-name gemini">Gemini 3.1 Pro</span><span class="version-tier">現在の最新フラッグシップ</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 3.1 Pro</span><span class="version-tier">Computer Use・MCP対応</span></div>
     <div class="version-details">
       <div class="version-desc">ARC-AGI-2で77.1%（新しい論理パターンへの対応力）。テキスト・音声・画像・動画・コードリポジトリの理解。Googleマップ連携。Computer Use（自律UI操作）対応。MCP対応。</div>
-      <div class="version-tags"><span class="tag landmark">最新</span><span class="tag new">Computer Use</span><span class="tag new">MCP対応</span><span class="tag new">マップ連携</span></div>
+      <div class="version-tags"><span class="tag new">Computer Use</span><span class="tag new">MCP対応</span><span class="tag new">マップ連携</span></div>
     </div>
   </div>
 
@@ -543,16 +624,38 @@ h1 {
       <div class="version-tags"><span class="tag upgrade">2.5倍高速</span><span class="tag upgrade">最安</span><span class="tag upgrade">大量処理向け</span></div>
     </div>
   </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年5月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 3.5 Flash</span><span class="version-tier">Google I/O 2026 で公開</span></div>
+    <div class="version-details">
+      <div class="version-desc">Google I/O 2026（5/19）で公開された Gemini 3.5 世代の高速版。Pro は同時発表されたがプレビュー止まり。</div>
+      <div class="version-tags"><span class="tag updated">🆕 6/17追加</span><span class="tag new">Gemini 3.5世代</span></div>
+    </div>
+  </div>
+
+  <div class="version-card">
+    <div class="version-date"><span class="version-date-text">2026年6月</span></div>
+    <div class="version-name-col"><span class="version-name gemini">Gemini 3.5 Pro</span><span class="version-tier">200万トークン・Deep Think</span></div>
+    <div class="version-details">
+      <div class="version-desc">200万トークンのコンテキストと「Deep Think」推論を搭載。I/Oで発表、6月の一般公開（GA）見込み。6月中旬時点では限定プレビュー（Vertex）。</div>
+      <div class="version-tags"><span class="tag updated">🆕 6/17追加</span><span class="tag new">200万トークン</span><span class="tag reasoning">Deep Think</span></div>
+    </div>
+  </div>
 </div>
 
-<div class="milestone gemini">Geminiの歩み：マルチモーダル → 100万トークン → リアルタイム対話 → ネイティブ思考 → Computer Use（自律操作）</div>
+<div class="milestone gemini">Geminiの歩み：マルチモーダル → 100万トークン → リアルタイム対話 → ネイティブ思考 → Computer Use（自律操作）→ Gemini 3.5（Deep Think）</div>
+
+<div class="footnote">
+  ※ <b>Claude Fable 5 / Mythos 5 の一時停止について</b> ── 2026年6月9日の公開直後、米政府の輸出管理指令（export control directive）により、Fable 5 と Mythos 5 へのアクセスが一時的に停止されました。Anthropic 自身が「AIが危険な水準に近づきつつある」と警告した数日後の出来事で、最先端モデルが安全保障・規制の対象になり始めたことを象徴する事例です。（出典：TechCrunch / InfoQ 2026年6月）
+</div>
 
 
 <div class="site-footer">
   <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
   <p>「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」別冊資料</p>
-  <p style="margin-top:6px;">情報は2026年4月時点。各社の公式発表をもとに作成。</p>
-  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年4月9日</p>
+  <p style="margin-top:6px;">情報は2026年6月時点。各社の公式発表・報道をもとに作成（一部の6月分は速報・プレビュー）。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年6月17日（第2回・4〜6月分を追加）</p>
   <div class="footer-logo">
     <img src="bY_color2.png" alt="bY community">
     <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
