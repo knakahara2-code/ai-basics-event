@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仕事の成熟サイクル — AIで加速する「改善の回る仕組み」</title>
+<meta name="description" content="すべての仕事は プロジェクト・ルーティン・欠落業務 の3類型。可視化→型化→システム化で"改善の回る仕組み"に育てる、AI時代の業務フレームワーク。農業・中小企業・行政まで使える1枚マップ。">
+<link rel="stylesheet" href="common.css">
+<style>
+  body{min-height:100vh;padding:48px 20px 80px;}
+  .bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .orb{position:absolute;border-radius:50%;filter:blur(110px);opacity:.10;}
+  .orb:nth-child(1){width:480px;height:480px;background:var(--blue);top:-8%;left:-8%;}
+  .orb:nth-child(2){width:420px;height:420px;background:var(--purple);bottom:-10%;right:-6%;}
+  .orb:nth-child(3){width:360px;height:360px;background:var(--green);top:46%;left:38%;}
+  .container{position:relative;z-index:1;max-width:1000px;margin:0 auto;}
+  .back{display:inline-block;font-size:.84rem;color:var(--text-dim);text-decoration:none;margin-bottom:22px;}
+  .back:hover{color:var(--text);}
+  .header{text-align:center;margin-bottom:30px;}
+  .header h1{font-size:2rem;font-weight:900;line-height:1.3;margin-bottom:12px;
+    background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .header .lede{color:var(--text-dim);font-size:.95rem;max-width:760px;margin:0 auto;line-height:1.8;}
+  .intro{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px 26px;margin-bottom:34px;}
+  .intro h2{font-size:1.05rem;margin-bottom:12px;}
+  .types{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .type{flex:1;min-width:180px;border:1px solid var(--border);border-radius:12px;padding:13px 15px;background:rgba(255,255,255,.02);}
+  .type .t{font-weight:800;font-size:.92rem;margin-bottom:3px;}
+  .type .d{font-size:.8rem;color:var(--text-dim);line-height:1.55;}
+  .type.p{border-top:4px solid #8b5cf6;} .type.r{border-top:4px solid #f59e0b;} .type.m{border-top:4px solid #ec4899;}
+  .flow{font-size:.88rem;color:var(--text-dim);line-height:1.8;}
+  .flow b{color:var(--text);}
+  .gallery{display:flex;flex-direction:column;gap:30px;}
+  .shot{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+  .shot .cap{display:flex;align-items:center;gap:10px;padding:16px 20px 12px;}
+  .shot .badge{font-size:.66rem;font-weight:800;letter-spacing:.05em;padding:3px 11px;border-radius:20px;color:#fff;white-space:nowrap;}
+  .b-core{background:linear-gradient(135deg,#3b82f6,#8b5cf6);}
+  .b-biz{background:linear-gradient(135deg,#8b5cf6,#ec4899);}
+  .b-agri{background:linear-gradient(135deg,#10b981,#059669);}
+  .shot .cap .ttl{font-weight:800;font-size:1.02rem;}
+  .shot a.img{display:block;background:#fff;}
+  .shot img{display:block;width:100%;height:auto;}
+  .shot .note{font-size:.82rem;color:var(--text-dim);padding:12px 20px 18px;line-height:1.6;}
+  .shot .note .zoom{color:var(--blue);font-weight:600;}
+  .site-footer{text-align:center;margin-top:46px;color:var(--text-dim);font-size:.8rem;line-height:1.8;}
+  @media(max-width:600px){.header h1{font-size:1.45rem;}.types{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="container">
+  <a href="index.html" class="back">← 資料一覧へ戻る</a>
+  <div class="header">
+    <h1>仕事の成熟サイクル<br>— AIで加速する「改善の回る仕組み」</h1>
+    <p class="lede">「やって終わり」から「改善し続ける仕組み」へ。<br>業種・規模を問わず、すべての仕事に当てはまる"地図"です。</p>
+  </div>
+
+  <div class="intro">
+    <h2>すべての仕事は、3つのどれかから始まる</h2>
+    <div class="types">
+      <div class="type p"><div class="t">① プロジェクト型</div><div class="d">一回性・明確なゴール。TODOに分解して進める。</div></div>
+      <div class="type r"><div class="t">② ルーティン型</div><div class="d">繰り返し発生。改善で価値が大きくなる。</div></div>
+      <div class="type m"><div class="t">③ 欠落（未実装）業務</div><div class="d">本来やるべきだが、まだ"存在しない"仕事。まず存在させるのが第一歩。</div></div>
+    </div>
+    <p class="flow">これを <b>可視化（悩み→課題）→ 型化（テンプレ・標準化）→ システム化（仕組み化）</b> と育てると、改善が"回る仕組み"になり、次のサイクルが加速する。<br>そして <b>AIは、その全体を加速する</b> ── 情報収集／壁打ち／型化・標準化／記録・分析の4点で。農業・中小企業・行政・教育まで、同じ地図で語れます。</p>
+  </div>
+
+  <div class="gallery">
+    <figure class="shot">
+      <div class="cap"><span class="badge b-core">核</span><span class="ttl">AIの当て方マップ（抽象版）</span></div>
+      <a class="img" href="maturity-cycle-map.png" target="_blank" rel="noopener"><img src="maturity-cycle-map.png" alt="AIの当て方マップ：悩み→課題→プロジェクト/ルーティン→型化→システム化"></a>
+      <p class="note">いちばんシンプルな核。「都度AI（ぱっと使う）」と「システム化（組む）」の2モードが、型化を橋にどう移っていくか。<span class="zoom">クリックで拡大 ↗</span></p>
+    </figure>
+
+    <figure class="shot">
+      <div class="cap"><span class="badge b-biz">汎用</span><span class="ttl">ビジネス版（3類型フル）</span></div>
+      <a class="img" href="maturity-cycle-business.png" target="_blank" rel="noopener"><img src="maturity-cycle-business.png" alt="仕事の成熟サイクル ビジネス汎用版 3類型フル" loading="lazy"></a>
+      <p class="note">プロジェクト・ルーティン・欠落業務の3類型を、システム化レベル1〜5・改善のフライホイール・AIの役割まで一枚に。あらゆる業種の決定版マップ。<span class="zoom">クリックで拡大 ↗</span></p>
+    </figure>
+
+    <figure class="shot">
+      <div class="cap"><span class="badge b-agri">農業</span><span class="ttl">農業版（3類型フル）</span></div>
+      <a class="img" href="maturity-cycle-agri.png" target="_blank" rel="noopener"><img src="maturity-cycle-agri.png" alt="農業の仕事成熟サイクル 3類型フル" loading="lazy"></a>
+      <p class="note">同じ地図を農業に当てはめた版。アスパラ収穫・水管理・選別などの具体例つきで、現場にそのまま落とせる。<span class="zoom">クリックで拡大 ↗</span></p>
+    </figure>
+
+    <figure class="shot">
+      <div class="cap"><span class="badge b-agri">展開</span><span class="ttl">農業版（適用フィールド・普遍性）</span></div>
+      <a class="img" href="maturity-cycle-agri-fields.png" target="_blank" rel="noopener"><img src="maturity-cycle-agri-fields.png" alt="農業の仕事成熟サイクル 適用フィールド版" loading="lazy"></a>
+      <p class="note">「これは農業だけの話ではない」── 中小企業・行政・教育・やまがBASE まで、同じサイクルが効くことを示した版。<span class="zoom">クリックで拡大 ↗</span></p>
+    </figure>
+  </div>
+
+  <div class="site-footer">
+    <p>「仕事の成熟サイクル」フレームワーク ／ YAMAGA BASE Presents bYコミュニティ</p>
+    <p>&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc.</p>
+  </div>
+</div>
+</body>
+</html>
