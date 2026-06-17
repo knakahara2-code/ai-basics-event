@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIを活用したオペレーション改善Ⅱ ── 自律型AIエージェントを立ち上げ、業務を動かす</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@400;600;700;900&display=swap');
+:root{
+  --bg:#0a0a1a; --card:#12122a; --blue:#4f8fff; --purple:#8b5cf6; --pink:#ec4899;
+  --green:#10b981; --orange:#f59e0b; --cyan:#06b6d4; --red:#ef4444;
+  --text:#f0f0ff; --dim:#a0a0c0; --border:rgba(255,255,255,0.1);
+  --g-main:linear-gradient(135deg,#4f8fff,#8b5cf6,#ec4899);
+  --g-cool:linear-gradient(135deg,#06b6d4,#4f8fff);
+  --g-warm:linear-gradient(135deg,#f59e0b,#ec4899);
+  --g-green:linear-gradient(135deg,#10b981,#06b6d4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans JP','Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh;}
+.bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.14;animation:float 22s infinite ease-in-out;}
+.orb:nth-child(1){width:520px;height:520px;background:var(--blue);top:-12%;left:-8%;}
+.orb:nth-child(2){width:420px;height:420px;background:var(--purple);top:48%;right:-10%;animation-delay:-7s;}
+.orb:nth-child(3){width:360px;height:360px;background:var(--pink);bottom:-12%;left:32%;animation-delay:-14s;}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-30px) scale(1.08);}66%{transform:translate(-20px,20px) scale(0.96);}}
+
+.deck{position:relative;width:100%;height:100vh;z-index:1;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:54px 72px;opacity:0;transform:translateX(50px);transition:opacity .5s ease,transform .5s ease;pointer-events:none;overflow-y:auto;}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:auto;}
+.slide.prev{opacity:0;transform:translateX(-50px);}
+.inner{width:100%;max-width:1060px;margin:auto;}
+.center{text-align:center;}
+
+.eyebrow{font-size:.8rem;letter-spacing:.22em;color:var(--dim);font-weight:600;margin-bottom:10px;}
+h1.title{font-size:3rem;font-weight:900;line-height:1.25;background:var(--g-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.title-sub{font-size:1.25rem;color:var(--cyan);margin-top:14px;font-weight:500;}
+.meta{color:var(--dim);font-size:.95rem;margin-top:18px;}
+h2.stitle{font-size:2.1rem;font-weight:800;line-height:1.3;margin-bottom:8px;}
+.g-cool{background:var(--g-cool);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.g-warm{background:var(--g-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.g-green{background:var(--g-green);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.g-main{background:var(--g-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.lead{color:var(--dim);font-size:1.05rem;margin-bottom:22px;}
+
+.big{font-size:2.5rem;font-weight:900;line-height:1.35;}
+.big.sm{font-size:1.9rem;}
+.kicker{font-size:1.15rem;color:var(--dim);margin-top:18px;line-height:1.7;}
+
+.cards{display:grid;gap:16px;margin-top:8px;}
+.cols-2{grid-template-columns:repeat(2,1fr);}
+.cols-3{grid-template-columns:repeat(3,1fr);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px;}
+.card .ic{font-size:1.9rem;margin-bottom:8px;}
+.card .ct{font-size:1.15rem;font-weight:700;margin-bottom:6px;}
+.card .cd{font-size:.92rem;color:var(--dim);line-height:1.6;}
+.card.blue{border-color:rgba(79,143,255,.4);} .card.blue .ct{color:var(--blue);}
+.card.green{border-color:rgba(16,185,129,.4);} .card.green .ct{color:var(--green);}
+.card.orange{border-color:rgba(245,158,11,.4);} .card.orange .ct{color:var(--orange);}
+.card.purple{border-color:rgba(139,92,246,.4);} .card.purple .ct{color:var(--purple);}
+.card.cyan{border-color:rgba(6,182,212,.4);} .card.cyan .ct{color:var(--cyan);}
+.card.red{border-color:rgba(239,68,68,.4);} .card.red .ct{color:var(--red);}
+
+.hl{border-radius:14px;padding:18px 24px;margin-top:20px;font-size:1.1rem;line-height:1.6;}
+.hl.blue{background:rgba(79,143,255,.1);border:1px solid rgba(79,143,255,.35);}
+.hl.cyan{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.35);}
+.hl.orange{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.35);}
+.hl.pink{background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.35);}
+.hl b{color:var(--cyan);}
+.hl.orange b{color:var(--orange);} .hl.pink b{color:var(--pink);}
+
+.flow{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:24px 0;}
+.flow .node{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;text-align:center;min-width:150px;}
+.flow .node .t{font-weight:700;font-size:1.05rem;}
+.flow .node .d{font-size:.82rem;color:var(--dim);margin-top:4px;}
+.flow .arr{font-size:1.6rem;color:var(--cyan);}
+.flow .node.hot{border-color:var(--cyan);background:rgba(6,182,212,.1);}
+
+.row{display:flex;gap:18px;align-items:stretch;margin-top:18px;}
+.row>div{flex:1;}
+.vs{display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--dim);font-size:1.2rem;}
+
+table.t{width:100%;border-collapse:collapse;margin-top:18px;font-size:.95rem;}
+table.t th,table.t td{border:1px solid var(--border);padding:11px 14px;text-align:left;vertical-align:top;}
+table.t th{background:rgba(255,255,255,.04);font-weight:700;}
+table.t td.k{color:var(--cyan);font-weight:700;white-space:nowrap;}
+
+.note{font-size:.9rem;color:var(--dim);margin-top:16px;font-style:italic;}
+ul.pl{list-style:none;margin-top:14px;}
+ul.pl li{padding:7px 0 7px 26px;position:relative;font-size:1.02rem;line-height:1.6;}
+ul.pl li:before{content:"▶";position:absolute;left:0;color:var(--cyan);font-size:.8rem;top:11px;}
+.tag-list{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:24px;}
+.tag{font-size:.85rem;padding:6px 16px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--dim);}
+.live{display:inline-block;font-size:.8rem;font-weight:700;color:var(--red);background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);border-radius:20px;padding:4px 14px;margin-bottom:14px;}
+.links-title{font-size:.85rem;color:var(--dim);margin-top:16px;font-weight:600;}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:9px 16px;margin-top:8px;}
+.lk{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 14px;text-decoration:none;cursor:pointer;transition:border-color .15s,transform .15s;}
+.lk:hover{border-color:var(--cyan);transform:translateY(-1px);}
+.lk .lbl{font-size:.74rem;color:var(--dim);font-weight:600;}
+.lk .url{font-size:.92rem;color:var(--cyan);font-weight:700;word-break:break-all;}
+
+/* nav */
+.nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:16px;
+  background:rgba(18,18,42,.85);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:30px;padding:8px 16px;}
+.nav-btn{width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:var(--text);
+  cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.nav-btn:hover{background:rgba(79,143,255,.35);}
+.counter{font-size:.85rem;color:var(--dim);min-width:54px;text-align:center;}
+.dots{display:flex;gap:5px;max-width:340px;flex-wrap:wrap;justify-content:center;}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:.3s;}
+.dot.active{background:var(--cyan);box-shadow:0 0 8px rgba(6,182,212,.6);}
+.brand{position:fixed;top:18px;right:24px;z-index:20;font-size:.78rem;color:var(--dim);letter-spacing:.1em;}
+
+@media(max-width:780px){
+  .slide{padding:40px 22px;}
+  h1.title{font-size:2rem;} .big{font-size:1.7rem;} h2.stitle{font-size:1.5rem;}
+  .cols-2,.cols-3{grid-template-columns:1fr;} .row{flex-direction:column;} .flow{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="brand">bY 2.0 ／ オペレーション改善Ⅱ</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 表紙 -->
+  <div class="slide active"><div class="inner center">
+    <p class="eyebrow">YAMAGA BASE Presents bYコミュニティ ／ 第2回</p>
+    <h1 class="title">AIを活用した<br>オペレーション改善Ⅱ</h1>
+    <p class="title-sub">自律型AIエージェントを立ち上げ、業務を動かす</p>
+    <p class="meta">2026年6月18日（木）19:00–20:30 ／ 講師：中原 功寛</p>
+    <div class="tag-list">
+      <span class="tag">自律エージェント</span><span class="tag">Codex / Claude Code</span>
+      <span class="tag">業務改善</span><span class="tag">安全運用</span>
+    </div>
+  </div></div>
+
+  <!-- 2 ゴール宣言 -->
+  <div class="slide"><div class="inner center">
+    <p class="eyebrow">今日のゴール</p>
+    <p class="big g-cool">完成じゃない。<br>最初の一歩。</p>
+    <p class="kicker">ターミナルを開いて1回打てれば勝ち。<br><b style="color:var(--cyan)">完走しなくて、大丈夫。</b> 怖くなくなれば成功です。</p>
+  </div></div>
+
+  <!-- 3 3つの参加スタイル -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">PARTICIPATION</p>
+    <h2 class="stitle"><span class="g-main">3つの参加スタイル</span></h2>
+    <p class="lead">どの段階でも、全員に居場所があります。</p>
+    <div class="cards cols-3">
+      <div class="card blue"><div class="ic">🌱</div><div class="ct">はじめての方</div><div class="cd">講師と一緒に、その場でセットアップを試す。完走しなくてOK。</div></div>
+      <div class="card green"><div class="ic">🙋</div><div class="ct">済みの方</div><div class="cd">自分の“詰まり”や疑問を持ってくる。質問タイムで回答します。</div></div>
+      <div class="card purple"><div class="ic">👀</div><div class="ct">見るだけの方</div><div class="cd">実演を見て「自社の何に使うか」を考える時間に。手は動かさなくてOK。</div></div>
+    </div>
+  </div></div>
+
+  <!-- 4 今日の流れ -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">AGENDA</p>
+    <h2 class="stitle"><span class="g-cool">今日の流れ</span></h2>
+    <div class="cards cols-3">
+      <div class="card"><div class="ic">🤖</div><div class="ct">1. エージェントとは</div><div class="cd">チャットとの違い・脳とPCの関係</div></div>
+      <div class="card"><div class="ic">⚙️</div><div class="ct">2. 立ち上げる</div><div class="cd">みんなで“ちょっと”セットアップ</div></div>
+      <div class="card"><div class="ic">🎬</div><div class="ct">3. 使う（デモ）</div><div class="cd">棚卸/マニュアルをAIに代行させる</div></div>
+      <div class="card"><div class="ic">🛡️</div><div class="ct">4. 安全に</div><div class="cd">リスクと、暴走させない運用</div></div>
+      <div class="card"><div class="ic">💬</div><div class="ct">5. 質問タイム</div><div class="cd">持ち帰り・来週から1つTry</div></div>
+    </div>
+    <p class="note">半分は手を動かす時間。スライドは“支え”です。</p>
+  </div></div>
+
+  <!-- 5 チャット vs エージェント -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">PART 1 ── そもそもエージェントとは</p>
+    <h2 class="stitle">チャット <span class="g-main">vs</span> エージェント</h2>
+    <p class="lead">同じ脳。違うのは「手があるか」だけ。</p>
+    <div class="row">
+      <div class="card blue"><div class="ic">📞</div><div class="ct">チャット型AI（ChatGPT / Claude）</div>
+        <div class="cd">賢い脳が箱の中。文章で聞くと文章で返すだけ。あなたのファイルには触れない。<br><b style="color:var(--blue)">＝ 助言する</b><br><span style="color:var(--dim)">電話の向こうの優秀なコンサル</span></div></div>
+      <div class="vs">→</div>
+      <div class="card cyan"><div class="ic">🧑‍💻</div><div class="ct">自律エージェント（Codex / Claude Code）</div>
+        <div class="cd">同じ脳に「手と机」を付けたもの。実際にファイルを開き・作り・保存する。<br><b style="color:var(--cyan)">＝ 作業を終わらせる</b><br><span style="color:var(--dim)">そのコンサルが隣の席に座った</span></div></div>
+    </div>
+  </div></div>
+
+  <!-- 6 脳=クラウド/手=PC -->
+  <div class="slide"><div class="inner center">
+    <p class="eyebrow">いちばん大事なモデル</p>
+    <h2 class="stitle"><span class="g-cool">脳＝クラウド ／ 手＝あなたのPC</span></h2>
+    <div class="flow" style="margin-top:30px;">
+      <div class="node hot"><div class="t">☁️ 脳</div><div class="d">考える＝提供元のクラウド</div></div>
+      <div class="arr">⇄ API ⇄</div>
+      <div class="node"><div class="t">💻 手</div><div class="d">作業する＝あなたのPC</div></div>
+    </div>
+    <div class="hl cyan">この分離が、今日の全部の土台。<br>ここから <b>「勝手に動く」</b> も <b>「データが上がる」</b> も、両方すっきり説明できます。</div>
+  </div></div>
+
+  <!-- 7 エージェントループ -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">PART 1</p>
+    <h2 class="stitle"><span class="g-main">エージェントループ</span></h2>
+    <p class="lead">これが“自律的”の正体。難しくない。</p>
+    <div class="flow">
+      <div class="node"><div class="t">① 考える</div><div class="d">何をすべきか</div></div>
+      <div class="arr">→</div>
+      <div class="node"><div class="t">② 道具を使う</div><div class="d">読む・書く・実行</div></div>
+      <div class="arr">→</div>
+      <div class="node"><div class="t">③ 結果を見る</div><div class="d">うまくいったか</div></div>
+      <div class="arr">↺</div>
+    </div>
+    <p class="note">目標が終わるまで自動で繰り返す。脳は文章しか出せず、道具を実際に使うのは脳を包むプログラム。</p>
+  </div></div>
+
+  <!-- 8 CLI→GUI→NLUI -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">PART 2 ── 怖くない理由</p>
+    <h2 class="stitle"><span class="g-green">使える人の母数は、毎回爆発してきた</span></h2>
+    <div class="flow">
+      <div class="node"><div class="t">CLI</div><div class="d">文字で命令<br>＝専門家だけ</div></div>
+      <div class="arr">→</div>
+      <div class="node"><div class="t">GUI</div><div class="d">クリック<br>＝誰でも</div></div>
+      <div class="arr">→</div>
+      <div class="node hot"><div class="t">NLUI</div><div class="d">話すだけ<br>＝今ここ</div></div>
+    </div>
+    <div class="hl cyan"><b>ターミナル（CLI）はAIの接点。あなたの接点は NLUI ＝ ただ話すだけ。</b><br><span class="text-sm" style="color:var(--dim)">だから「黒い画面が怖い」を越えなくていい。あれはAIのためのもの。</span></div>
+  </div></div>
+
+  <!-- 9 車の比喩 -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">PART 2</p>
+    <h2 class="stitle">新しいAIを、<span class="g-warm">恐れなくていい</span></h2>
+    <p class="big sm" style="margin:14px 0;">車は新機能が出ても、<br>“運転の仕方”は変わらない。</p>
+    <p class="lead">モデルは次々新しくなるが、使い方の基本はずっと一緒。進化はむしろ運転を“楽”にする。</p>
+    <table class="t">
+      <tr><th>運転の基本（変わらない）</th><th>AIでの中身（変わらない）</th></tr>
+      <tr><td class="k">目的地を決める</td><td>何をやりたいか（WHY）は自分が決める</td></tr>
+      <tr><td class="k">ハンドル・アクセル</td><td>頼み方（短く／1問ずつ／鏡として）</td></tr>
+      <tr><td class="k">交通ルール</td><td>安全運用（後半で扱う）</td></tr>
+      <tr><td class="k">前を見て運転</td><td>AIの出力を人が検証する</td></tr>
+    </table>
+  </div></div>
+
+  <!-- 10 用意するもの -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">PART 3 ── 立ち上げてみる</p>
+    <h2 class="stitle"><span class="g-cool">まずは、これだけで始められる</span></h2>
+    <p class="lead">2026年から Claude Code 本体は単体アプリに。<b style="color:var(--cyan)">最初の一歩は Node.js なし</b>（GUIなら ターミナルも不要）。</p>
+    <div class="row">
+      <div class="card cyan"><div class="ic">💻</div><div class="ct">① PC ＋ アプリ</div><div class="cd">公式からダウンロードして入れるだけ</div></div>
+      <div class="card cyan"><div class="ic">🔑</div><div class="ct">② 有料アカウント</div><div class="cd">脳（クラウド）を使う権利</div></div>
+    </div>
+    <div class="hl orange">ただし <b>Codex・外部ツール連携（MCP）・コード実行</b> には Node.js（18+）が要る。本体には“内蔵”ランタイムがあるが、本体の外のJSには貸せないため。<b>→ 本格運用で要るので、今回は Node も入れます。</b></div>
+  </div></div>
+
+  <!-- 11 デスクトップアプリ -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">PART 3 ── 一番ラクな入れ方</p>
+    <h2 class="stitle"><span class="g-green">デスクトップアプリなら、3ステップ</span></h2>
+    <div class="flow">
+      <div class="node"><div class="t">① ダウンロード</div><div class="d">公式サイトから</div></div><div class="arr">→</div>
+      <div class="node"><div class="t">② インストール</div><div class="d">画面の指示どおり</div></div><div class="arr">→</div>
+      <div class="node hot"><div class="t">③ ログイン</div><div class="d">有料アカウント</div></div>
+    </div>
+    <div class="links-title">📥 入れる・登録するリンク（公式のみ）</div>
+    <div class="links">
+      <a class="lk" href="https://nodejs.org" target="_blank" rel="noopener"><span class="lbl">Node.js（緑の「LTS」ボタン）</span><span class="url">nodejs.org</span></a>
+      <a class="lk" href="https://claude.com/download" target="_blank" rel="noopener"><span class="lbl">Claude Code（アプリをダウンロード）</span><span class="url">claude.com/download</span></a>
+      <a class="lk" href="https://chatgpt.com" target="_blank" rel="noopener"><span class="lbl">ChatGPT（Codex用・アカウント）</span><span class="url">chatgpt.com</span></a>
+    </div>
+    <p class="live" style="margin-top:14px;">● ここから画面共有でライブ ── 一緒に試す／済みの人はチャットに質問。完走不問。</p>
+  </div></div>
+
+  <!-- 12 デモ -->
+  <div class="slide"><div class="inner">
+    <p class="live">● ライブデモ（35–55分）</p>
+    <h2 class="stitle"><span class="g-main">棚卸 / マニュアルを、AIに代行させる</span></h2>
+    <div class="row">
+      <div class="card"><div class="ct" style="color:var(--dim)">第1回</div><div class="cd">人がやる作法<br>（業務棚卸・改善）</div></div>
+      <div class="vs">→</div>
+      <div class="card cyan"><div class="ct">第2回（今日）</div><div class="cd">同じことを、<b style="color:var(--cyan)">エージェントにやらせる</b></div></div>
+    </div>
+    <ul class="pl">
+      <li>ダミーの書類フォルダを渡す → AIが棚卸表を自動生成</li>
+      <li>「重複・属人化候補も出して」と続ける</li>
+      <li>※ <b style="color:var(--orange)">ダミーデータ＋承認を挟む様子</b>で「安全」も同時に実演</li>
+    </ul>
+    <div class="links-title">🔗 参考・持ち帰りリンク</div>
+    <div class="links">
+      <a class="lk" href="https://ai-basics-event.vercel.app/ai-agent-glossary.html" target="_blank" rel="noopener"><span class="lbl">AI用語集サイト（ぜんぶ「たとえ」で）</span><span class="url">ai-basics-event.vercel.app/ai-agent-glossary.html</span></a>
+      <a class="lk" href="https://ai-basics-event.vercel.app" target="_blank" rel="noopener"><span class="lbl">資料ハブ（年表・ガイド一覧）</span><span class="url">ai-basics-event.vercel.app</span></a>
+    </div>
+  </div></div>
+
+  <!-- 13 結論先出し -->
+  <div class="slide"><div class="inner center">
+    <p class="eyebrow">PART 4 ── リスクと安全運用 ／ 今日の核心</p>
+    <p class="big g-warm" style="line-height:1.4;">守るのは<br>「データの行き先」より<br>「AIの行動」</p>
+    <p class="kicker">ここを取り違えなければ、もう怖くない。</p>
+  </div></div>
+
+  <!-- 14 漏洩=Gmail -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">論点①</p>
+    <h2 class="stitle">情報漏洩 ＝ <span class="g-cool">Gmailと同じ信頼</span></h2>
+    <p class="lead">エージェントに見せたものは脳（クラウド）に送られる。でも──</p>
+    <div class="hl cyan">それは <b>Gmail・LINE・freee</b> に機密を預けるのと <b>同じ種類の信頼</b>。<br>「サーバーに上がる＝危険」を徹底したら、クラウドは何も使えない。<b>AIだけ特別に怖がる理由はない。</b></div>
+  </div></div>
+
+  <!-- 15 freee比較 -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">論点① ── “freeeと何が違う？”</p>
+    <h2 class="stitle">本当の違いは <span class="g-warm">「1つだけ」</span></h2>
+    <table class="t">
+      <tr><th>論点</th><th>freee / Gmail</th><th>AI（無料・個人）</th><th>結論</th></tr>
+      <tr><td class="k">学習に使うか</td><td>使わない（目的限定）</td><td>使う場合がある</td><td>業務用/APIプランなら同じ</td></tr>
+      <tr><td class="k">他人に出るか</td><td>アカウント分離で起きない</td><td>同じく分離</td><td>差はない（どちらも極小）</td></tr>
+      <tr><td class="k">契約で縛れるか</td><td>DPAあり</td><td>法人で DPA・ゼロ保持</td><td>紙で縛れば freee と同等</td></tr>
+    </table>
+    <p class="note">「絶対漏れない」は無い。でも“学習しないプラン”にすれば、残るは Gmail 並みの極小リスクだけ。</p>
+  </div></div>
+
+  <!-- 16 ★勝手に動く -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">論点② ★ 本当に新しいのはここ</p>
+    <h2 class="stitle"><span class="g-main">「勝手に動く」</span> が、唯一の新リスク</h2>
+    <p class="lead">SaaS（Gmail/freee）は保管・処理するだけ。エージェントは読んで・書いて・送って・<b style="color:var(--cyan)">実行する</b>。</p>
+    <div class="hl orange">🧑‍💼 たとえ：<b>優秀なインターン</b>。普通は「実行していい？」と聞く。<br>「もう全部勝手にやって」と<b>設定した時だけ</b>、聞かずに進む。事故るのは“勝手に”ではなく“人がそう設定した”時。</div>
+    <ul class="pl">
+      <li>確認を残す（書き込み・削除・送信の前に人が見る）</li>
+      <li>範囲を区切る（いきなり全権限を渡さない）</li>
+      <li>小さく始める（読むだけ → 信頼できてから任せる）</li>
+    </ul>
+  </div></div>
+
+  <!-- 17 道具パターン -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">論点②</p>
+    <h2 class="stitle">道具パターン <span style="font-size:1rem;color:var(--dim);">── 規制データ用の切り札</span></h2>
+    <div class="hl pink">本物データを見せず、<b>“処理する道具（スクリプト）”を作らせ、ローカル実行</b>。データは一歩も外に出ない＝freeeより私的。</div>
+    <div class="hl blue" style="margin-top:14px;">ただし <b>万能の安全策ではない</b>。法律・契約でデータが外に出せない時（規制業種の個人情報など）の切り札。<br>普通の業務は、業務用プランで <b>Gmail と同じくそのまま</b>使えばいい。</div>
+  </div></div>
+
+  <!-- 18 3行ルール + ガードレール -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">安全運用 ── まとめ</p>
+    <h2 class="stitle"><span class="g-green">「ビビる」でなく「いつもの基準を当てる」</span></h2>
+    <div class="row" style="align-items:flex-start;">
+      <div style="flex:1.3;">
+        <ul class="pl">
+          <li><b style="color:var(--cyan)">① 学習しないプランを選ぶ</b> … これだけで漏洩懸念は Gmail 並みに</li>
+          <li><b style="color:var(--cyan)">② 行動には承認</b> … エージェント固有の“本当に新しい”リスク</li>
+          <li><b style="color:var(--cyan)">③ 規制データは法律のルールが別</b> … 金融・医療など</li>
+        </ul>
+      </div>
+      <div style="flex:1;">
+        <div class="card"><div class="ct" style="font-size:.95rem;color:var(--dim)">前回フレーム＝自律度の手綱</div>
+          <div class="cd">・3つの行き先（廃止／AI委譲／磨く）<br>・試す／断る／任せる<br>・3層モデル（作業／検証／設計）</div></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 19 発明≠実行 -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">PART 5 ── 大きな問い</p>
+    <h2 class="stitle">発明 <span class="g-warm">≠</span> 実行</h2>
+    <div class="flow">
+      <div class="node"><div class="t">Xerox</div><div class="d">GUIを発明<br>でも売れず</div></div><div class="arr">→</div>
+      <div class="node hot"><div class="t">Apple</div><div class="d">商品化＝革命</div></div><div class="arr">→</div>
+      <div class="node"><div class="t">AI</div><div class="d">今も同じ構図</div></div>
+    </div>
+    <div class="hl cyan"><b>技術を持つことより「何に使うか（実行）」で差がつく。</b><br>エジソン「執行されないビジョンは幻想にすぎない」＝「AIだけでは差別化にならない」。</div>
+  </div></div>
+
+  <!-- 20 独自性×AI -->
+  <div class="slide"><div class="inner center">
+    <p class="eyebrow">PART 5</p>
+    <p class="big g-main" style="line-height:1.4;">独自性 × AI</p>
+    <p class="kicker">全員がAIを持つ時代。差がつくのは「<b style="color:var(--cyan)">自社の独自性 × AI</b>」。<br>人が残るのは、判断・WHY ── そこをAIで磨く。</p>
+  </div></div>
+
+  <!-- 21 質問タイム -->
+  <div class="slide"><div class="inner center">
+    <p class="eyebrow">Q & A</p>
+    <p class="big g-cool">質問、お待ちしています。</p>
+    <p class="kicker">チャットの質問に、わかる範囲でお答えします。<br>「済みの人の疑問」＝ 全員の学び。</p>
+    <div style="font-size:4rem;margin-top:20px;">💬</div>
+  </div></div>
+
+  <!-- 22 持ち帰り -->
+  <div class="slide"><div class="inner">
+    <p class="eyebrow">持ち帰り</p>
+    <h2 class="stitle"><span class="g-green">今日の続きを、自分のペースで</span></h2>
+    <div class="cards cols-3">
+      <div class="card"><div class="ic">📄</div><div class="ct">セットアップ手順書</div><div class="cd">Mac/Win 両対応・段階チェックポイント</div></div>
+      <div class="card"><div class="ic">🛡️</div><div class="ct">安全運用チェックリスト</div><div class="cd">使う前に毎回見る1枚</div></div>
+      <div class="card cyan"><div class="ic">📖</div><div class="ct">AI用語集サイト</div><div class="cd">ぜんぶ「たとえ」で引ける（URLは別途）</div></div>
+    </div>
+    <div class="hl cyan">来週、<b>低リスクな1業務</b>でTryしてみる。それが、今日のいちばんの成果。</div>
+  </div></div>
+
+  <!-- 23 Closing -->
+  <div class="slide"><div class="inner center">
+    <p class="big g-main">ありがとうございました。</p>
+    <p class="title-sub" style="margin-top:20px;">be You. beyond You. beside You. ── at YAMAGA BASE.</p>
+    <p class="meta">やまがBASE 株式会社</p>
+  </div></div>
+
+</div>
+
+<div class="nav">
+  <button class="nav-btn" id="prev">‹</button>
+  <span class="counter" id="counter">1 / 23</span>
+  <button class="nav-btn" id="next">›</button>
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const counter=document.getElementById('counter');
+  const dotsWrap=document.getElementById('dots');
+  let cur=0;
+  slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot';d.onclick=()=>go(i);dotsWrap.appendChild(d);});
+  const dots=[...document.querySelectorAll('.dot')];
+  function go(n){
+    n=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,i)=>{s.classList.remove('active','prev');if(i<n)s.classList.add('prev');});
+    slides[n].classList.add('active');
+    dots.forEach((d,i)=>d.classList.toggle('active',i===n));
+    counter.textContent=(n+1)+' / '+slides.length;
+    cur=n; history.replaceState(null,'','#'+(n+1));
+  }
+  document.getElementById('next').onclick=()=>go(cur+1);
+  document.getElementById('prev').onclick=()=>go(cur-1);
+  addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1);}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
+    if(e.key==='Home')go(0); if(e.key==='End')go(slides.length-1);
+  });
+  // deep-link (#5 など) でその枚に
+  const h=parseInt((location.hash||'').replace('#',''));
+  go(isNaN(h)?0:h-1);
+</script>
+</body>
+</html>
