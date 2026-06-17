@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI・自律エージェント 用語集 — むずかしい言葉を、ぜんぶ「たとえ」で</title>
+<meta name="description" content="チャットAIと自律エージェントの違い、Node.js / npm / ターミナル / API / トークン / モデル、CLI→GUI→NLUI、安全運用まで。たとえで分かる用語集。">
+<link rel="stylesheet" href="common.css">
+<style>
+body { padding: 40px 20px 80px; }
+.container { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* Header */
+.header { text-align: center; margin-bottom: 28px; }
+.header h1 {
+  font-size: 2.2rem; font-weight: 900; line-height: 1.3; margin: 6px 0 8px;
+  background: linear-gradient(135deg, var(--blue), var(--purple), var(--pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header .subtitle { color: var(--text-dim); font-size: 0.95rem; }
+.date-badge {
+  display: inline-block; font-size: 0.75rem; padding: 4px 14px; border-radius: 20px;
+  background: var(--blue-bg); border: 1px solid var(--blue-border); color: var(--blue);
+  font-weight: 500; margin-top: 12px;
+}
+
+/* 2 big messages */
+.messages { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin: 26px 0 8px; }
+.msg {
+  flex: 1; min-width: 260px; max-width: 420px; text-align: left;
+  border-radius: 14px; padding: 16px 20px; border: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(79,143,255,0.08), rgba(139,92,246,0.05));
+}
+.msg .t { font-weight: 800; font-size: 0.98rem; margin-bottom: 3px; }
+.msg.a .t { color: var(--orange); } .msg.b .t { color: var(--blue); }
+.msg .d { font-size: 0.85rem; color: var(--text-dim); }
+
+/* Search + jump */
+.tools { margin: 22px 0 6px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.search {
+  flex: 1; min-width: 200px; background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 22px; padding: 10px 18px; color: var(--text); font-size: 0.95rem; outline: none;
+  font-family: inherit;
+}
+.search:focus { border-color: var(--blue-border); }
+.jump { display: flex; flex-wrap: wrap; gap: 7px; }
+.jump a {
+  font-size: 0.78rem; color: var(--text-dim); text-decoration: none; padding: 5px 11px;
+  border-radius: 16px; border: 1px solid var(--border); background: var(--card-bg); transition: .15s;
+}
+.jump a:hover { color: var(--text); border-color: rgba(255,255,255,0.2); text-decoration: none; }
+
+/* Category */
+.cat { margin-top: 40px; scroll-margin-top: 20px; }
+.cat-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px;
+}
+.cat-title { font-size: 1.45rem; font-weight: 800; margin-bottom: 16px; }
+.cat-note { font-size: 0.82rem; color: var(--text-dim); font-weight: 400; margin-left: 8px; }
+
+/* Term cards */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+.tcard {
+  background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent, var(--blue));
+  border-radius: 14px; padding: 16px 18px; transition: transform .2s, border-color .3s, box-shadow .3s;
+}
+.tcard:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.18); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.tcard .term { font-size: 1.05rem; font-weight: 800; }
+.tcard .eng { font-size: 0.74rem; color: var(--text-dim); font-weight: 600; margin-bottom: 8px; }
+.tcard .def { font-size: 0.86rem; color: var(--text); line-height: 1.6; }
+.tcard .ex {
+  margin-top: 10px; font-size: 0.8rem; line-height: 1.5; border-radius: 9px; padding: 8px 11px;
+  background: rgba(245,158,11,0.07); border: 1px solid var(--orange-border); color: #f5d9a8;
+}
+.tcard .ex b { color: var(--orange); }
+.tcard .use { margin-top: 8px; font-size: 0.78rem; color: var(--text-dim); font-style: italic; }
+.tcard b { color: var(--blue); }
+
+/* accent per category */
+.c-core .tcard { border-left-color: var(--blue); }   .c-core .cat-label { color: var(--blue); }
+.c-setup .tcard { border-left-color: var(--green); }  .c-setup .cat-label { color: var(--green); }
+.c-money .tcard { border-left-color: var(--orange); } .c-money .cat-label { color: var(--orange); }
+.c-brain .tcard { border-left-color: var(--purple); } .c-brain .cat-label { color: var(--purple); }
+.c-lang .tcard { border-left-color: var(--cyan); }    .c-lang .cat-label { color: var(--cyan); }
+.c-ui .tcard { border-left-color: var(--pink); }      .c-ui .cat-label { color: var(--pink); }
+.c-safe .tcard { border-left-color: #ef4444; }        .c-safe .cat-label { color: #ef4444; }
+.c-meta .tcard { border-left-color: var(--text-dim); } .c-meta .cat-label { color: var(--text-dim); }
+
+.noresult { display: none; text-align: center; color: var(--text-dim); padding: 40px; }
+
+.bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.orb { position: absolute; border-radius: 50%; filter: blur(110px); opacity: 0.1; }
+.orb:nth-child(1){ width:480px;height:480px;background:var(--blue);top:-12%;left:-10%; }
+.orb:nth-child(2){ width:380px;height:380px;background:var(--purple);top:55%;right:-12%; }
+
+@media (max-width: 600px) {
+  .header h1 { font-size: 1.55rem; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div></div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="footer-nav" style="margin-bottom:18px;"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+    <h1>AI・自律エージェント 用語集</h1>
+    <p class="subtitle">むずかしい言葉を、ぜんぶ「たとえ」で。</p>
+    <span class="date-badge">bY 2.0 ／ オペレーション改善Ⅱ</span>
+  </div>
+
+  <div class="messages">
+    <div class="msg a"><div class="t">🏁 発明 ≠ 実行</div><div class="d">技術を持つことより「何に使うか」で差がつく。AIだけでは差別化にならない。</div></div>
+    <div class="msg b"><div class="t">🚗 運転の仕方は変わらない</div><div class="d">モデルは次々新しくなるが、使い方の基本はずっと一緒。新しいAIを恐れなくていい。</div></div>
+  </div>
+
+  <div class="tools">
+    <input class="search" id="q" type="text" placeholder="🔍 用語を検索（例：トークン）">
+    <div class="jump">
+      <a href="#core">核モデル</a><a href="#setup">セットアップ</a><a href="#money">お金</a>
+      <a href="#brain">脳</a><a href="#lang">言語</a><a href="#ui">UI史</a>
+      <a href="#safe">安全</a><a href="#meta">たとえ集</a>
+    </div>
+  </div>
+
+  <!-- 核モデル -->
+  <section class="cat c-core" id="core">
+    <div class="cat-label">CORE</div><div class="cat-title">まず押さえる核モデル<span class="cat-note">この4つで全部つながる</span></div>
+    <div class="grid">
+      <div class="tcard"><div class="term">脳＝クラウド／手＝あなたのPC</div><div class="eng">いちばん大事なモデル</div>
+        <div class="def">AIの考える脳は提供元のサーバー（クラウド）、ファイルを触る手はあなたのPC。この2つが分かれている。</div>
+        <div class="use">これで「勝手に動く」「データが上がる」両方が説明できる。</div></div>
+      <div class="tcard"><div class="term">チャット型AI</div><div class="eng">ChatGPT / Claude</div>
+        <div class="def">賢い脳が箱の中。文章で聞くと文章で返すだけ。ファイルには触れない＝助言する。</div>
+        <div class="ex">📞 たとえ：<b>電話の向こうの優秀なコンサル</b>。何でも答えるが、机の書類には触れない。</div></div>
+      <div class="tcard"><div class="term">自律エージェント</div><div class="eng">Codex / Claude Code</div>
+        <div class="def">同じ脳に手と机を付けたもの。実際にファイルを開き・作り・保存する＝作業を終わらせる。</div>
+        <div class="ex">🧑‍💻 たとえ：<b>そのコンサルが隣の席に座った</b>。同じ賢さで、今度は手を動かす。</div></div>
+      <div class="tcard"><div class="term">エージェントループ</div><div class="eng">think → act → observe</div>
+        <div class="def">考える→道具を使う（読む/書く/実行）→結果を見る、を目標完了まで自動で繰り返す。これが“自律的”の正体。</div></div>
+    </div>
+  </section>
+
+  <!-- セットアップ -->
+  <section class="cat c-setup" id="setup">
+    <div class="cat-label">SETUP</div><div class="cat-title">セットアップの言葉<span class="cat-note">手で入れるのは実質 Node.js だけ</span></div>
+    <div class="grid">
+      <div class="tcard"><div class="term">ターミナル</div><div class="eng">Terminal / PowerShell</div>
+        <div class="def">文字で命令を打つ「窓・場所」。Mac＝ターミナル、Win＝PowerShell。やることは「文字を打って Enter」だけ。</div></div>
+      <div class="tcard"><div class="term">CLI</div><div class="eng">Command Line Interface</div>
+        <div class="def">文字で命令する「やり方・方式」。ターミナルの中で使う流儀。<b>場所＝ターミナル／やり方＝CLI</b>。</div></div>
+      <div class="tcard"><div class="term">シェル</div><div class="eng">Shell（zsh / PowerShell）</div>
+        <div class="def">ターミナルの中で、命令を実際に理解して実行する「係」。深掘りは不要（窓＝ターミナル／やり方＝CLI で十分）。</div></div>
+      <div class="tcard"><div class="term">Node.js</div><div class="eng">ノード・ジェイエス</div>
+        <div class="def">PCの上でプログラムを動かす「土台（エンジン）」。一度入れればOK・無料。</div>
+        <div class="ex">📱 たとえ：<b>スマホ本体</b>。アプリを動かす土台そのもの。</div></div>
+      <div class="tcard"><div class="term">npm</div><div class="eng">Node Package Manager</div>
+        <div class="def">Nodeに最初から付いてくる「アプリを取ってくる店」。コマンド1行でツールを入れてくれる。</div>
+        <div class="ex">📱 たとえ：<b>App Store</b>。本体に最初から入ってる店員さん。</div></div>
+      <div class="tcard"><div class="term">用意する5材料</div><div class="eng">セットアップ全体像</div>
+        <div class="def">①PC ②ターミナル ③Node.js ④ツール本体 ⑤有料アカウント＋ログイン。</div>
+        <div class="use">つまずくのは実質 Node.js だけ。ツール本体は npm で一行で乗る。</div></div>
+    </div>
+  </section>
+
+  <!-- お金 -->
+  <section class="cat c-money" id="money">
+    <div class="cat-label">COST</div><div class="cat-title">お金の言葉<span class="cat-note">脳を借りる料金メーター</span></div>
+    <div class="grid">
+      <div class="tcard"><div class="term">API</div><div class="eng">Application Programming Interface</div>
+        <div class="def">ソフト同士が決まった形でやり取りする「窓口」。手が脳に頼む電話線。</div>
+        <div class="ex">🍽 たとえ：<b>レストランの注文カウンター</b>／コンセントの規格。中身を知らなくても使える。</div></div>
+      <div class="tcard"><div class="term">トークン</div><div class="eng">Token</div>
+        <div class="def">AIが文章を刻む単位＝課金メーター。英語は約4文字、日本語は約1文字で1トークン。入力＋出力で課金。</div>
+        <div class="ex">🚕 たとえ：<b>タクシーのメーター</b>。読ませるほど・話すほど回る。</div></div>
+      <div class="tcard"><div class="term">なぜエージェントは有料前提か</div><div class="eng">トークンを食う理由</div>
+        <div class="def">ループで脳を何十回も呼び、毎回「これまで全部」を読み直す→トークンが膨らむ。チャット1往復とケタ違い。</div></div>
+      <div class="tcard"><div class="term">定額 vs 従量</div><div class="eng">課金の2方式</div>
+        <div class="def">定額（Plus/Pro/Max）＝予算が読める・研修向き。従量（API）＝使った分・メーター注意。</div>
+        <div class="use">コスト暴走は主に従量（API）の話。まずは定額が安全。</div></div>
+    </div>
+  </section>
+
+  <!-- 脳 -->
+  <section class="cat c-brain" id="brain">
+    <div class="cat-label">MODEL</div><div class="cat-title">脳（モデル）の言葉<span class="cat-note">番号に詳しくなる必要はない</span></div>
+    <div class="grid">
+      <div class="tcard"><div class="term">モデル</div><div class="eng">Model</div>
+        <div class="def">訓練済みのAI＝脳そのもの。アプリ（ChatGPT/Claude Code）は脳を包む“車体”。同じ脳がいろんな車体に載る。</div></div>
+      <div class="tcard"><div class="term">GPT / Claude / Gemini</div><div class="eng">脳のブランド</div>
+        <div class="def">会社違いの競合する脳。GPT＝OpenAI、Claude＝Anthropic、Gemini＝Google。トヨタ vs ホンダの関係。</div></div>
+      <div class="tcard"><div class="term">バージョン（世代）</div><div class="eng">3 → 4 → 5 …</div>
+        <div class="def">脳の新しさ。大きいほど新しく賢い世代。小数（4→4.5）は同世代の改良。</div>
+        <div class="ex">🚗 たとえ：<b>車の年式</b>。新しいほど良い。</div></div>
+      <div class="tcard"><div class="term">グレード（サイズ）</div><div class="eng">Opus / Sonnet / Haiku</div>
+        <div class="def">同世代の中の大小。大＝賢い・高い・遅い／小＝速い・安い。</div>
+        <div class="ex">🚗 たとえ：<b>車のグレード</b>（高級車 ⇔ エコノミー）。年式とは別軸。</div></div>
+    </div>
+  </section>
+
+  <!-- 言語 -->
+  <section class="cat c-lang" id="lang">
+    <div class="cat-label">LANGUAGE</div><div class="cat-title">言語の言葉<span class="cat-note">用途が言語を決める</span></div>
+    <div class="grid">
+      <div class="tcard"><div class="term">プログラミング言語</div><div class="eng">なぜ何種類もあるか</div>
+        <div class="def">「機械の都合（速さ）⇄ 人間の都合（書きやすさ）」の綱引き。用途で形が決まる。</div>
+        <div class="ex">🏎 たとえ：<b>乗り物</b>。C/Rust＝レーシングカー、Python＝安全な普通車。</div></div>
+      <div class="tcard"><div class="term">JavaScript</div><div class="eng">JS（手のツールの言語）</div>
+        <div class="def">元はブラウザ専用→Nodeでどこでも動く。Claude Code はこれで作られている（だからNodeが要る）。</div></div>
+      <div class="tcard"><div class="term">Python</div><div class="eng">AI・データの言語</div>
+        <div class="def">読みやすく、AI・データの王様。脳（モデル）の学習側はこちらが多い。<b>脳＝Python側／手＝JS側</b>。</div></div>
+    </div>
+  </section>
+
+  <!-- UI -->
+  <section class="cat c-ui" id="ui">
+    <div class="cat-label">INTERFACE</div><div class="cat-title">インターフェースの歴史<span class="cat-note">第2回の掴み</span></div>
+    <div class="grid">
+      <div class="tcard"><div class="term">3つのUI（CLI→GUI→NLUI）</div><div class="eng">User Interface＝人と機械の接点</div>
+        <div class="def"><b>CLI</b>（文字で命令・専門家だけ）→ <b>GUI</b>（クリック・誰でも）→ <b>NLUI</b>（話すだけ・今ここ）。革命のたびに使える人の母数が爆発。</div>
+        <div class="ex">💬 決め台詞：<b>ターミナル(CLI)はAIの接点。あなたの接点はNLUI＝ただ話すだけ。</b></div></div>
+      <div class="tcard"><div class="term">発明 ≠ 実行</div><div class="eng">Xerox → Apple → AI</div>
+        <div class="def">GUIを発明したのはXerox PARC。でも売れず、Appleが商品化＝革命、Microsoftが大衆化。</div>
+        <div class="ex">🏁 <b>ビジョンより実行で差がつく</b>。エジソン＝バーニーと同じ。</div></div>
+      <div class="tcard"><div class="term">NLUI</div><div class="eng">Natural Language User Interface</div>
+        <div class="def">自然言語で機械を操作する接点。会話型UIとも。AIエージェントは、まさにこの新インターフェース。</div></div>
+    </div>
+  </section>
+
+  <!-- 安全 -->
+  <section class="cat c-safe" id="safe">
+    <div class="cat-label">SAFETY</div><div class="cat-title">安全の言葉<span class="cat-note">漏洩よりも“行動”</span></div>
+    <div class="grid">
+      <div class="tcard"><div class="term">情報漏洩 ── Gmailと同じ信頼</div><div class="eng">AI特有ではない</div>
+        <div class="def">見せたものは脳（クラウド）に送られるが、Gmail・LINE・freee に機密を預けるのと<b>同じ種類の信頼</b>。「サーバーに上がる＝危険」を徹底したらクラウドは何も使えない。AIだけ特別に怖がる理由はない。</div></div>
+      <div class="tcard"><div class="term">freeeとの違いは「1つだけ」</div><div class="eng">学習に使うか</div>
+        <div class="def">freeeは君のデータで世間のモデルを訓練しない。AIは<b>無料・個人プランだと学習に使う場合がある</b>。本当に違うのはここだけ。<b>ビジネス/APIプラン（学習しない）にすれば、Gmailと完全に同じ。</b></div></div>
+      <div class="tcard"><div class="term">「絶対漏れない」は無い</div><div class="eng">正直な前提</div>
+        <div class="def">誰も100%は保証できない。漏洩は直接（他人に出る＝アカウント分離で起きない）と間接（学習経由で出力に断片）。<b>学習しないプランなら間接の経路が消える＝Gmail並み。</b></div></div>
+      <div class="tcard"><div class="term">★ 本当に新しいのは「勝手に動く」</div><div class="eng">守るのは“行動”</div>
+        <div class="def">SaaS（Gmail/freee）は保管・処理するだけ。エージェントは読んで、書いて、送って、<b>実行する</b>。新しいリスクは「データが上がる」ではなく「<b>勝手に行動する</b>」方。守るのは漏洩より<b>行動への承認</b>。</div>
+        <div class="ex">🧑‍💼 たとえ：<b>優秀なインターン</b>。普通は「実行していい？」と聞く。「勝手にやって」と設定した時だけ進む。</div></div>
+      <div class="tcard"><div class="term">道具パターン</div><div class="eng">規制データ用の切り札</div>
+        <div class="def">本物データを見せず「処理する道具（スクリプト）」を作らせ、ローカル実行。<b>万能の安全策ではない</b>。法律・契約でデータが外に出せない時（規制業種の個人情報など）の切り札。普通の業務はビジネスプランでそのまま使えばいい。</div></div>
+      <div class="tcard"><div class="term">いつもの基準を当てるだけ</div><div class="eng">ビビらない安全運用</div>
+        <div class="def">「AIは危険」ではなく「<b>Gmailやfreeeと同じ基準を当てる</b>」。残る注意は3つだけ：① 学習しないプランを選ぶ ② 行動には承認（エージェント固有）③ 規制データは法律のルールが別にある。</div>
+        <div class="use">🔑 守るのは「データの行き先」より「AIの行動」。</div></div>
+    </div>
+  </section>
+
+  <!-- たとえ集 -->
+  <section class="cat c-meta" id="meta">
+    <div class="cat-label">ANALOGY</div><div class="cat-title">効く「たとえ」集<span class="cat-note">説明に困ったらこれ</span></div>
+    <div class="grid">
+      <div class="tcard"><div class="term">📱 スマホ</div><div class="eng">セットアップ3点を一貫</div>
+        <div class="def">Node.js＝スマホ本体／npm＝App Store／Claude Code・Codex＝アプリ。<b>npm install</b>＝App Storeで入手ボタンを押す。</div></div>
+      <div class="tcard"><div class="term">🚗 車</div><div class="eng">速さの恐怖を消す</div>
+        <div class="def">車は新機能が出ても「運転の仕方」は変わらない。AIも同じ＝モデルは変わるが使い方の基本は不変。進化はむしろ運転を“楽”にする。</div>
+        <div class="use">運転の基本＝目的地(WHY)／ハンドル(頼み方)／交通ルール(安全)／前を見る(検証)。</div></div>
+      <div class="tcard"><div class="term">📞 電話相談 vs 隣の席</div><div class="eng">チャット vs エージェント</div>
+        <div class="def">チャット＝電話の向こうの賢いコンサル（助言だけ）。エージェント＝そのコンサルが隣に座って実際に手を動かす。</div></div>
+      <div class="tcard"><div class="term">🧑‍💼 優秀なインターン</div><div class="eng">自律と承認</div>
+        <div class="def">普通は「実行していい？」と聞いてくる。「勝手にやって」と設定した時だけ、聞かずに進む。事故は“勝手に”でなく“人がそう設定した”時。</div></div>
+    </div>
+  </section>
+
+  <div class="noresult" id="noresult">該当する用語が見つかりませんでした。</div>
+
+  <div class="site-footer">
+    <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+    <p>bY 2.0 ／ 第2回 オペレーション改善Ⅱ ── AI・自律エージェント 用語集</p>
+    <p style="margin-top:6px;">情報は2026年6月時点。モデル名・プラン名・コマンドは更新されることがあります。</p>
+    <div class="footer-logo">
+      <img src="bY_color2.png" alt="bY community">
+      <span class="presents">YAMAGA BASE Presents bYコミュニティ</span>
+    </div>
+    <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+  </div>
+
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+  addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+  const q=document.getElementById('q'),cards=[...document.querySelectorAll('.tcard')],cats=[...document.querySelectorAll('.cat')],nr=document.getElementById('noresult');
+  q.addEventListener('input',()=>{
+    const v=q.value.trim().toLowerCase();let n=0;
+    cards.forEach(c=>{const hit=c.textContent.toLowerCase().includes(v);c.style.display=hit?'':'none';if(hit)n++;});
+    cats.forEach(cat=>{cat.style.display=[...cat.querySelectorAll('.tcard')].some(c=>c.style.display!=='none')?'':'none';});
+    nr.style.display=n===0?'block':'none';
+  });
+  document.querySelectorAll('.jump a').forEach(a=>a.addEventListener('click',e=>{
+    const el=document.querySelector(a.getAttribute('href'));if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+  }));
+</script>
+</body>
+</html>
