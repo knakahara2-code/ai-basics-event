@@ -242,34 +242,32 @@ code { background:rgba(255,255,255,0.07); padding:1px 7px; border-radius:6px;
   <div style="font-size:0.8rem; color:var(--text-dim); margin-top:8px;">ON＝会話が学習対象＋最大5年保持／OFF＝学習に使われず保持30日。2025年8月から消費者は<b>オプトアウト方式</b>（初期でONになり得るので要確認）。※既に学習に入ったデータは取り消せません。</div>
 </div>
 
-<h3 style="margin:26px 0 4px; font-size:1.05rem;">3-2. 許可の仕組み（勝手には動かない）── 5つのモード</h3>
-<p class="sec-lead" style="margin-top:0;">ファイル書き込み・コマンド実行・MCPツール利用は、原則<b>あなたの承認</b>が要ります。実際は<b>5つのモード</b>があり、<b>Shift+Tab で切替</b>（左下に現在のモードが表示）。</p>
+<h3 style="margin:26px 0 4px; font-size:1.05rem;">3-2. 許可の仕組み（勝手には動かない）── Code は5モード / Cowork は3モード</h3>
+<p class="sec-lead" style="margin-top:0;">ファイル操作・コマンド実行・MCP利用は、原則<b>あなたの承認</b>が必要。モードで「どれだけ自動に任せるか」を選びます。<b>同じ基盤でも、Code は5つ・Cowork は3つ</b>（Cowork は非エンジニア向けでシンプル）。</p>
 <div class="uicols">
-  <div class="uicol" style="flex:0 0 auto;">
+  <div class="uicol">
+    <p class="uicap" style="margin:0 0 6px;"><b>🖥 Claude Code（5モード）</b> ── Shift+Tab で切替</p>
     <div class="uimenu">
       <div class="h">モード</div>
-      <div class="r"><span>手動</span><span class="num">1</span></div>
-      <div class="r"><span>編集を承認</span><span class="num">2</span></div>
-      <div class="r"><span>プラン</span><span class="num">3</span></div>
-      <div class="r"><span>自動</span><span class="num">4</span></div>
-      <div class="r warn"><span>許可をバイパス</span><span class="num">✓ 5</span></div>
+      <div class="r"><span>手動（既定）</span><span class="num">毎回確認・最安全</span></div>
+      <div class="r"><span>編集を承認</span><span class="num">編集は自動/実行は確認</span></div>
+      <div class="r"><span>プラン</span><span class="num">計画だけ作る</span></div>
+      <div class="r"><span>自動</span><span class="num">安全は自動/危険は停止</span></div>
+      <div class="r warn"><span>許可をバイパス</span><span class="num">確認スキップ・危険</span></div>
     </div>
   </div>
   <div class="uicol">
-    <div class="table-wrap">
-    <table class="t" style="min-width:0;">
-      <tbody>
-        <tr><td><b>手動</b>（既定）</td><td>すべての操作を毎回確認。いちばん安全</td></tr>
-        <tr><td><b>編集を承認</b></td><td>ファイル編集は自動、コマンド等は確認</td></tr>
-        <tr><td><b>プラン</b></td><td>計画だけ作る（実行しない）→承認後に実行</td></tr>
-        <tr><td><b>自動</b></td><td>安全性をリアルタイム判定。安全は自動・危険は停止/確認</td></tr>
-        <tr><td class="r"><b>許可をバイパス</b></td><td class="r">確認をスキップ。<b>危険・隔離環境だけ</b></td></tr>
-      </tbody>
-    </table>
+    <p class="uicap" style="margin:0 0 6px;"><b>💬 Claude Cowork（3モード）</b> ── 会話版はシンプル</p>
+    <div class="uimenu">
+      <div class="h">モード（フォルダ選択の隣）</div>
+      <div class="r sel"><span>✋ 手動で承認</span><span class="num">✓ 各アクションで一時停止</span></div>
+      <div class="r"><span>⏩ 自動承認</span><span class="num">自律・危険時だけ確認</span></div>
+      <div class="r warn"><span>⚠ すべての承認をスキップ</span><span class="num">危険でも止まらない</span></div>
     </div>
+    <p class="uicap" style="margin-top:8px;">対応：手動で承認≈Codeの「手動」／自動承認≈「自動」／すべてスキップ≈「許可をバイパス」。Cowork に「プラン」「編集を承認」は無い（コーディング特有のため）。</p>
   </div>
 </div>
-<p class="sec-lead" style="margin-top:6px;">「許可をバイパス」＝<code>--dangerously-skip-permissions</code> 相当で、<b>日常では使わない</b>のが鉄則。※どのモードでも、設定やリポジトリの要所（保護パス）はバイパス以外では自動承認されません。</p>
+<p class="sec-lead" style="margin-top:6px;">いちばん右の「許可をバイパス／すべての承認をスキップ」は<b>日常では使わない</b>のが鉄則（Codeでは <code>--dangerously-skip-permissions</code> 相当）。※どのモードでも、設定やリポジトリの要所（保護パス）は自動承認されません。<b>まずは両方とも「手動（で承認）」から</b>。</p>
 <div class="perm">
   <div class="q">⚠️「手動」なら、危険な操作の前にこう止まります：</div>
   <div><span class="cmd">rm -rf ./old-data</span></div>
