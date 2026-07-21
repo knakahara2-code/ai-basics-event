@@ -125,6 +125,23 @@ table.cmp tbody tr:hover td { background:rgba(255,255,255,0.015); }
   </div>
 </div>
 
+<!-- Fable vs Opus 実際どう違う -->
+<h2 class="sec-title">③ Fable 5 と Opus 4.8、実際どう違って見える？</h2>
+<p class="sec-lead">「使っていて差が分からない」── それ、正常です。差が出る場面が限られているから。</p>
+<div class="choose">
+  <div class="ch">
+    <div style="font-weight:800; margin-bottom:6px;">😐 差が出にくい（＝ふだんの使い方）</div>
+    <div class="when">短い単発プロンプト、ステップごとに指示する対話、1関数のリファクタ、仕様の決まったアルゴリズム、単一ファイルの機能追加。この領域は <b>Opus 4.8 でほぼ頭打ち</b>なので、Fableの上積みが見えません。</div>
+  </div>
+  <div class="ch" style="border-color:var(--pink);">
+    <div style="font-weight:800; margin-bottom:6px; color:var(--pink);">🔥 差が出る（＝Fableの独壇場）</div>
+    <div class="when"><b>複数ファイルにまたがる大リファクタ／モジュール境界をまたぐデバッグ／第一原理でのアーキ判断／長時間の自律実行</b>（計画→実行→自己レビュー→反復を監督なしで継続）。SWE-Bench Pro は <b>Fable 80.3% vs Opus 69.2%（11pt差）</b>。</div>
+  </div>
+</div>
+<div class="note" style="border-left-color:var(--pink);">
+  カギは「<b>作り込んだ自律フロー</b>」。ファイルにメモを残して自己改善させると、Fableの伸びは Opus の<b>約3倍</b>という報告も（長い研究タスクを36時間で他社の4日相当まで、等）。逆に<b>素のOpusパイプラインにFableを差し替えるだけでは差は出ません</b>。だから普段 Opus / Sonnet で足りるのは正しい判断。<b>「長い・大きい・またぐ・任せきる」仕事だけ Fable に回す</b>のが正解です（Fableは約2倍の価格）。
+</div>
+
 <div class="note">
   <b>Fable 5 と Mythos 5 の関係：</b>中身は<b>同じモデル</b>。<b>Fable 5</b>＝安全装置（分類器）つきの公開版、<b>Mythos 5</b>＝安全装置を外した<b>承認パートナー限定</b>版（一般利用は不可）。
   Fable 5 は、サイバー・生物化学などの危険分類に触れた時だけ自動的に <b>Opus 4.8</b> が応答します（全体の5%未満）。
