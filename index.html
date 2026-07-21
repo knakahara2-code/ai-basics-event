@@ -185,9 +185,36 @@ body {
   border-color: rgba(139,92,246,0.25);
 }
 
+/* Section grouping (当日の順路) */
+.flow-note {
+  text-align: center; font-size: 0.85rem; color: var(--text-dim);
+  margin: -8px 0 26px;
+}
+.sec { margin-top: 30px; }
+.sec:first-of-type { margin-top: 0; }
+.sec-head {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px;
+  margin: 0 4px 14px;
+}
+.sec-step {
+  font-size: 0.72rem; font-weight: 900; letter-spacing: 0.04em;
+  color: #fff; background: linear-gradient(135deg, var(--blue), var(--purple));
+  border-radius: 20px; padding: 3px 13px; align-self: center;
+}
+.sec-title { font-size: 1.12rem; font-weight: 800; }
+.sec-sub { font-size: 0.8rem; color: var(--text-dim); width: 100%; margin-left: 2px; }
+details.sec > summary { list-style: none; cursor: pointer; outline: none; }
+details.sec > summary::-webkit-details-marker { display: none; }
+details.sec > summary .sec-title::after {
+  content: "▸"; margin-left: 8px; color: var(--text-dim); font-weight: 400;
+}
+details.sec[open] > summary .sec-title::after { content: "▾"; }
+details.sec > .card-list { margin-top: 6px; }
+
 @media print {
   .bg-orbs { display: none; }
   .card { border: 1px solid #ddd; }
+  details.sec { open: true; }
 }
 
 @media (max-width: 600px) {
@@ -220,55 +247,15 @@ body {
     <br><span class="last-updated">最終更新: 2026年7月21日（第3回 更新）</span>
   </div>
 
-  <div class="card-list">
+  <p class="flow-note">▼ 当日はこの順で進みます（下の「参考」は必要なときに開いてください）</p>
 
-    <a href="operations2-presentation.html" class="card-link">
-      <div class="card featured">
-        <div class="card-icon">🤖</div>
-        <div class="card-body">
-          <div class="card-label" style="color:var(--orange);"><span class="new-pill">NEW</span>6/18開催 ・ 第2回</div>
-          <div class="card-title">AIを活用したオペレーション改善Ⅱ</div>
-          <div class="card-desc">Claude Code / Codex を、みんなでワイワイ立ち上げてみる回。原理の初歩の初歩から、ちょっと応用まで。参加型ワークのスライド本編です。</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="invoice-automation.html" class="card-link">
-      <div class="card">
-        <div class="card-icon">🧾</div>
-        <div class="card-body">
-          <div class="card-label" style="color:var(--orange);">事例 ・ オペレーション改善</div>
-          <div class="card-title">請求書で学ぶ「AX」── スライド</div>
-          <div class="card-desc">昔ながらの請求業務を、AIでどこまで自動化できる？ 仕事の定義 → 成熟マップ → 4段のはしご → Before/After まで、一本の流れで。全10枚。</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="invoice-automation-demo.html" class="card-link">
-      <div class="card">
-        <div class="card-icon">⚙️</div>
-        <div class="card-body">
-          <div class="card-label" style="color:var(--cyan);">さわれるデモ</div>
-          <div class="card-title">請求オートメーション デモ</div>
-          <div class="card-desc">源泉データ → 自動生成 → 承認 → 送付 → 消込 を、その場でクリックして体験。人が触るのは「承認」1回だけ、を見て・触って実感。</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="maturity-cycle.html" class="card-link">
-      <div class="card">
-        <div class="card-icon">🔄</div>
-        <div class="card-body">
-          <div class="card-label" style="color:var(--purple);">フレームワーク</div>
-          <div class="card-title">仕事の成熟サイクル</div>
-          <div class="card-desc">プロジェクト・ルーティン・欠落業務の3類型を、可視化→型化→システム化で"改善の回る仕組み"に。農業・中小企業・行政まで使える1枚マップ集。</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </div>
-    </a>
+  <div class="sec">
+    <div class="sec-head">
+      <span class="sec-step">STEP 1</span>
+      <span class="sec-title">まずここから ── AIの基本</span>
+      <span class="sec-sub">「AIって何？」から、今日から使い始めるところまで。</span>
+    </div>
+    <div class="card-list">
 
     <a href="presentation.html" class="card-link">
       <div class="card highlight">
@@ -294,6 +281,87 @@ body {
       </div>
     </a>
 
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <span class="sec-step">STEP 2</span>
+      <span class="sec-title">AIに"任せる" ── エージェント実践</span>
+      <span class="sec-sub">チャットの先へ。仕事をまるごと任せる考え方と、立ち上げの実演。</span>
+    </div>
+    <div class="card-list">
+
+    <a href="operations2-presentation.html" class="card-link">
+      <div class="card featured">
+        <div class="card-icon">🤖</div>
+        <div class="card-body">
+          <div class="card-label" style="color:var(--orange);"><span class="new-pill">MAIN</span>参加型ワーク本編</div>
+          <div class="card-title">AIを活用したオペレーション改善Ⅱ</div>
+          <div class="card-desc">Claude Code / Codex を、みんなでワイワイ立ち上げてみる回。原理の初歩の初歩から、ちょっと応用まで。参加型ワークのスライド本編です。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="maturity-cycle.html" class="card-link">
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <div class="card-body">
+          <div class="card-label" style="color:var(--purple);">フレームワーク</div>
+          <div class="card-title">仕事の成熟サイクル</div>
+          <div class="card-desc">プロジェクト・ルーティン・欠落業務の3類型を、可視化→型化→システム化で"改善の回る仕組み"に。農業・中小企業・行政まで使える1枚マップ集。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head">
+      <span class="sec-step">STEP 3</span>
+      <span class="sec-title">事例で見る ── 請求業務のAX</span>
+      <span class="sec-sub">身近な業務が、どこまで自動化できるか。見て・さわって実感。</span>
+    </div>
+    <div class="card-list">
+
+    <a href="invoice-automation.html" class="card-link">
+      <div class="card">
+        <div class="card-icon">🧾</div>
+        <div class="card-body">
+          <div class="card-label" style="color:var(--orange);">事例 ・ オペレーション改善</div>
+          <div class="card-title">請求書で学ぶ「AX」── スライド</div>
+          <div class="card-desc">昔ながらの請求業務を、AIでどこまで自動化できる？ 仕事の定義 → 成熟マップ → 4段のはしご → Before/After まで、一本の流れで。全10枚。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="invoice-automation-demo.html" class="card-link">
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <div class="card-body">
+          <div class="card-label" style="color:var(--cyan);">さわれるデモ</div>
+          <div class="card-title">請求オートメーション デモ</div>
+          <div class="card-desc">源泉データ → 自動生成 → 承認 → 送付 → 消込 を、その場でクリックして体験。人が触るのは「承認」1回だけ、を見て・触って実感。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    </div>
+  </div>
+
+  <details class="sec">
+    <summary class="sec-head">
+      <span class="sec-step">参考</span>
+      <span class="sec-title">もっと詳しく ── 深掘り資料</span>
+      <span class="sec-sub">年表・用語集など。必要なときにクリックで開いてください。</span>
+    </summary>
+    <div class="card-list">
+
     <a href="ai-version-timeline.html" class="card-link">
       <div class="card">
         <div class="card-icon">📊</div>
@@ -301,30 +369,6 @@ body {
           <div class="card-label timeline">TIMELINE</div>
           <div class="card-title">3大AI バージョン進化 横並び年表</div>
           <div class="card-desc">2022〜2026年、同時期に3社で何が起きていたかを横並びで比較。</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="ai-tokens-and-chips.html" class="card-link">
-      <div class="card">
-        <div class="card-icon">🧩</div>
-        <div class="card-body">
-          <div class="card-label" style="color:var(--orange);">DEEP DIVE</div>
-          <div class="card-title">トークンって何？ AIと半導体のつながり</div>
-          <div class="card-desc">トークン→GPU→NVIDIA→TSMC→熊本。AIの「燃料」から地元まで全部つながる話。</div>
-        </div>
-        <div class="card-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="shortcuts-guide.html" class="card-link">
-      <div class="card">
-        <div class="card-icon">⌨️</div>
-        <div class="card-body">
-          <div class="card-label" style="color:var(--cyan);">SHORTCUTS</div>
-          <div class="card-title">AI活用に便利なショートカット集</div>
-          <div class="card-desc">スクショ・コピペ・音声入力。Windows / Mac / iPhone / Android 全対応。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -354,7 +398,32 @@ body {
       </div>
     </a>
 
-  </div>
+    <a href="ai-tokens-and-chips.html" class="card-link">
+      <div class="card">
+        <div class="card-icon">🧩</div>
+        <div class="card-body">
+          <div class="card-label" style="color:var(--orange);">DEEP DIVE</div>
+          <div class="card-title">トークンって何？ AIと半導体のつながり</div>
+          <div class="card-desc">トークン→GPU→NVIDIA→TSMC→熊本。AIの「燃料」から地元まで全部つながる話。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <a href="shortcuts-guide.html" class="card-link">
+      <div class="card">
+        <div class="card-icon">⌨️</div>
+        <div class="card-body">
+          <div class="card-label" style="color:var(--cyan);">SHORTCUTS</div>
+          <div class="card-title">AI活用に便利なショートカット集</div>
+          <div class="card-desc">スクショ・コピペ・音声入力。Windows / Mac / iPhone / Android 全対応。</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    </div>
+  </details>
 
   <div class="site-footer">
     <p>「いまさら聞けない！AIの初歩の初歩をゆるりと語ろうの会」配布資料</p>
