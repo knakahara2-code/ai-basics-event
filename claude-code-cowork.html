@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBA×AI 実践合宿 ── Claude Code / Cowork 深掘り＆セキュリティ</title>
+<meta name="description" content="Claude Code / Cowork を一段うまく使うための機能・概念（CLAUDE.md・プランモード・サブエージェント・MCP・チェックポイント）と、安心して使うためのセキュリティ（権限モデル・サンドボックス・プロンプトインジェクション・データ保持）。">
+<link rel="stylesheet" href="common.css">
+<style>
+.container { max-width: 1040px; margin: 0 auto; padding: 40px 20px 80px; }
+
+h1 { text-align: center; font-size: 2rem; font-weight: 900;
+  background: linear-gradient(135deg, var(--orange), var(--pink), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.subtitle { text-align: center; color: var(--text-dim); font-size: 0.95rem; margin-bottom: 26px; }
+
+.lead-box { max-width: 840px; margin: 0 auto 36px; padding: 18px 22px;
+  background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--orange);
+  border-radius: 12px; font-size: 0.95rem; }
+.lead-box b { color: var(--orange); }
+
+.sec-title { font-size: 1.35rem; font-weight: 800; margin: 46px 0 6px; padding-bottom: 8px;
+  border-bottom: 2px solid var(--border); }
+.sec-title .n { color: var(--cyan); }
+.sec-lead { color: var(--text-dim); font-size: 0.9rem; margin: 10px 0 20px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.f { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+.f h3 { font-size: 1.02rem; font-weight: 800; margin-bottom: 6px; }
+.f h3 .ic { margin-right: 7px; }
+.f p { font-size: 0.87rem; color: #c8c8e0; }
+.f .k { display:inline-block; font-size:0.7rem; color:var(--cyan); background:rgba(6,182,212,0.12);
+  border:1px solid rgba(6,182,212,0.35); border-radius:8px; padding:1px 8px; margin-top:8px;
+  font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+/* terminal mock */
+.term { background:#0c0c1c; border:1px solid rgba(255,255,255,0.10); border-radius:10px;
+  padding:14px 16px; margin:14px 0; font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size:0.82rem; line-height:1.7; overflow-x:auto; }
+.term .dots { margin-bottom:8px; }
+.term .dots i { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
+.term .dots i:nth-child(1){background:#ff5f57;} .term .dots i:nth-child(2){background:#febc2e;} .term .dots i:nth-child(3){background:#28c840;}
+.term .p { color:var(--green); } .term .c { color:#f0f0ff; } .term .o { color:var(--text-dim); } .term .hl { color:var(--cyan); }
+
+/* permission prompt mock */
+.perm { background:rgba(245,158,11,0.05); border:1px solid var(--orange-border); border-radius:12px;
+  padding:14px 16px; margin:14px 0; font-size:0.86rem; }
+.perm .q { font-weight:700; margin-bottom:8px; }
+.perm .cmd { font-family: ui-monospace, Menlo, Consolas, monospace; color:var(--pink);
+  background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:6px; }
+.perm .btns { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+.perm .b { font-size:0.78rem; padding:4px 12px; border-radius:8px; border:1px solid var(--border); }
+.perm .b.allow{ color:var(--green); border-color:var(--green-border); background:var(--green-bg);}
+.perm .b.ask{ color:var(--orange); border-color:var(--orange-border); background:var(--orange-bg);}
+.perm .b.deny{ color:var(--pink); border-color:rgba(236,72,153,0.3); background:rgba(236,72,153,0.06);}
+
+/* tables */
+.table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:14px; margin:6px 0; }
+table.t { width:100%; border-collapse:collapse; min-width:620px; font-size:0.85rem; }
+table.t th, table.t td { text-align:left; padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+table.t thead th { background:rgba(255,255,255,0.04); font-weight:700; }
+table.t .g { color:var(--green); font-weight:700; } table.t .r { color:var(--pink); font-weight:700; }
+
+/* danger / injection */
+.danger { background:rgba(236,72,153,0.06); border:1px solid rgba(236,72,153,0.30);
+  border-left:3px solid var(--pink); border-radius:12px; padding:18px 20px; margin:16px 0; font-size:0.9rem; }
+.danger h3 { color:var(--pink); font-size:1.05rem; margin-bottom:8px; }
+.danger .case { font-size:0.82rem; color:var(--text-dim); margin-top:8px; padding-left:12px; border-left:2px solid rgba(236,72,153,0.3); }
+
+.rules { counter-reset: r; margin-top:6px; }
+.rule { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px dashed var(--border); }
+.rule:before { counter-increment:r; content:counter(r); flex:0 0 auto; width:26px; height:26px; border-radius:50%;
+  background:var(--orange-bg); border:1px solid var(--orange-border); color:var(--orange);
+  font-weight:800; font-size:0.8rem; display:flex; align-items:center; justify-content:center; }
+.rule div b { color:var(--text); } .rule div { font-size:0.9rem; }
+
+.dataflow { display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+  margin:14px 0; padding:18px; background:var(--card-bg); border:1px solid var(--border); border-radius:14px; }
+.df-node { text-align:center; }
+.df-node .t { font-weight:800; } .df-node .d { font-size:0.78rem; color:var(--text-dim); }
+.df-arr { color:var(--cyan); font-weight:700; font-size:0.82rem; }
+
+@media (max-width: 720px){ .grid{grid-template-columns:1fr;} h1{font-size:1.55rem;} }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Claude Code / Cowork 深掘り＆セキュリティ</h1>
+<p class="subtitle">一段うまく使う「機能・概念」と、安心して使う「守り」</p>
+
+<div class="lead-box">
+  Claude Code と Cowork は<b>同じ脳・同じエージェント基盤</b>。違いは接点だけ（Code＝ターミナル/本気、Cowork＝会話/デスクトップアプリ）。
+  ここでは、知っていると<b>一段うまく使える機能</b>と、業務で<b>安心して使うためのセキュリティ</b>をまとめます。画面イメージ付きで。
+</div>
+
+<!-- ===== 1. 機能・概念 ===== -->
+<h2 class="sec-title"><span class="n">①</span> 知っておくと差がつく機能・概念</h2>
+<p class="sec-lead">「ただ話す」だけでも動きますが、この6つを知ると精度と安全が一気に上がります。</p>
+
+<div class="grid">
+  <div class="f">
+    <h3><span class="ic">📜</span>CLAUDE.md（プロジェクトの憲法）</h3>
+    <p>フォルダ直下に置くメモ。毎回のセッション開始時に必ず読まれ、「守るルール・用語・やってはいけないこと」を固定できる。“同じ説明を毎回する”が消える。</p>
+    <span class="k">/init で自動生成</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">⌨️</span>スラッシュコマンド</h3>
+    <p>「/」始まりのショートカット。<code>/init</code>（初期化）<code>/compact</code>（会話を圧縮）<code>/review</code>（レビュー）<code>/security-review</code>（脆弱性チェック）。自作コマンドも登録できる。</p>
+    <span class="k">/security-review が便利</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">🧭</span>プランモード（考えてから動く）</h3>
+    <p><b>計画 → あなたが承認 → 実行</b>の順に切り替わるモード。いきなり手を動かさせず、段取りを見てからGOできる。大きな作業ほど効く。</p>
+    <span class="k">Shift+Tab で切替</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">👥</span>サブエージェント（分担・並列）</h3>
+    <p>専門役の分身を<b>最大10体まで並列</b>で走らせる。調査係・レビュー係などに分けると、本線の会話が汚れず、速く・安く終わる。</p>
+    <span class="k">最大10並列</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">🔌</span>MCP（外部ツール・データに接続）</h3>
+    <p>Claude を社内ツール・DB・SaaS に“つなぐ”共通規格。つなぐとその機能を最初から持っていたかのように使える。※つなぐ先はセキュリティ対象（後述）。</p>
+    <span class="k">Model Context Protocol</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">⏪</span>チェックポイント（巻き戻せる）</h3>
+    <p>作業の要所が保存され、気に入らなければ<b>元に戻せる</b>。フック（自動処理）やスキル/プラグインで“自分の型”も仕込める。だから怖がらず試せる。</p>
+    <span class="k">やり直せる安心</span>
+  </div>
+</div>
+
+<div class="term">
+  <div class="dots"><i></i><i></i><i></i></div>
+  <div><span class="p">$</span> <span class="c">claude</span></div>
+  <div><span class="o">› CLAUDE.md を読み込みました（プロジェクトのルールを確認）</span></div>
+  <div><span class="p">&gt;</span> <span class="c">この請求フォルダを棚卸しして、重複と属人化を洗い出して</span></div>
+  <div><span class="o">› </span><span class="hl">[プランモード]</span><span class="o"> 3ステップの計画を作成 → 承認を待っています…</span></div>
+</div>
+
+<!-- ===== 2. Cowork ===== -->
+<h2 class="sec-title"><span class="n">②</span> Cowork ならではのポイント</h2>
+<p class="sec-lead">ターミナルを使わず、会話で"任せる"側の勘所。</p>
+<div class="grid">
+  <div class="f">
+    <h3><span class="ic">📁</span>「Work in a folder」で範囲限定</h3>
+    <p>作業させるフォルダを最初に指定。触れる場所を絞るので安全で、意図もブレにくい。</p>
+  </div>
+  <div class="f">
+    <h3><span class="ic">✅</span>承認を挟んで実行</h3>
+    <p>やることを提示 → あなたがOKしてから動く。勝手に確定しない。</p>
+  </div>
+  <div class="f">
+    <h3><span class="ic">🌙</span>閉じても継続（バックグラウンド）</h3>
+    <p>アプリを閉じても処理は進む。※ローカルのファイル/PC/ブラウザを使う作業は、アプリを開いたままに。</p>
+  </div>
+  <div class="f">
+    <h3><span class="ic">📊</span>そのまま使える成果物</h3>
+    <p>数式が生きたExcel、体裁の整ったPowerPoint など“開いてすぐ使える”形で返す。サブエージェントで並行処理も。</p>
+  </div>
+</div>
+
+<!-- ===== 3. セキュリティ ===== -->
+<h2 class="sec-title"><span class="n">③</span> セキュリティ ── 安心して業務で使うために</h2>
+
+<h3 style="margin:22px 0 4px; font-size:1.05rem;">3-1. データはどこへ行く？</h3>
+<div class="dataflow">
+  <div class="df-node"><div class="t">💻 手＝あなたのPC</div><div class="d">見せたファイル・画面</div></div>
+  <div class="df-arr">──送信──▶</div>
+  <div class="df-node"><div class="t">☁️ 脳＝クラウド</div><div class="d">考える（提供元）</div></div>
+</div>
+<p class="sec-lead" style="margin-top:0;">エージェントに見せたものは脳（クラウド）に送られます。だからこそ「学習に使われるか／どれだけ保持されるか」を知って選ぶのが肝心。</p>
+<div class="table-wrap">
+<table class="t">
+  <thead><tr><th>区分</th><th>学習に使う？</th><th>保持期間</th></tr></thead>
+  <tbody>
+    <tr><td>消費者（Free/Pro/Max）・<b>学習ON</b></td><td class="r">使う</td><td>5年</td></tr>
+    <tr><td>消費者（Free/Pro/Max）・<b>学習OFF</b></td><td class="g">使わない</td><td>30日</td></tr>
+    <tr><td>商用（Work / Enterprise / Edu / Gov）</td><td class="g">使わない</td><td>既定で非保持・API入出力は30日以内に自動削除</td></tr>
+    <tr><td>ZDR契約（API / Enterprise・要承認）</td><td class="g">使わない</td><td>保存しない（安全分類の結果のみ保持）</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="sec-lead" style="margin-top:8px;">※ 最上位（Mythos級）モデルは安全目的で全プラン30日保持（2026/6/9〜）。<b>機密を扱うなら、消費者版は「学習OFF」、本番は商用/ZDR</b>が基本。</p>
+
+<h3 style="margin:26px 0 4px; font-size:1.05rem;">3-2. 許可の仕組み（勝手には動かない）</h3>
+<p class="sec-lead" style="margin-top:0;">ファイル書き込み・コマンド実行・MCPツール利用は、原則ぜんぶ<b>あなたの承認</b>が要ります。ルールは <b>Allow / Ask / Deny</b> の3種。</p>
+<div class="perm">
+  <div class="q">⚠️ Claude が次を実行しようとしています：</div>
+  <div><span class="cmd">rm -rf ./old-data</span></div>
+  <div class="btns"><span class="b allow">Allow（許可）</span><span class="b ask">Ask（毎回確認）</span><span class="b deny">Deny（拒否）</span></div>
+</div>
+<div class="grid">
+  <div class="f">
+    <h3><span class="ic">🔒</span>サンドボックス（OSレベル）</h3>
+    <p>ファイル/ネットワークへの到達を、信頼や言葉ではなく<b>OSの仕組みで物理的に制限</b>。切っていると「許可の仕組みだけが唯一の壁」になる。</p>
+  </div>
+  <div class="f">
+    <h3><span class="ic">🚫</span>Deny リストと危険フラグ</h3>
+    <p>削除・強制push・公開・秘密の読み取り等は既定で拒否。<code>--dangerously-skip-permissions</code>（全許可）は<b>基本使わない</b>。使うなら隔離環境で。</p>
+  </div>
+</div>
+
+<div class="danger">
+  <h3>3-3. いちばん新しい脅威：プロンプトインジェクション</h3>
+  <p>AIが読み込む<b>資料やWebページの中に、見えない命令を仕込む</b>攻撃。エージェントは「あなたの指示」と「文書に埋まった指示」を確実には区別できず、両方に従ってしまう ── 2026年の最重要リスクです。</p>
+  <div class="case">実例①：Cowork公開直後（2026年1月）、Word文書に<b>1ポイントの白い文字</b>で隠した命令が、利用者の財務資料（一部SSN含む）を攻撃者側へ送信させた（PromptArmor）。</div>
+  <div class="case">実例②：2026年3月「Claudy Day」── 素の claude.ai セッションでも、見えない命令＋データ持ち出しが成立し得ることが実証された（Oasis Security）。</div>
+  <p style="margin-top:10px;">→ だから<b>「出所の怪しい資料・URL・添付」を鵜呑みにさせない</b>、そして<b>外部送信やファイル操作の前に必ず承認を挟む</b>ことが効きます。</p>
+</div>
+
+<h3 style="margin:26px 0 8px; font-size:1.05rem;">3-4. 現場の5つのルール（これだけで9割安全）</h3>
+<div class="rules">
+  <div class="rule"><div><b>ダミーで試す。</b>初めての作業・共有前のデモは、本物の機密ではなくダミーデータで。</div></div>
+  <div class="rule"><div><b>承認を残す。</b>ファイル操作・外部送信・コマンド実行は「Ask」。“全許可”フラグは日常では使わない。</div></div>
+  <div class="rule"><div><b>プランを選ぶ。</b>機密を扱うなら消費者版は「学習OFF」、本番業務は商用/ZDR契約で。</div></div>
+  <div class="rule"><div><b>範囲を絞る。</b>Coworkは作業フォルダを限定、MCP接続は必要な範囲だけ（最小権限）。何がつながっているか把握する。</div></div>
+  <div class="rule"><div><b>鍵は書かない。</b>APIキー・パスワードはプロンプトやコードに貼らず環境変数へ。出所の怪しい資料・URLは鵜呑みにさせない。</div></div>
+</div>
+
+<div class="lead-box" style="border-left-color:var(--cyan); margin-top:30px;">
+  まとめ：Claude Code / Cowork は「<b>脳はクラウド・手はあなたのPC</b>」で、<b>承認・サンドボックス・学習OFF/商用</b>という守りが用意されています。
+  一番の新リスクは<b>プロンプトインジェクション</b>。「怪しいものを鵜呑みにさせない＋要所で承認」を守れば、リスクは Gmail や freee にデータを預けるのと同程度に収まります。
+</div>
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>MBA×AI 実践合宿 ── Day1 教材</p>
+  <p style="margin-top:6px;">情報は2026年7月時点。各社の公式ドキュメント・報道をもとに作成。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年7月21日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents ／ MBA×AI 実践合宿</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</div>
+</body>
+</html>
