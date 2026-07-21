@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBA×AI 実践合宿 ── AIエージェント 使い分け＆セットアップ</title>
+<meta name="description" content="Claude Code / Cowork・OpenAI Codex・Gemini CLI・Google Antigravity・Genspark・NotebookLM。エージェント型AIの違いと「いつどれを使うか」、そして今日から立ち上げるセットアップ手順。">
+<link rel="stylesheet" href="common.css">
+<style>
+.container { max-width: 1100px; margin: 0 auto; padding: 40px 20px 80px; }
+
+h1 { text-align: center; font-size: 2.1rem; font-weight: 900;
+  background: linear-gradient(135deg, var(--orange), var(--pink), var(--blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.subtitle { text-align: center; color: var(--text-dim); font-size: 0.95rem; margin-bottom: 26px; }
+
+.concept { max-width: 820px; margin: 0 auto 34px; padding: 18px 22px;
+  background: var(--card-bg); border: 1px solid var(--border); border-left: 3px solid var(--cyan);
+  border-radius: 12px; font-size: 0.95rem; }
+.concept b { color: var(--cyan); }
+
+.sec-title { font-size: 1.3rem; font-weight: 800; margin: 44px 0 6px; }
+.sec-lead { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 18px; }
+
+/* comparison table */
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; }
+table.cmp { width: 100%; border-collapse: collapse; min-width: 880px; font-size: 0.86rem; }
+table.cmp th, table.cmp td { text-align: left; padding: 12px 14px; vertical-align: top;
+  border-bottom: 1px solid var(--border); }
+table.cmp thead th { background: rgba(255,255,255,0.04); font-weight: 700; color: var(--text);
+  position: sticky; top: 0; }
+table.cmp tbody tr:hover td { background: rgba(255,255,255,0.015); }
+.tool { font-weight: 800; font-size: 0.95rem; white-space: nowrap; }
+.tool.anthropic { color: var(--orange); }
+.tool.openai { color: var(--green); }
+.tool.google { color: var(--blue); }
+.tool.genspark { color: var(--purple); }
+.vendor { font-size: 0.72rem; color: var(--text-dim); display: block; margin-top: 2px; }
+.pill { display: inline-block; font-size: 0.68rem; padding: 2px 8px; border-radius: 10px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-dim); }
+.warn { color: var(--pink); font-weight: 600; }
+
+/* setup cards */
+.setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 6px; }
+.stp { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; }
+.stp.anthropic { border-top: 3px solid var(--orange); }
+.stp.openai { border-top: 3px solid var(--green); }
+.stp.google { border-top: 3px solid var(--blue); }
+.stp h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 2px; }
+.stp .who { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 12px; }
+.stp ol { margin: 0 0 10px 1.1em; padding: 0; }
+.stp ol li { margin-bottom: 7px; font-size: 0.88rem; }
+.stp code { background: rgba(255,255,255,0.07); padding: 1px 7px; border-radius: 6px;
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.82rem; color: var(--cyan); }
+.stp .note { font-size: 0.78rem; color: var(--text-dim); border-top: 1px dashed var(--border); padding-top: 8px; }
+.stp .lk { font-size: 0.82rem; }
+
+.browser-now { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+  padding: 20px 22px; margin-top: 16px; }
+.browser-now h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; }
+.bn-row { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.bn-item { font-size: 0.88rem; }
+.bn-item b { color: var(--text); }
+
+.safety { margin-top: 30px; padding: 16px 20px; background: rgba(245,158,11,0.06);
+  border: 1px solid var(--orange-border); border-radius: 12px; font-size: 0.9rem; }
+.safety b { color: var(--orange); }
+
+@media (max-width: 720px) {
+  .setup-grid { grid-template-columns: 1fr; }
+  h1 { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>AIエージェント 使い分け＆セットアップ</h1>
+<p class="subtitle">「同じ脳に、手が付いたもの」── いつ・どれを使い、どう立ち上げるか</p>
+
+<div class="concept">
+  チャット型AIは<b>助言する</b>（文章で返すだけ）。エージェント型AIは<b>作業を終わらせる</b>（実際にファイルを開き・作り・保存する）。
+  同じ脳（クラウド）に「手と机」を付けたのがエージェントです。合宿で実際に動かすのはこちら。まず全体像 → 使い分け → セットアップの順でいきましょう。
+</div>
+
+<!-- ===== 使い分け 一覧 ===== -->
+<h2 class="sec-title">① まず一覧で「使い分け」</h2>
+<p class="sec-lead">7つを、接点（使い方）と得意で並べました。太字が名前、色は提供元。</p>
+
+<div class="table-wrap">
+<table class="cmp">
+<thead>
+  <tr>
+    <th>ツール</th><th>接点（使い方）</th><th>誰向け</th><th>得意なこと</th><th>こんな時に</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td><span class="tool anthropic">Claude Cowork</span><span class="vendor">Anthropic</span></td>
+    <td>会話・デスクトップアプリ<br><span class="pill">ターミナル不要</span></td>
+    <td>非エンジニア</td>
+    <td>フォルダ整理・Excel/PPT等の成果物・調査を"丸投げ"</td>
+    <td>まず会話で任せてみたい。黒い画面は使いたくない</td>
+  </tr>
+  <tr>
+    <td><span class="tool genspark">Genspark</span><span class="vendor">Genspark</span></td>
+    <td>会話・ブラウザ<br><span class="pill">インストール不要</span></td>
+    <td>全員</td>
+    <td>1プロンプトで資料・サイト・動画・リサーチを量産（複数AIを束ねる）</td>
+    <td>成果物をとにかく早く出したい</td>
+  </tr>
+  <tr>
+    <td><span class="tool anthropic">Claude Code</span><span class="vendor">Anthropic</span></td>
+    <td>ターミナル／アプリ<br><span class="pill">CLI</span></td>
+    <td>作る人・本格運用</td>
+    <td>コード・自動化・多段の自律作業の主力。Coworkと同じ基盤の"本気版"</td>
+    <td>本格的に作り込む・業務を自動化する</td>
+  </tr>
+  <tr>
+    <td><span class="tool openai">OpenAI Codex</span><span class="vendor">OpenAI</span></td>
+    <td>ターミナル＋IDE＋クラウド<br><span class="pill">CLI</span></td>
+    <td>ChatGPT派・開発寄り</td>
+    <td>サンドボックスで安全にコード実行。サブエージェント並列</td>
+    <td>ChatGPT課金の範囲で開発したい</td>
+  </tr>
+  <tr>
+    <td><span class="tool google">Gemini CLI</span><span class="vendor">Google</span></td>
+    <td>ターミナル<br><span class="pill">CLI</span></td>
+    <td>Google派・開発寄り</td>
+    <td>端末でGemini・100万トークン・MCP対応</td>
+    <td><span class="warn">※無料枠は6/18にAntigravity CLIへ移行</span>。有料API/Vertexは継続</td>
+  </tr>
+  <tr>
+    <td><span class="tool google">Google Antigravity</span><span class="vendor">Google</span></td>
+    <td>IDE／デスクトップ／CLI<br><span class="pill">開発基盤</span></td>
+    <td>開発チーム</td>
+    <td>複数エージェントを並列で走らせる。実ブラウザを操作しながら作る</td>
+    <td>開発をエージェント主導で回したい</td>
+  </tr>
+  <tr>
+    <td><span class="tool google">NotebookLM</span><span class="vendor">Google</span></td>
+    <td>ブラウザ<br><span class="pill">インストール不要</span></td>
+    <td>全員</td>
+    <td>アップした資料"だけ"に根拠を置く調査（引用付き）＋音声要約・スライド化</td>
+    <td>手持ち資料を読み込ませ、正確に調べ・まとめたい</td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<div class="concept" style="border-left-color:var(--orange); margin-top:20px;">
+  迷ったら：<b>会話で任せたい非エンジニア → Claude Cowork</b>／<b>本格的に作る → Claude Code</b>／<b>手持ち資料の調査 → NotebookLM</b>。
+  Cowork と Claude Code は<b>同じ脳・同じエージェント基盤</b>で、接点が「会話」か「ターミナル」かの違いです。
+</div>
+
+<!-- ===== セットアップ ===== -->
+<h2 class="sec-title">② 立ち上げる（セットアップ手順）</h2>
+<p class="sec-lead">合宿で実際に触る主力4つ。完走しなくてOK、まず一歩踏み出せれば成功です。</p>
+
+<div class="setup-grid">
+
+  <div class="stp anthropic">
+    <h3>Claude Code</h3>
+    <div class="who">Anthropic ／ 本格的に作る・自動化する</div>
+    <ol>
+      <li><a class="lk" href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a> からネイティブ版をダウンロード<br><span class="note" style="border:0;padding:0;">（ネイティブ版は <b style="color:var(--orange)">Node.js 不要</b>・自動更新）</span></li>
+      <li>インストール → 起動</li>
+      <li>有料アカウント（Pro / Max / Team など）でログイン</li>
+    </ol>
+    <div class="note">Mac / Windows / Linux 対応。無料plan では使えません。npm 版は旧経路（Node.js 22+）。</div>
+  </div>
+
+  <div class="stp anthropic">
+    <h3>Claude Cowork</h3>
+    <div class="who">Anthropic ／ 会話でまるごと"任せる"（ターミナル不要）</div>
+    <ol>
+      <li><a class="lk" href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> から Claude Desktop を入れ、有料planでログイン</li>
+      <li>メッセージ欄で <code>Cowork</code> を選択</li>
+      <li>「Work in a folder」で作業フォルダを指定 → 自然文で依頼 → 承認して実行</li>
+    </ol>
+    <div class="note">Claude Code と同じ基盤をアプリ化したもの。アプリを閉じても処理は継続（ローカルファイルを使う時は開いておく）。</div>
+  </div>
+
+  <div class="stp openai">
+    <h3>OpenAI Codex</h3>
+    <div class="who">OpenAI ／ ChatGPT派のコーディングエージェント</div>
+    <ol>
+      <li>ChatGPT（Plus / Team など）アカウントを用意</li>
+      <li>ターミナルで <code>npm i -g @openai/codex</code></li>
+      <li><code>codex</code> を起動 → ChatGPTでログイン（モデル gpt-5-codex）</li>
+    </ol>
+    <div class="note">既定は Suggest モード（毎回承認）＋サンドボックス（ネット遮断・カレント配下のみ）。VS Code拡張やクラウド版（chatgpt.com/codex）も。</div>
+  </div>
+
+  <div class="stp google">
+    <h3>Gemini CLI</h3>
+    <div class="who">Google ／ 端末でGemini（開発寄り）</div>
+    <ol>
+      <li>ターミナルで <code>npm i -g @google/gemini-cli</code></li>
+      <li><code>gemini</code> を起動 → Google / API で認証</li>
+      <li>設定は <code>~/.gemini/</code> に保存</li>
+    </ol>
+    <div class="note"><span class="warn">※ 2026/6/18に無料ホスト版バックエンドを停止。</span>無料で使うなら <b style="color:var(--blue)">Antigravity CLI</b> へ。有料API / Vertex は継続。</div>
+  </div>
+
+</div>
+
+<div class="browser-now">
+  <h3>ブラウザで今すぐ（インストール不要）</h3>
+  <div class="bn-row">
+    <div class="bn-item"><b>Genspark</b> — <a href="https://www.genspark.ai" target="_blank" rel="noopener">genspark.ai</a>：無料200クレジット/日・カード不要で即開始</div>
+    <div class="bn-item"><b>NotebookLM</b> — <a href="https://notebooklm.google.com" target="_blank" rel="noopener">notebooklm.google.com</a>：資料をアップ→質問・音声要約</div>
+    <div class="bn-item"><b>Google Antigravity</b> — <a href="https://antigravity.google" target="_blank" rel="noopener">antigravity.google</a>：DL（Free / Pro / Ultra）</div>
+  </div>
+</div>
+
+<div class="safety">
+  <b>安全に使うコツ：</b>エージェントに見せたものは脳（クラウド）に送られます。<b>ダミーデータで試す・「承認」を挟む・"学習しないプラン/設定"を選ぶ</b>の3つで、リスクは Gmail や freee にデータを預けるのと同程度に収まります。「AIだけ特別に怖がる」必要はありません。
+</div>
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>MBA×AI 実践合宿 ── Day1 教材</p>
+  <p style="margin-top:6px;">情報は2026年7月時点。各社の公式発表・報道をもとに作成。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年7月21日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents ／ MBA×AI 実践合宿</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</div>
+</body>
+</html>
