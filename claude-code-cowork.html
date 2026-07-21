@@ -80,6 +80,24 @@ table.t .g { color:var(--green); font-weight:700; } table.t .r { color:var(--pin
 .df-node .t { font-weight:800; } .df-node .d { font-size:0.78rem; color:var(--text-dim); }
 .df-arr { color:var(--cyan); font-weight:700; font-size:0.82rem; }
 
+code { background:rgba(255,255,255,0.07); padding:1px 7px; border-radius:6px;
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size:0.82rem; color:var(--cyan); }
+
+/* UI menu mock (実画面ふう) */
+.uicols { display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start; margin:6px 0 4px; }
+.uicol { flex:1 1 300px; }
+.uimenu { background:#15152a; border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:6px;
+  box-shadow:0 10px 34px rgba(0,0,0,0.45); }
+.uimenu .h { font-size:0.72rem; color:var(--text-dim); padding:7px 12px 5px; }
+.uimenu .r { display:flex; justify-content:space-between; align-items:center; gap:14px;
+  padding:8px 12px; border-radius:8px; font-size:0.87rem; }
+.uimenu .r .num { color:var(--text-dim); font-size:0.78rem; white-space:nowrap; }
+.uimenu .r.sel { color:var(--cyan); font-weight:700; }
+.uimenu .r.warn { color:var(--pink); }
+.uimenu .sep { height:1px; background:var(--border); margin:5px 8px; }
+.uicap { font-size:0.82rem; color:var(--text-dim); margin-top:8px; }
+.uicap b { color:var(--text); }
+
 @media (max-width: 720px){ .grid{grid-template-columns:1fr;} h1{font-size:1.55rem;} }
 </style>
 </head>
@@ -127,8 +145,13 @@ table.t .g { color:var(--green); font-weight:700; } table.t .r { color:var(--pin
   </div>
   <div class="f">
     <h3><span class="ic">⏪</span>チェックポイント（巻き戻せる）</h3>
-    <p>作業の要所が保存され、気に入らなければ<b>元に戻せる</b>。フック（自動処理）やスキル/プラグインで“自分の型”も仕込める。だから怖がらず試せる。</p>
+    <p>作業の要所が保存され、気に入らなければ<b>元に戻せる</b>。フック（自動処理）で“自分の型”も仕込める。だから怖がらず試せる。</p>
     <span class="k">やり直せる安心</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">🧩</span>スキル（Skills）</h3>
+    <p><code>SKILL.md</code>（指示＋スクリプト＋資料をまとめたフォルダ）。<b>関連する時だけ自動で読み込む</b>ので普段は軽い。<code>/スキル名</code>で呼び出しも。例：資料デザイン・Webアプリのテスト・セキュリティレビュー等。自作もでき、Claudeアプリ/Code/APIで横断利用。</p>
+    <span class="k">＋メニュー →「プラグインを追加」から</span>
   </div>
 </div>
 
@@ -162,6 +185,35 @@ table.t .g { color:var(--green); font-weight:700; } table.t .r { color:var(--pin
   </div>
 </div>
 
+<!-- ===== 2.5 画面で見る ===== -->
+<h2 class="sec-title"><span class="n">②′</span> 画面で見る ── よく使うメニュー</h2>
+<p class="sec-lead">スクショの各メニューが何者か。ここを押さえると迷いません。</p>
+<div class="uicols">
+  <div class="uicol">
+    <div class="uimenu">
+      <div class="h">モデル</div>
+      <div class="r"><span>Fable 5</span><span class="num">1</span></div>
+      <div class="r sel"><span>Opus 4.8</span><span class="num">✓ 2</span></div>
+      <div class="r"><span>Sonnet 5</span><span class="num">3</span></div>
+      <div class="r"><span>Haiku 4.5</span><span class="num">4</span></div>
+      <div class="sep"></div>
+      <div class="r"><span>高速モードを有効にする</span><span class="num">⚡</span></div>
+    </div>
+    <p class="uicap"><b>モデル選択</b>：用途で“脳”を切替。最上位＝Fable 5／標準＝Sonnet 5／速さ・低コスト＝Haiku 4.5。<b>高速モード</b>は応答を速く（精度優先なら通常のまま）。</p>
+  </div>
+  <div class="uicol">
+    <div class="uimenu">
+      <div class="r"><span>📎 ファイル / 写真を追加</span><span class="num">Ctrl+U</span></div>
+      <div class="r"><span>📁 フォルダを追加</span><span class="num"></span></div>
+      <div class="r"><span>／ スラッシュコマンド</span><span class="num"></span></div>
+      <div class="r"><span>🔌 コネクタ</span><span class="num">›</span></div>
+      <div class="r"><span>🧩 プラグインを追加</span><span class="num"></span></div>
+    </div>
+    <p class="uicap"><b>＋メニュー</b>：作業フォルダを渡す／スラッシュコマンド／<b>コネクタ＝MCP</b>で外部ツール接続／プラグイン・スキルで拡張。ここが“手を増やす”入口。</p>
+  </div>
+</div>
+<p class="sec-lead" style="margin-top:14px;"><b>コンテキストウィンドウ</b>（例 337k / 1.0M＝34%）＝会話の“作業机の広さ”。埋まってきたら <code>/compact</code> で圧縮。<b>使用量</b>は 5時間ごと＋週次（全モデル／Fable 別）でプランの枠を消費します（Max 20x など）。</p>
+
 <!-- ===== 3. セキュリティ ===== -->
 <h2 class="sec-title"><span class="n">③</span> セキュリティ ── 安心して業務で使うために</h2>
 
@@ -184,13 +236,44 @@ table.t .g { color:var(--green); font-weight:700; } table.t .r { color:var(--pin
 </table>
 </div>
 <p class="sec-lead" style="margin-top:8px;">※ 最上位（Mythos級）モデルは安全目的で全プラン30日保持（2026/6/9〜）。<b>機密を扱うなら、消費者版は「学習OFF」、本番は商用/ZDR</b>が基本。</p>
+<div class="perm" style="background:rgba(6,182,212,0.05); border-color:rgba(6,182,212,0.35);">
+  <div class="q">🔧 「学習ON/OFF」はどこで設定する？</div>
+  <div>Claude.ai → <b>左下のアカウント名</b> → <b>設定（Settings）</b> → <b>プライバシー（Privacy）</b> → 「<b>Claudeの改善に協力 / Help improve Claude</b>」トグル</div>
+  <div style="font-size:0.8rem; color:var(--text-dim); margin-top:8px;">ON＝会話が学習対象＋最大5年保持／OFF＝学習に使われず保持30日。2025年8月から消費者は<b>オプトアウト方式</b>（初期でONになり得るので要確認）。※既に学習に入ったデータは取り消せません。</div>
+</div>
 
-<h3 style="margin:26px 0 4px; font-size:1.05rem;">3-2. 許可の仕組み（勝手には動かない）</h3>
-<p class="sec-lead" style="margin-top:0;">ファイル書き込み・コマンド実行・MCPツール利用は、原則ぜんぶ<b>あなたの承認</b>が要ります。ルールは <b>Allow / Ask / Deny</b> の3種。</p>
+<h3 style="margin:26px 0 4px; font-size:1.05rem;">3-2. 許可の仕組み（勝手には動かない）── 5つのモード</h3>
+<p class="sec-lead" style="margin-top:0;">ファイル書き込み・コマンド実行・MCPツール利用は、原則<b>あなたの承認</b>が要ります。実際は<b>5つのモード</b>があり、<b>Shift+Tab で切替</b>（左下に現在のモードが表示）。</p>
+<div class="uicols">
+  <div class="uicol" style="flex:0 0 auto;">
+    <div class="uimenu">
+      <div class="h">モード</div>
+      <div class="r"><span>手動</span><span class="num">1</span></div>
+      <div class="r"><span>編集を承認</span><span class="num">2</span></div>
+      <div class="r"><span>プラン</span><span class="num">3</span></div>
+      <div class="r"><span>自動</span><span class="num">4</span></div>
+      <div class="r warn"><span>許可をバイパス</span><span class="num">✓ 5</span></div>
+    </div>
+  </div>
+  <div class="uicol">
+    <div class="table-wrap">
+    <table class="t" style="min-width:0;">
+      <tbody>
+        <tr><td><b>手動</b>（既定）</td><td>すべての操作を毎回確認。いちばん安全</td></tr>
+        <tr><td><b>編集を承認</b></td><td>ファイル編集は自動、コマンド等は確認</td></tr>
+        <tr><td><b>プラン</b></td><td>計画だけ作る（実行しない）→承認後に実行</td></tr>
+        <tr><td><b>自動</b></td><td>安全性をリアルタイム判定。安全は自動・危険は停止/確認</td></tr>
+        <tr><td class="r"><b>許可をバイパス</b></td><td class="r">確認をスキップ。<b>危険・隔離環境だけ</b></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+<p class="sec-lead" style="margin-top:6px;">「許可をバイパス」＝<code>--dangerously-skip-permissions</code> 相当で、<b>日常では使わない</b>のが鉄則。※どのモードでも、設定やリポジトリの要所（保護パス）はバイパス以外では自動承認されません。</p>
 <div class="perm">
-  <div class="q">⚠️ Claude が次を実行しようとしています：</div>
+  <div class="q">⚠️「手動」なら、危険な操作の前にこう止まります：</div>
   <div><span class="cmd">rm -rf ./old-data</span></div>
-  <div class="btns"><span class="b allow">Allow（許可）</span><span class="b ask">Ask（毎回確認）</span><span class="b deny">Deny（拒否）</span></div>
+  <div class="btns"><span class="b allow">許可</span><span class="b ask">毎回確認</span><span class="b deny">拒否</span></div>
 </div>
 <div class="grid">
   <div class="f">
@@ -198,8 +281,8 @@ table.t .g { color:var(--green); font-weight:700; } table.t .r { color:var(--pin
     <p>ファイル/ネットワークへの到達を、信頼や言葉ではなく<b>OSの仕組みで物理的に制限</b>。切っていると「許可の仕組みだけが唯一の壁」になる。</p>
   </div>
   <div class="f">
-    <h3><span class="ic">🚫</span>Deny リストと危険フラグ</h3>
-    <p>削除・強制push・公開・秘密の読み取り等は既定で拒否。<code>--dangerously-skip-permissions</code>（全許可）は<b>基本使わない</b>。使うなら隔離環境で。</p>
+    <h3><span class="ic">🚫</span>Deny リスト（既定で拒否）</h3>
+    <p>削除・強制push・公開・秘密（鍵など）の読み取りといった<b>破壊的な操作は既定で拒否</b>。許可したものだけを通す“通行証”方式で、事故を未然に防ぎます。</p>
   </div>
 </div>
 
