@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBA×AI 実践合宿 ── Claudeモデルの選び方（Fable / Opus / Sonnet / Haiku）</title>
+<meta name="description" content="Claude Fable 5・Opus 4.8・Sonnet 5・Haiku 4.5 は具体的に何が違うのか。知能・速度・コスト・用途で比較し、いつどれを選ぶかをまとめました。">
+<link rel="stylesheet" href="common.css">
+<style>
+.container { max-width: 1040px; margin: 0 auto; padding: 40px 20px 80px; }
+h1 { text-align:center; font-size:2rem; font-weight:900;
+  background:linear-gradient(135deg,var(--orange),var(--pink),var(--purple));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
+.subtitle { text-align:center; color:var(--text-dim); font-size:0.95rem; margin-bottom:26px; }
+
+.lead-box { max-width:840px; margin:0 auto 30px; padding:18px 22px; background:var(--card-bg);
+  border:1px solid var(--border); border-left:3px solid var(--orange); border-radius:12px; font-size:0.95rem; }
+.lead-box b { color:var(--orange); }
+
+.sec-title { font-size:1.3rem; font-weight:800; margin:40px 0 6px; }
+.sec-lead { color:var(--text-dim); font-size:0.9rem; margin-bottom:18px; }
+
+.table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:14px; }
+table.cmp { width:100%; border-collapse:collapse; min-width:840px; font-size:0.86rem; }
+table.cmp th, table.cmp td { text-align:left; padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+table.cmp thead th { background:rgba(255,255,255,0.04); font-weight:700; }
+table.cmp tbody tr:hover td { background:rgba(255,255,255,0.015); }
+.m { font-weight:800; font-size:0.95rem; white-space:nowrap; color:var(--orange); }
+.m .tier { display:block; font-size:0.7rem; color:var(--text-dim); margin-top:2px; font-weight:500; }
+.cost { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:0.82rem; white-space:nowrap; }
+.spd-fast { color:var(--green); font-weight:700; } .spd-mid { color:var(--blue); } .spd-slow { color:var(--text-dim); }
+
+/* choose flow */
+.choose { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px; }
+.ch { background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
+.ch .when { font-size:0.85rem; color:var(--text-dim); }
+.ch .pick { font-weight:800; color:var(--orange); font-size:1.05rem; margin-top:4px; }
+.ch.default { border-color:var(--orange-border); background:rgba(245,158,11,0.05); }
+
+.note { background:var(--card-bg); border:1px solid var(--border); border-left:3px solid var(--cyan);
+  border-radius:12px; padding:16px 20px; margin-top:16px; font-size:0.9rem; }
+.note b { color:var(--cyan); }
+.axis { background:rgba(139,92,246,0.05); border:1px solid rgba(139,92,246,0.25);
+  border-radius:12px; padding:16px 20px; margin-top:16px; font-size:0.9rem; }
+.axis b { color:var(--purple); }
+
+@media (max-width:720px){ .choose{grid-template-columns:1fr;} h1{font-size:1.55rem;} }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Claudeモデルの選び方</h1>
+<p class="subtitle">Fable 5 / Opus 4.8 / Sonnet 5 / Haiku 4.5 ── 具体的に何が違う？</p>
+
+<div class="lead-box">
+  Claudeの4モデルは<b>同じ“脳の系統”の大小・世代違い</b>。選ぶ軸はシンプルに <b>知能（自律性）・速度・コスト</b> の3つ。
+  上ほど賢く高価・遅め、下ほど速く安い。<b>迷ったら Sonnet 5</b>（既定）でOKです。
+</div>
+
+<!-- 比較表 -->
+<h2 class="sec-title">① 一覧で比較</h2>
+<p class="sec-lead">価格は100万トークンあたり（入力/出力）。2026年7月時点。</p>
+<div class="table-wrap">
+<table class="cmp">
+<thead>
+  <tr><th>モデル</th><th>ひとことで</th><th>得意・使いどころ</th><th>速度</th><th>コスト（入/出）</th><th>文脈</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <td><span class="m">Fable 5<span class="tier">最上位・Mythos級</span></span></td>
+    <td>いま最強・<b>最も自律的</b></td>
+    <td>品質が絶対で、<b>長時間の自律作業を“組んだ”</b>時に真価（長い無人実行・大きな作業単位）。素の置き換えなら Opus の方が費用対効果は上。</td>
+    <td class="spd-mid">標準</td>
+    <td class="cost">$10 / $50</td>
+    <td>100万</td>
+  </tr>
+  <tr>
+    <td><span class="m">Opus 4.8<span class="tier">高性能</span></span></td>
+    <td>難問に効く<b>本気の一手</b></td>
+    <td>多段の推論・複雑なコード・濃い分析など<b>間違いが高くつく仕事</b>。多くの現場で費用対効果が良い“実質フラッグシップ”。</td>
+    <td class="spd-slow">やや遅い</td>
+    <td class="cost">$5 / $25</td>
+    <td>100万</td>
+  </tr>
+  <tr>
+    <td><span class="m">Sonnet 5<span class="tier">標準・既定 ★</span></span></td>
+    <td><b>大半の業務の最適解</b></td>
+    <td>知識作業では<b>Opus 4.8 に肩を並べつつ低コスト</b>。日常の資料作成・分析・コーディングの主力。<b>迷ったらこれ。</b></td>
+    <td class="spd-fast">速い</td>
+    <td class="cost">$2 / $10<br><span style="color:var(--text-dim);font-size:0.72rem;">※8/31まで・以降 $3/$15</span></td>
+    <td>大</td>
+  </tr>
+  <tr>
+    <td><span class="m">Haiku 4.5<span class="tier">高速・低コスト</span></span></td>
+    <td><b>速く・安く・大量に</b></td>
+    <td>仕分け・一次対応・大量処理・下書き。1世代前なら Sonnet 級の値段が必要だった品質を、この速さ・安さで。</td>
+    <td class="spd-fast">最速</td>
+    <td class="cost">$1 / $5</td>
+    <td>20万</td>
+  </tr>
+</tbody>
+</table>
+</div>
+
+<!-- 選び方 -->
+<h2 class="sec-title">② いつ、どれを選ぶ？</h2>
+<div class="choose">
+  <div class="ch default">
+    <div class="when">迷ったら・ふだんの業務</div>
+    <div class="pick">→ Sonnet 5</div>
+  </div>
+  <div class="ch">
+    <div class="when">難しい／失敗が許されない仕事</div>
+    <div class="pick">→ Opus 4.8</div>
+  </div>
+  <div class="ch">
+    <div class="when">品質が絶対＋自律フローを作り込む</div>
+    <div class="pick">→ Fable 5</div>
+  </div>
+  <div class="ch">
+    <div class="when">大量・高速・低コストで回す</div>
+    <div class="pick">→ Haiku 4.5</div>
+  </div>
+</div>
+
+<div class="note">
+  <b>Fable 5 と Mythos 5 の関係：</b>中身は<b>同じモデル</b>。<b>Fable 5</b>＝安全装置（分類器）つきの公開版、<b>Mythos 5</b>＝安全装置を外した<b>承認パートナー限定</b>版（一般利用は不可）。
+  Fable 5 は、サイバー・生物化学などの危険分類に触れた時だけ自動的に <b>Opus 4.8</b> が応答します（全体の5%未満）。
+</div>
+
+<div class="axis">
+  <b>“モデル選択”とは別の軸：</b>画面には「思考レベル（例：高）」や「高速モード」もあります。これは<b>同じモデルで、どれだけ熟考させるか／速さを優先するか</b>の調整。
+  まずは <b>Sonnet 5・思考レベル標準</b>で十分。難しい時だけ上のモデルや「高」に上げる、という使い方が実用的です。
+</div>
+
+<div class="lead-box" style="border-left-color:var(--cyan); margin-top:28px;">
+  まとめ：<b>賢さ順に Fable 5 ＞ Opus 4.8 ≒ Sonnet 5 ＞ Haiku 4.5</b>、<b>速さ・安さは逆順</b>。
+  ただし Sonnet 5 が知識作業で Opus に迫るため、<b>実務は Sonnet 5 を軸に、難所だけ Opus / Fable、量産は Haiku</b> ── これが基本の型です。
+</div>
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>MBA×AI 実践合宿 ── Day1 教材</p>
+  <p style="margin-top:6px;">情報は2026年7月時点。各社の公式発表・報道をもとに作成。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年7月21日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents ／ MBA×AI 実践合宿</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</div>
+</body>
+</html>
