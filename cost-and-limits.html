@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBA×AI 実践合宿 ── コストと使用量（Pro / Max でどれくらい使える？）</title>
+<meta name="description" content="Claude Code / Cowork のコストの考え方と、Pro・Max プランでどれくらい使えるか。使用量の枠（5時間＋週次）の仕組み、何がトークンを食うか、枠を長持ちさせるコツ。">
+<link rel="stylesheet" href="common.css">
+<style>
+.container { max-width:1040px; margin:0 auto; padding:40px 20px 80px; }
+h1 { text-align:center; font-size:1.95rem; font-weight:900;
+  background:linear-gradient(135deg,var(--green),var(--orange),var(--pink));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
+.subtitle { text-align:center; color:var(--text-dim); font-size:0.95rem; margin-bottom:26px; }
+.lead-box { max-width:840px; margin:0 auto 30px; padding:18px 22px; background:var(--card-bg);
+  border:1px solid var(--border); border-left:3px solid var(--green); border-radius:12px; font-size:0.95rem; }
+.lead-box b { color:var(--green); }
+.sec-title { font-size:1.28rem; font-weight:800; margin:42px 0 6px; }
+.sec-lead { color:var(--text-dim); font-size:0.9rem; margin-bottom:18px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.f { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:16px 18px; }
+.f h3 { font-size:1rem; font-weight:800; margin-bottom:5px; }
+.f h3 .ic { margin-right:7px; }
+.f p { font-size:0.86rem; color:#c8c8e0; }
+.f .w { font-size:0.72rem; color:var(--orange); font-weight:700; margin-top:6px; display:block; }
+.table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:14px; }
+table.cmp { width:100%; border-collapse:collapse; min-width:760px; font-size:0.86rem; }
+table.cmp th, table.cmp td { text-align:left; padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+table.cmp thead th { background:rgba(255,255,255,0.04); font-weight:700; }
+table.cmp .plan { font-weight:800; white-space:nowrap; }
+table.cmp .pro { color:var(--blue); } table.cmp .m5 { color:var(--orange); } table.cmp .m20 { color:var(--pink); }
+.limitbox { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:6px; max-width:420px; margin:12px 0; box-shadow:0 10px 30px rgba(0,0,0,0.4); }
+.limitbox .h { font-size:0.72rem; color:var(--text-dim); padding:8px 12px 4px; }
+.limitrow { padding:8px 12px; }
+.limitrow .lbl { display:flex; justify-content:space-between; font-size:0.84rem; margin-bottom:5px; }
+.limitrow .lbl .pct { color:var(--text-dim); }
+.bar { height:7px; border-radius:4px; background:rgba(255,255,255,0.08); overflow:hidden; }
+.bar i { display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--cyan)); }
+.note { background:rgba(6,182,212,0.05); border:1px solid rgba(6,182,212,0.3); border-radius:12px;
+  padding:15px 18px; margin-top:16px; font-size:0.88rem; }
+.note b { color:var(--cyan); }
+.tips { counter-reset:t; margin-top:6px; }
+.tip { display:flex; gap:12px; align-items:flex-start; padding:11px 0; border-bottom:1px dashed var(--border); font-size:0.9rem; }
+.tip:before { counter-increment:t; content:counter(t); flex:0 0 auto; width:24px; height:24px; border-radius:50%;
+  background:var(--green-bg); border:1px solid var(--green-border); color:var(--green); font-weight:800; font-size:0.78rem;
+  display:flex; align-items:center; justify-content:center; }
+.tip b { color:var(--text); }
+@media (max-width:720px){ .grid{grid-template-columns:1fr;} h1{font-size:1.5rem;} }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>コストと使用量の考え方</h1>
+<p class="subtitle">Claude Code / Cowork を Pro・Max でどれくらい使える？</p>
+
+<div class="lead-box">
+  いちばん大事な発想の転換：<b>サブスク（Pro/Max）の“コスト”は、お金ではなく「使える量（枠）」の話。</b>
+  月額は固定で、その中で「どれだけトークンを食ったか」で枠が減る。だから<b>定額プランなら“メーター暴走”は起きません</b>（暴走するのは従量制のAPIの方）。まずは定額が安全。
+</div>
+
+<!-- ① 何が枠を食う -->
+<h2 class="sec-title">① 何が「枠（トークン）」を食う？</h2>
+<p class="sec-lead">同じ「1時間の作業」でも、消費はここで何倍も変わります。</p>
+<div class="grid">
+  <div class="f">
+    <h3><span class="ic">🧠</span>使うモデル</h3>
+    <p>上位ほど1回が重い。Fable ≫ Opus ≫ Sonnet ≫ Haiku。ふだんは Sonnet、難所だけ上げるのが枠にやさしい。</p>
+    <span class="w">影響：大</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">👥</span>サブエージェント・並列</h3>
+    <p>分身は各自が文脈を持つ＝<b>3体で約7倍</b>のトークン。5体も走らせると Pro の5時間枠を1時間かからず使い切ることも。</p>
+    <span class="w">影響：大</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">📜</span>コンテキストの量</h3>
+    <p>エージェントは毎ループ「これまで全部」を読み直す。長い会話・大きなリポジトリほど食う。<code>/compact</code> で圧縮・不要な巨大ファイルは読ませない。</p>
+    <span class="w">影響：中〜大</span>
+  </div>
+  <div class="f">
+    <h3><span class="ic">🔁</span>タスクの複雑さ・長さ</h3>
+    <p>大規模リファクタや長時間の自律実行はループ回数が増える＝消費増。小さく区切ると読みやすく・安い。</p>
+    <span class="w">影響：中</span>
+  </div>
+</div>
+
+<!-- ② 上限の仕組み -->
+<h2 class="sec-title">② 上限の仕組み（枠は“2階建て”）</h2>
+<p class="sec-lead">スクショの使用量表示は、この2種類（＋モデル別）の枠を見せています。</p>
+<div class="limitbox">
+  <div class="h">プラン使用制限（例：Max 20x）</div>
+  <div class="limitrow"><div class="lbl"><span>5時間制限（短期・ローリング）</span><span class="pct">2%</span></div><div class="bar"><i style="width:2%"></i></div></div>
+  <div class="limitrow"><div class="lbl"><span>週次・全モデル</span><span class="pct">11%</span></div><div class="bar"><i style="width:11%"></i></div></div>
+  <div class="limitrow"><div class="lbl"><span>週次・Fable（上位モデル別枠）</span><span class="pct">9%</span></div><div class="bar"><i style="width:9%"></i></div></div>
+</div>
+<div class="grid">
+  <div class="f">
+    <h3><span class="ic">⏱</span>5時間セッション（短期）</h3>
+    <p>直近5時間の“ローリング”上限。使い切っても数時間で回復。2026/5/6にこの枠は恒久的に2倍化されました。</p>
+  </div>
+  <div class="f">
+    <h3><span class="ic">📅</span>週次（長期・2種）</h3>
+    <p><b>全モデル枠</b>に加え、<b>上位モデル（Sonnet系/Fable）専用の週次枠</b>が別にある。上位を多用すると先に上位枠が尽きる。</p>
+  </div>
+</div>
+<div class="note">
+  <b>重要：Claude Code と Claude チャットは“同じプール”を共有。</b>Codeでガッツリ回すと、その分ふだんのチャットの枠も減ります。逆も同じ。
+</div>
+
+<!-- ③ Pro / Max 目安 -->
+<h2 class="sec-title">③ Pro / Max でどれくらい使える？（目安）</h2>
+<p class="sec-lead">Anthropicは固定の公表値を2026年にやめており、実際はモデル・複雑さで変動。以下は報道ベースの<b>目安</b>です。</p>
+<div class="table-wrap">
+<table class="cmp">
+<thead>
+  <tr><th>プラン</th><th>月額</th><th>Pro比</th><th>5時間の目安</th><th>Code 週あたり目安</th><th>向いている人</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="plan pro">Pro</td><td>$20</td><td>×1（基準）</td>
+    <td>個人の中程度の作業がこなせる量</td>
+    <td>—</td>
+    <td>まず試す個人。コードレビュー・デバッグ・集中した機能開発。大規模リファクタや巨大コードベースはすぐ枯れる。</td>
+  </tr>
+  <tr>
+    <td class="plan m5">Max 5x</td><td>$100</td><td>×5</td>
+    <td>約 225 メッセージ / 5時間窓</td>
+    <td>約 140〜280 時間相当</td>
+    <td>Codeを日常的に。並列や中規模の作業も回したい人。</td>
+  </tr>
+  <tr>
+    <td class="plan m20">Max 20x</td><td>$200</td><td>×20</td>
+    <td>約 900 メッセージ / 5時間窓</td>
+    <td>約 240〜480 時間相当</td>
+    <td>1日中Code漬け・大きめの自律作業・チーム的な使い方。</td>
+  </tr>
+</tbody>
+</table>
+</div>
+<div class="note">
+  ざっくり：<b>Pro＝“試す・軽めの実務”／Max 5x＝“毎日ちゃんと使う”／Max 20x＝“ほぼ本業ツール”。</b>
+  まず Pro $20 で始め、枠に頻繁に当たる・並列や大規模をやるなら Max に上げる、が現実的。
+</div>
+
+<!-- ④ 長持ちのコツ -->
+<h2 class="sec-title">④ 枠を長持ちさせる5つのコツ</h2>
+<div class="tips">
+  <div class="tip"><div><b>ふだんは Sonnet 5。</b>難所だけ Opus / Fable に上げる（上位は週次の別枠で先に尽きる）。</div></div>
+  <div class="tip"><div><b>会話が伸びたら <code>/compact</code>。</b>“作業机”を片付けてから続けると消費が減る。</div></div>
+  <div class="tip"><div><b>サブエージェントは必要な時だけ。</b>3体で約7倍。多並列は枠を一気に食う。</div></div>
+  <div class="tip"><div><b>大きな仕事は小さく区切る。</b>巨大ファイル・巨大リポジトリを丸ごと読ませない。</div></div>
+  <div class="tip"><div><b>本気の量産・チームは API も検討。</b>定額の枠を超えるなら従量（使った分だけ）が合うことも。</div></div>
+</div>
+
+<div class="lead-box" style="border-left-color:var(--cyan); margin-top:28px;">
+  まとめ：定額プランの“コスト”＝<b>お金ではなく枠（トークン）</b>。枠は <b>5時間＋週次（全モデル／上位別）</b> の2階建てで、<b>Code とチャットは共有</b>。
+  <b>Sonnet 5 を軸に、/compact で片付けながら、難所だけ上位</b> ── これで Pro でもかなり戦えます。足りなければ Max へ。
+</div>
+
+<div class="site-footer">
+  <div class="footer-nav"><a href="index.html" class="back-to-hub">← 資料一覧に戻る</a></div>
+  <p>MBA×AI 実践合宿 ── Day1 教材</p>
+  <p style="margin-top:6px;">情報は2026年7月時点。各社の公式発表・報道をもとに作成（使用量は目安・変動あり）。</p>
+  <p class="last-updated" style="margin-top:8px;">最終更新: 2026年7月21日</p>
+  <div class="footer-logo">
+    <img src="bY_color2.png" alt="bY community">
+    <span class="presents">YAMAGA BASE Presents ／ MBA×AI 実践合宿</span>
+  </div>
+  <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
+</div>
+
+<button class="back-to-top" id="backToTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+addEventListener('scroll',()=>{document.getElementById('backToTop').classList.toggle('visible',scrollY>300)});
+</script>
+
+</div>
+</body>
+</html>
