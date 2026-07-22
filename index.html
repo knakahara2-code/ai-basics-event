@@ -224,10 +224,15 @@ details.sec > .card-list { margin-top: 6px; }
   .card-icon { font-size: 1.8rem; width: 40px; }
   .card-title { font-size: 1.05rem; }
 }
+.lang-toggle{position:fixed;top:14px;right:14px;z-index:60;display:flex;gap:2px;background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:3px;backdrop-filter:blur(8px);}
+.lang-toggle button{border:none;background:none;color:var(--text-dim);font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:16px;cursor:pointer;font-family:inherit;letter-spacing:0.02em;}
+.lang-toggle button.active{background:var(--blue);color:#fff;}
+@media (max-width:600px){.lang-toggle{top:10px;right:10px;}.lang-toggle button{padding:3px 9px;font-size:0.68rem;}}
 </style>
 </head>
 <body>
 
+<div class="lang-toggle"><button id="btn-ja" class="active" onclick="setLang('ja')">日本語</button><button id="btn-en" onclick="setLang('en')">EN</button></div>
 <div class="bg-orbs">
   <div class="orb"></div>
   <div class="orb"></div>
@@ -239,21 +244,21 @@ details.sec > .card-list { margin-top: 6px; }
   <div class="header">
     <div class="header-branding">
       <img src="bY_color2.png" alt="bY community">
-      <span class="presents">YAMAGA BASE Presents ／ MBA×AI 実践合宿</span>
+      <span class="presents" data-en="YAMAGA BASE Presents ／ MBA×AI Practical Bootcamp">YAMAGA BASE Presents ／ MBA×AI 実践合宿</span>
     </div>
-    <h1>MBA×AI 実践合宿</h1>
-    <p class="subtitle">Day1 ── AIの基本とセットアップ ／ 教材・リンク集</p>
-    <span class="date-badge">2026年7月・第1期</span>
-    <br><span class="last-updated">最終更新: 2026年7月21日</span>
+    <h1 data-en="MBA×AI Practical Bootcamp">MBA×AI 実践合宿</h1>
+    <p class="subtitle" data-en="Day 1 ── AI Basics &amp; Setup ／ Materials &amp; Links">Day1 ── AIの基本とセットアップ ／ 教材・リンク集</p>
+    <span class="date-badge" data-en="July 2026 ・ 1st Cohort">2026年7月・第1期</span>
+    <br><span class="last-updated" data-en="Last updated: Jul 21, 2026">最終更新: 2026年7月21日</span>
   </div>
 
-  <p class="flow-note">▼ 当日はこの順で進みます（下の「参考」は必要なときに開いてください）</p>
+  <p class="flow-note" data-en="▼ We'll go in this order on the day (open “Reference” below when needed)">▼ 当日はこの順で進みます（下の「参考」は必要なときに開いてください）</p>
 
   <div class="sec">
     <div class="sec-head">
       <span class="sec-step">STEP 1</span>
-      <span class="sec-title">まずここから ── AIの基本</span>
-      <span class="sec-sub">「AIって何？」から、今日から使い始めるところまで。</span>
+      <span class="sec-title" data-en="Start Here ── AI Basics">まずここから ── AIの基本</span>
+      <span class="sec-sub" data-en="From “what is AI?” to getting started today.">「AIって何？」から、今日から使い始めるところまで。</span>
     </div>
     <div class="card-list">
 
@@ -262,8 +267,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">🎤</div>
         <div class="card-body">
           <div class="card-label main">PRESENTATION</div>
-          <div class="card-title">プレゼンテーション本編</div>
-          <div class="card-desc">AI入門から3大チャットAI比較、マルチモーダル、AIエージェント（Cowork）まで。全19スライド。</div>
+          <div class="card-title" data-en="Main Presentation">プレゼンテーション本編</div>
+          <div class="card-desc" data-en="From AI intro to the 3 major chat AIs, multimodal, and AI agents (Cowork). 19 slides.">AI入門から3大チャットAI比較、マルチモーダル、AIエージェント（Cowork）まで。全19スライド。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -274,8 +279,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">⚡</div>
         <div class="card-body">
           <div class="card-label guide">SETUP GUIDE</div>
-          <div class="card-title">3大AI はじめてセットアップガイド</div>
-          <div class="card-desc">ChatGPT・Claude・Gemini を今日から使い始めるための手順。料金プラン比較も。</div>
+          <div class="card-title" data-en="Getting Started: The 3 Major AIs">3大AI はじめてセットアップガイド</div>
+          <div class="card-desc" data-en="Steps to start ChatGPT, Claude &amp; Gemini today. Plus a pricing comparison.">ChatGPT・Claude・Gemini を今日から使い始めるための手順。料金プラン比較も。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -286,8 +291,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">🧠</div>
         <div class="card-body">
           <div class="card-label" style="color:var(--orange);">MODELS</div>
-          <div class="card-title">Claudeモデルの選び方</div>
-          <div class="card-desc">Fable 5 / Opus 4.8 / Sonnet 5 / Haiku 4.5 は何が違う？ 知能・速度・コストで比較し、いつどれを選ぶかまで。</div>
+          <div class="card-title" data-en="Choosing a Claude Model">Claudeモデルの選び方</div>
+          <div class="card-desc" data-en="How do Fable 5 / Opus 4.8 / Sonnet 5 / Haiku 4.5 differ? Compare by intelligence, speed &amp; cost — and when to use which.">Fable 5 / Opus 4.8 / Sonnet 5 / Haiku 4.5 は何が違う？ 知能・速度・コストで比較し、いつどれを選ぶかまで。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -298,8 +303,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">💰</div>
         <div class="card-body">
           <div class="card-label" style="color:var(--green);">COST</div>
-          <div class="card-title">コストと使用量（Pro / Max でどれくらい？）</div>
-          <div class="card-desc">サブスクの“コスト”＝使える枠の話。何がトークンを食うか、5時間＋週次の仕組み、Pro/Maxの目安、長持ちのコツ。</div>
+          <div class="card-title" data-en="Cost &amp; Usage (How much on Pro / Max?)">コストと使用量（Pro / Max でどれくらい？）</div>
+          <div class="card-desc" data-en="A subscription’s “cost” = your usage allowance. What eats tokens, the 5-hour + weekly limits, Pro/Max guides, and tips to make it last.">サブスクの“コスト”＝使える枠の話。何がトークンを食うか、5時間＋週次の仕組み、Pro/Maxの目安、長持ちのコツ。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -311,8 +316,8 @@ details.sec > .card-list { margin-top: 6px; }
   <div class="sec">
     <div class="sec-head">
       <span class="sec-step">STEP 2</span>
-      <span class="sec-title">AIに"任せる" ── エージェント実践</span>
-      <span class="sec-sub">チャットの先へ。仕事をまるごと任せる考え方と、立ち上げの実演。</span>
+      <span class="sec-title" data-en="Let AI “Do the Work” ── Agents in Practice">AIに"任せる" ── エージェント実践</span>
+      <span class="sec-sub" data-en="Beyond chat. How to hand off whole tasks, plus a live setup.">チャットの先へ。仕事をまるごと任せる考え方と、立ち上げの実演。</span>
     </div>
     <div class="card-list">
 
@@ -321,8 +326,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">🧭</div>
         <div class="card-body">
           <div class="card-label" style="color:var(--cyan);">AGENT GUIDE</div>
-          <div class="card-title">AIエージェント 使い分け＆セットアップ</div>
-          <div class="card-desc">Claude Code / Cowork・Codex・Gemini CLI・Antigravity・Genspark・NotebookLM。7つの違いと「いつどれを使うか」、今日から立ち上げる手順まで。</div>
+          <div class="card-title" data-en="AI Agents: Which to Use &amp; Setup">AIエージェント 使い分け＆セットアップ</div>
+          <div class="card-desc" data-en="Claude Code / Cowork, Codex, Gemini CLI, Antigravity, Genspark, NotebookLM — how the 7 differ, when to use which, and how to set them up today.">Claude Code / Cowork・Codex・Gemini CLI・Antigravity・Genspark・NotebookLM。7つの違いと「いつどれを使うか」、今日から立ち上げる手順まで。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -333,8 +338,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">🔐</div>
         <div class="card-body">
           <div class="card-label" style="color:var(--orange);">DEEP DIVE</div>
-          <div class="card-title">Claude Code / Cowork 深掘り＆セキュリティ</div>
-          <div class="card-desc">一段うまく使う機能（CLAUDE.md・プランモード・サブエージェント・MCP）と、安心して使う守り（権限・サンドボックス・プロンプトインジェクション・データ保持）。画面イメージ付き。</div>
+          <div class="card-title" data-en="Claude Code / Cowork Deep Dive &amp; Security">Claude Code / Cowork 深掘り＆セキュリティ</div>
+          <div class="card-desc" data-en="Features to use them better (CLAUDE.md, plan mode, subagents, MCP) and how to stay safe (permissions, sandbox, prompt injection, data retention). With screenshots.">一段うまく使う機能（CLAUDE.md・プランモード・サブエージェント・MCP）と、安心して使う守り（権限・サンドボックス・プロンプトインジェクション・データ保持）。画面イメージ付き。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -344,9 +349,9 @@ details.sec > .card-list { margin-top: 6px; }
       <div class="card featured">
         <div class="card-icon">🤖</div>
         <div class="card-body">
-          <div class="card-label" style="color:var(--orange);"><span class="new-pill">MAIN</span>参加型ワーク本編</div>
-          <div class="card-title">AIを活用したオペレーション改善Ⅱ</div>
-          <div class="card-desc">Claude Code / Codex を、みんなで実際に立ち上げてみる回。原理の基礎から、ちょっと応用まで。参加型ワークのスライド本編です。</div>
+          <div class="card-label" style="color:var(--orange);"><span class="new-pill">MAIN</span><span data-en="Hands-on Workshop">参加型ワーク本編</span></div>
+          <div class="card-title" data-en="AI-Powered Operations Improvement II">AIを活用したオペレーション改善Ⅱ</div>
+          <div class="card-desc" data-en="Spin up Claude Code / Codex together, hands-on — from the basics to a bit of advanced. The main workshop deck.">Claude Code / Codex を、みんなで実際に立ち上げてみる回。原理の基礎から、ちょっと応用まで。参加型ワークのスライド本編です。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -356,9 +361,9 @@ details.sec > .card-list { margin-top: 6px; }
       <div class="card">
         <div class="card-icon">🔄</div>
         <div class="card-body">
-          <div class="card-label" style="color:var(--purple);">フレームワーク</div>
-          <div class="card-title">仕事の成熟サイクル</div>
-          <div class="card-desc">プロジェクト・ルーティン・欠落業務の3類型を、可視化→型化→システム化で"改善の回る仕組み"に。農業・中小企業・行政まで使える1枚マップ集。</div>
+          <div class="card-label" style="color:var(--purple);" data-en="FRAMEWORK">フレームワーク</div>
+          <div class="card-title" data-en="The Work Maturity Cycle">仕事の成熟サイクル</div>
+          <div class="card-desc" data-en="Sort work into 3 types (projects, routines, gaps) and turn them into a self-improving loop: visualize → standardize → systemize. One-page maps usable from farming to SMEs to government.">プロジェクト・ルーティン・欠落業務の3類型を、可視化→型化→システム化で"改善の回る仕組み"に。農業・中小企業・行政まで使える1枚マップ集。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -370,8 +375,8 @@ details.sec > .card-list { margin-top: 6px; }
   <div class="sec">
     <div class="sec-head">
       <span class="sec-step">STEP 3</span>
-      <span class="sec-title">事例で見る ── 請求業務のAX</span>
-      <span class="sec-sub">身近な業務が、どこまで自動化できるか。見て・さわって実感。</span>
+      <span class="sec-title" data-en="See It in Action ── Invoicing AX">事例で見る ── 請求業務のAX</span>
+      <span class="sec-sub" data-en="How far everyday work can be automated. See it, try it.">身近な業務が、どこまで自動化できるか。見て・さわって実感。</span>
     </div>
     <div class="card-list">
 
@@ -379,9 +384,9 @@ details.sec > .card-list { margin-top: 6px; }
       <div class="card">
         <div class="card-icon">🧾</div>
         <div class="card-body">
-          <div class="card-label" style="color:var(--orange);">事例 ・ オペレーション改善</div>
-          <div class="card-title">請求書で学ぶ「AX」── スライド</div>
-          <div class="card-desc">昔ながらの請求業務を、AIでどこまで自動化できる？ 仕事の定義 → 成熟マップ → 4段のはしご → Before/After まで、一本の流れで。全10枚。</div>
+          <div class="card-label" style="color:var(--orange);" data-en="CASE ・ OPERATIONS">事例 ・ オペレーション改善</div>
+          <div class="card-title" data-en="Learning “AX” through Invoicing ── Slides">請求書で学ぶ「AX」── スライド</div>
+          <div class="card-desc" data-en="How far can old-school invoicing be automated with AI? Job definition → maturity map → the 4-rung ladder → Before/After, in one flow. 10 slides.">昔ながらの請求業務を、AIでどこまで自動化できる？ 仕事の定義 → 成熟マップ → 4段のはしご → Before/After まで、一本の流れで。全10枚。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -391,9 +396,9 @@ details.sec > .card-list { margin-top: 6px; }
       <div class="card">
         <div class="card-icon">⚙️</div>
         <div class="card-body">
-          <div class="card-label" style="color:var(--cyan);">さわれるデモ</div>
-          <div class="card-title">請求オートメーション デモ</div>
-          <div class="card-desc">源泉データ → 自動生成 → 承認 → 送付 → 消込 を、その場でクリックして体験。人が触るのは「承認」1回だけ、を見て・触って実感。</div>
+          <div class="card-label" style="color:var(--cyan);" data-en="LIVE DEMO">さわれるデモ</div>
+          <div class="card-title" data-en="Invoice Automation Demo">請求オートメーション デモ</div>
+          <div class="card-desc" data-en="Source data → auto-generate → approve → send → reconcile, click through it live. See how a human only touches “approve” once.">源泉データ → 自動生成 → 承認 → 送付 → 消込 を、その場でクリックして体験。人が触るのは「承認」1回だけ、を見て・触って実感。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -404,9 +409,9 @@ details.sec > .card-list { margin-top: 6px; }
 
   <details class="sec">
     <summary class="sec-head">
-      <span class="sec-step">参考</span>
-      <span class="sec-title">もっと詳しく ── 深掘り資料</span>
-      <span class="sec-sub">年表・用語集など。必要なときにクリックで開いてください。</span>
+      <span class="sec-step" data-en="Reference">参考</span>
+      <span class="sec-title" data-en="Learn More ── Deep-Dive Materials">もっと詳しく ── 深掘り資料</span>
+      <span class="sec-sub" data-en="Timelines, glossary, and more. Click to open when needed.">年表・用語集など。必要なときにクリックで開いてください。</span>
     </summary>
     <div class="card-list">
 
@@ -415,8 +420,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">📊</div>
         <div class="card-body">
           <div class="card-label timeline">TIMELINE</div>
-          <div class="card-title">3大AI バージョン進化 横並び年表</div>
-          <div class="card-desc">2022〜2026年、同時期に3社で何が起きていたかを横並びで比較。</div>
+          <div class="card-title" data-en="3 Major AIs: Version Timeline">3大AI バージョン進化 横並び年表</div>
+          <div class="card-desc" data-en="2022–2026, what each of the 3 companies shipped at the same time, side by side.">2022〜2026年、同時期に3社で何が起きていたかを横並びで比較。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -427,8 +432,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">🔬</div>
         <div class="card-body">
           <div class="card-label detail">DEEP DIVE</div>
-          <div class="card-title">バージョン別 詳細進化年表</div>
-          <div class="card-desc">各バージョンで何ができるようになったか。マニア向けの完全網羅版。</div>
+          <div class="card-title" data-en="Detailed Version History">バージョン別 詳細進化年表</div>
+          <div class="card-desc" data-en="What each version made newly possible. The complete edition for enthusiasts.">各バージョンで何ができるようになったか。マニア向けの完全網羅版。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -439,8 +444,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">📖</div>
         <div class="card-body">
           <div class="card-label" style="color:var(--blue);">GLOSSARY</div>
-          <div class="card-title">AI・自律エージェント 用語集</div>
-          <div class="card-desc">チャットAIとエージェントの違い、Node.js / npm / API / トークン / モデル、CLI→GUI→NLUI、安全運用まで。むずかしい言葉をぜんぶ「たとえ」で。</div>
+          <div class="card-title" data-en="AI &amp; Autonomous Agents Glossary">AI・自律エージェント 用語集</div>
+          <div class="card-desc" data-en="Chat AI vs agents, Node.js / npm / API / tokens / models, CLI→GUI→NLUI, safe operation — every hard term explained by analogy.">チャットAIとエージェントの違い、Node.js / npm / API / トークン / モデル、CLI→GUI→NLUI、安全運用まで。むずかしい言葉をぜんぶ「たとえ」で。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -451,8 +456,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">🧩</div>
         <div class="card-body">
           <div class="card-label" style="color:var(--orange);">DEEP DIVE</div>
-          <div class="card-title">トークンって何？ AIと半導体のつながり</div>
-          <div class="card-desc">トークン→GPU→NVIDIA→TSMC→熊本。AIの「燃料」から地元まで全部つながる話。</div>
+          <div class="card-title" data-en="What’s a Token? AI ↔ Semiconductors">トークンって何？ AIと半導体のつながり</div>
+          <div class="card-desc" data-en="Token→GPU→NVIDIA→TSMC→Kumamoto. From AI’s “fuel” all the way to the local connection.">トークン→GPU→NVIDIA→TSMC→熊本。AIの「燃料」から地元まで全部つながる話。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -463,8 +468,8 @@ details.sec > .card-list { margin-top: 6px; }
         <div class="card-icon">⌨️</div>
         <div class="card-body">
           <div class="card-label" style="color:var(--cyan);">SHORTCUTS</div>
-          <div class="card-title">AI活用に便利なショートカット集</div>
-          <div class="card-desc">スクショ・コピペ・音声入力。Windows / Mac / iPhone / Android 全対応。</div>
+          <div class="card-title" data-en="Handy Shortcuts for AI">AI活用に便利なショートカット集</div>
+          <div class="card-desc" data-en="Screenshots, copy-paste, voice input. Windows / Mac / iPhone / Android.">スクショ・コピペ・音声入力。Windows / Mac / iPhone / Android 全対応。</div>
         </div>
         <div class="card-arrow">→</div>
       </div>
@@ -474,17 +479,27 @@ details.sec > .card-list { margin-top: 6px; }
   </details>
 
   <div class="site-footer">
-    <p>MBA×AI 実践合宿 ── Day1 教材</p>
-    <p class="footer-credit">このプレゼン資料は、AIエージェント「Claude Cowork」と人間が一緒に作成しました。</p>
+    <p data-en="MBA×AI Practical Bootcamp ── Day 1 Materials">MBA×AI 実践合宿 ── Day1 教材</p>
+    <p class="footer-credit" data-en="These materials were created by the AI agent “Claude Cowork” together with a human.">このプレゼン資料は、AIエージェント「Claude Cowork」と人間が一緒に作成しました。</p>
     <div class="footer-logo">
       <img src="bY_color2.png" alt="bY community">
-      <span class="presents">YAMAGA BASE Presents ／ MBA×AI 実践合宿</span>
+      <span class="presents" data-en="YAMAGA BASE Presents ／ MBA×AI Practical Bootcamp">YAMAGA BASE Presents ／ MBA×AI 実践合宿</span>
     </div>
     <p class="footer-copyright">&copy; 2026 やまがBASE株式会社 / YAMAGA BASE Inc. All Rights Reserved.</p>
-    <p class="last-updated" style="margin-top:8px;">最終更新: 2026年7月21日（第3回 更新）</p>
+    <p class="last-updated" style="margin-top:8px;" data-en="Last updated: Jul 21, 2026 (3rd update)">最終更新: 2026年7月21日（第3回 更新）</p>
   </div>
 
 </div>
 
+<script>
+document.querySelectorAll('[data-en]').forEach(function(el){el.setAttribute('data-ja',el.textContent);});
+function setLang(l){
+  document.querySelectorAll('[data-en]').forEach(function(el){el.textContent=(l==='en')?el.getAttribute('data-en'):el.getAttribute('data-ja');});
+  document.getElementById('btn-ja').classList.toggle('active',l==='ja');
+  document.getElementById('btn-en').classList.toggle('active',l==='en');
+  document.documentElement.lang=l; try{localStorage.setItem('siteLang',l);}catch(e){}
+}
+try{if(localStorage.getItem('siteLang')==='en')setLang('en');}catch(e){}
+</script>
 </body>
 </html>
